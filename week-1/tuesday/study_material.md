@@ -14,6 +14,7 @@
 - Learn the three main string formatting techniques in Python
 - Use the `math` standard library for mathematical operations
 - Understand the four core Python data structures: Lists, Dictionaries, Tuples, and Sets
+- Understand **Control Flow** using `for` and `while` loops
 - Know what magic comments are and when to use them
 
 ---
@@ -380,7 +381,85 @@ a ^ b       # Symmetric Difference: {1, 2, 5, 6}
 
 ---
 
-## 6. Magic Comments
+## 6. Control Flow & Loops
+
+Python provides two main types of loops for iterative control flow: `for` loops (definite iteration) and `while` loops (indefinite iteration).
+
+### For Loops
+
+The `for` loop in Python iterates over the items of any iterable (like a list, tuple, string, or dictionary) in the order that they appear.
+
+```python
+fruits = ["apple", "banana", "cherry"]
+
+for fruit in fruits:
+    print(fruit)
+```
+
+**Iterating with `range()`**
+The `range()` function generates a sequence of numbers, perfect for executing a loop a specific number of times.
+
+```python
+# range(start, stop, step)
+for i in range(5):          # 0, 1, 2, 3, 4
+    print(i)
+
+for i in range(2, 8, 2):    # 2, 4, 6
+    print(i)
+```
+
+**Iterating with `enumerate()`**
+When you need both the index and the value of items in a list, `enumerate()` is the Pythonic way to do it.
+
+```python
+fruits = ["apple", "banana"]
+for index, fruit in enumerate(fruits):
+    print(f"{index}: {fruit}")
+# 0: apple
+# 1: banana
+```
+
+> 💡 **Best Practice:** Avoid using `for i in range(len(items)):` to access list elements by index. Always use `for item in items:` or `for i, item in enumerate(items):`.
+
+### While Loops
+
+The `while` loop executes a block of code repeatedly as long as a given condition is `True`.
+
+```python
+count = 0
+while count < 3:
+    print(count)
+    count += 1
+```
+
+**Loop Control Statements**
+- `break`: Exits the loop completely.
+- `continue`: Skips the rest of the current iteration and moves to the next one.
+
+```python
+while True:  # Infinite loop pattern
+    user_input = input("Enter 'q' to quit: ")
+    if user_input == 'q':
+        break       # Exit the loop entirely
+    if user_input == '':
+        continue    # Skip the empty input processing
+    print(f"You entered: {user_input}")
+```
+
+> 📌 **Did You Know?** Python loops have an `else` clause! The `else` block runs **only if** the loop completes naturally (without hitting a `break` statement). This is useful for search loops.
+
+```python
+for item in [1, 2, 3]:
+    if item == 5:
+        print("Found 5!")
+        break
+else:
+    print("5 was not found in the list.")
+```
+
+---
+
+## 7. Magic Comments
 
 Magic comments are special comments that affect how Python interprets the source file.
 
@@ -428,8 +507,9 @@ Tells type checkers (mypy, pyright) to skip checking that line.
 3. Use **f-strings** for all string formatting in modern Python
 4. `math.pi` is a constant (no parentheses); use `**` over `math.pow()` for integer powers
 5. **Lists** are your go-to mutable sequence; **Tuples** for immutable data; **Dicts** for key-value pairs; **Sets** for uniqueness and fast lookups
-6. Understand the difference between **type coercion** (implicit) and **type conversion** (explicit)
-7. Know your falsy values: `0`, `0.0`, `""`, `[]`, `{}`, `None`, `False`
+6. Use **`for` loops** to iterate over collections and **`while` loops** for condition-based iteration. Leverage `enumerate()`.
+7. Understand the difference between **type coercion** (implicit) and **type conversion** (explicit)
+8. Know your falsy values: `0`, `0.0`, `""`, `[]`, `{}`, `None`, `False`
 
 ---
 
