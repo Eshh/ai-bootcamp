@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bootcamp — Week 1, Tuesday | Python Fundamentals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8f9fc;
+            --surface: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-light: #e0e7ff;
+            --accent: #06b6d4;
+            --accent-light: #cffafe;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --amber: #f59e0b;
+            --amber-light: #fef3c7;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #06b6d4 100%);
+            color: white;
+            padding: 48px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+        .header-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 650px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+        .toc h2 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+        .toc ol {
+            list-style: none;
+            counter-reset: toc-counter;
+        }
+        .toc li {
+            counter-increment: toc-counter;
+            margin-bottom: 6px;
+        }
+        .toc li::before {
+            content: counter(toc-counter) ".";
+            color: var(--primary);
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        .toc a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .toc a:hover { color: var(--primary); }
+
+        /* Section Cards */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.2s;
+        }
+        .section:hover { box-shadow: var(--shadow-md); }
+
+        .section h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        .section h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+        .section h3:first-of-type { margin-top: 0; }
+
+        /* Paragraphs & Lists */
+        p { margin-bottom: 12px; }
+        ul, ol { margin: 8px 0 16px 20px; }
+        li { margin-bottom: 4px; }
+
+        /* Code */
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 14px;
+        }
+        :not(pre) > code {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 13.5px;
+        }
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px 24px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 12px 0 20px;
+            line-height: 1.6;
+            font-size: 13.5px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        pre code { color: inherit; background: none; padding: 0; }
+        .comment { color: #94a3b8; }
+        .keyword { color: #c084fc; }
+        .string { color: #34d399; }
+        .number { color: #fbbf24; }
+        .function { color: #60a5fa; }
+        .builtin { color: #f472b6; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 14.5px;
+        }
+        thead th {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        thead th:first-child { border-radius: 8px 0 0 0; }
+        thead th:last-child { border-radius: 0 8px 0 0; }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+        tr:nth-child(even) { background: #f8fafc; }
+        tr:hover { background: var(--primary-light); }
+
+        /* Callout boxes */
+        .callout {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 14px 0;
+            font-size: 14.5px;
+            line-height: 1.6;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+        .callout-tip { background: var(--green-light); border-left: 4px solid var(--green); }
+        .callout-info { background: var(--accent-light); border-left: 4px solid var(--accent); }
+        .callout-warn { background: var(--amber-light); border-left: 4px solid var(--amber); }
+        .callout-danger { background: var(--red-light); border-left: 4px solid var(--red); }
+        .callout strong { font-weight: 600; }
+
+        /* Key Takeaways */
+        .takeaways {
+            background: linear-gradient(135deg, #e0e7ff 0%, #cffafe 100%);
+            border: 1px solid var(--primary);
+        }
+        .takeaways h2 { color: var(--primary); border-bottom-color: var(--primary); }
+        .takeaways ol { counter-reset: takeaway; list-style: none; padding-left: 0; }
+        .takeaways li {
+            counter-increment: takeaway;
+            padding: 8px 0 8px 36px;
+            position: relative;
+        }
+        .takeaways li::before {
+            content: counter(takeaway);
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Resources links */
+        .resources a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed var(--primary);
+            transition: border-color 0.2s;
+        }
+        .resources a:hover { border-bottom-style: solid; }
+
+        /* Learning Objectives */
+        .objectives-list {
+            list-style: none;
+            margin-left: 0;
+        }
+        .objectives-list li {
+            padding: 6px 0 6px 28px;
+            position: relative;
+        }
+        .objectives-list li::before {
+            content: '🎯';
+            position: absolute;
+            left: 0;
+        }
+
+        /* Print styles */
+        @media print {
+            body { background: white; font-size: 12pt; }
+            .header { background: #4f46e5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .section { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+            pre { font-size: 10pt; }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header h1 { font-size: 24px; }
+            .section { padding: 20px; }
+            pre { padding: 14px; font-size: 12.5px; }
+            table { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-content">
+        <span class="header-badge">📘 AI Bootcamp — Week 1</span>
+        <h1>Python Fundamentals</h1>
+        <p>Variables, Operators, String Formatting, Math Library, Data Structures & Magic Comments</p>
+        <p style="margin-top:12px; opacity:0.75; font-size:14px;">📅 Tuesday, 25 February 2026</p>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+        <h2>📑 Contents</h2>
+        <ol>
+            <li><a href="#variables">Variables & Data Types</a></li>
+            <li><a href="#operators">Operators — Arithmetic, Comparison & Logical</a></li>
+            <li><a href="#strings">String Formatting</a></li>
+            <li><a href="#math">The <code>math</code> Library</a></li>
+            <li><a href="#datastructures">Data Structures — Lists, Dicts, Tuples, Sets</a></li>
+            <li><a href="#magic">Magic Comments</a></li>
+            <li><a href="#takeaways">Key Takeaways</a></li>
+        </ol>
+    </nav>
+
+    <!-- LEARNING OBJECTIVES -->
+    <div class="section">
+        <h2>🎯 Learning Objectives</h2>
+        <ul class="objectives-list">
+            <li>Understand Python's dynamic typing and variable assignment patterns</li>
+            <li>Master arithmetic, comparison, and logical operators</li>
+            <li>Learn the three main string formatting techniques in Python</li>
+            <li>Use the <code>math</code> standard library for mathematical operations</li>
+            <li>Understand the four core data structures: Lists, Dicts, Tuples, Sets</li>
+            <li>Know what magic comments are and when to use them</li>
+        </ul>
+    </div>
+
+    <!-- 1. VARIABLES & DATA TYPES -->
+    <div class="section" id="variables">
+        <h2>1. Variables & Data Types</h2>
+
+        <h3>Basic Variable Assignment</h3>
+        <p>Python is <strong>dynamically typed</strong> — you don't declare a type; it's inferred from the value.</p>
+        <pre><code><span class="comment"># Basic assignments</span>
+text = <span class="string">"Hello"</span>        <span class="comment"># str</span>
+number = <span class="number">42</span>           <span class="comment"># int</span>
+pi = <span class="number">3.14</span>             <span class="comment"># float</span>
+is_active = <span class="keyword">True</span>      <span class="comment"># bool</span></code></pre>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div><strong>Pro Tip:</strong> Use <code>type()</code> to inspect any variable's type at runtime: <code>type(pi)</code> → <code>&lt;class 'float'&gt;</code></div>
+        </div>
+
+        <h3>Core Data Types</h3>
+        <table>
+            <thead><tr><th>Type</th><th>Example</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td><code>int</code></td><td><code>42</code>, <code>-7</code>, <code>1_000_000</code></td><td>Whole numbers (arbitrary precision)</td></tr>
+                <tr><td><code>float</code></td><td><code>3.14</code>, <code>1e-5</code></td><td>Floating-point (IEEE 754 double)</td></tr>
+                <tr><td><code>str</code></td><td><code>"hello"</code></td><td>Immutable text sequences</td></tr>
+                <tr><td><code>bool</code></td><td><code>True</code>, <code>False</code></td><td>Boolean (subclass of <code>int</code>)</td></tr>
+                <tr><td><code>NoneType</code></td><td><code>None</code></td><td>Absence of a value</td></tr>
+                <tr><td><code>complex</code></td><td><code>3+4j</code></td><td>Complex numbers</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Multiple Assignment (Pythonic Pattern)</h3>
+        <pre><code><span class="comment"># Assign different values</span>
+x, y, z = <span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>
+
+<span class="comment"># Assign same value to multiple variables</span>
+a = b = c = <span class="number">0</span>
+
+<span class="comment"># Swap without a temp variable</span>
+x, y = y, x</code></pre>
+
+        <div class="callout callout-info">
+            <span class="callout-icon">📌</span>
+            <div><strong>Did You Know?</strong> <code>x, y, z = 10, 20, 30</code> creates a tuple <code>(10, 20, 30)</code> on the right and unpacks it. This is called <strong>tuple unpacking</strong> and works with any iterable.</div>
+        </div>
+
+        <h3>Numeric Literals & Readability</h3>
+        <pre><code>population = <span class="number">1_400_000_000</span>    <span class="comment"># Underscores for readability (3.6+)</span>
+speed_of_light = <span class="number">3e8</span>          <span class="comment"># Scientific notation: 3 × 10⁸</span>
+planck = <span class="number">6.626e-34</span>            <span class="comment"># Very small: 6.626 × 10⁻³⁴</span></code></pre>
+
+        <h3>Type Coercion vs. Type Conversion</h3>
+        <p><strong>Coercion (implicit)</strong> — Python auto-converts in mixed expressions:</p>
+        <pre><code><span class="number">5</span> + <span class="number">2.0</span>       <span class="comment"># int + float → float: 7.0</span>
+<span class="keyword">True</span> + <span class="number">1</span>      <span class="comment"># bool + int → int: 2</span></code></pre>
+
+        <p><strong>Conversion (explicit)</strong> — You manually cast:</p>
+        <pre><code><span class="builtin">int</span>(<span class="string">"42"</span>)      <span class="comment"># str → int: 42</span>
+<span class="builtin">float</span>(<span class="string">"3.14"</span>)  <span class="comment"># str → float: 3.14</span>
+<span class="builtin">str</span>(<span class="number">100</span>)       <span class="comment"># int → str: "100"</span>
+<span class="builtin">bool</span>(<span class="number">0</span>)        <span class="comment"># int → bool: False</span>
+<span class="builtin">bool</span>(<span class="string">""</span>)       <span class="comment"># str → bool: False (empty = falsy)</span></code></pre>
+
+        <div class="callout callout-warn">
+            <span class="callout-icon">⚠️</span>
+            <div><strong>Pitfall:</strong> <code>int("3.14")</code> raises <code>ValueError</code>. Convert via: <code>int(float("3.14"))</code></div>
+        </div>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div><strong>Going Deeper — Truthy & Falsy:</strong> These are <code>False</code> in boolean context: <code>0</code>, <code>0.0</code>, <code>""</code>, <code>[]</code>, <code>{}</code>, <code>()</code>, <code>set()</code>, <code>None</code>. Everything else is <code>True</code>. Idiomatic: <code>if my_list:</code> instead of <code>if len(my_list) > 0:</code></div>
+        </div>
+    </div>
+
+    <!-- 2. OPERATORS -->
+    <div class="section" id="operators">
+        <h2>2. Operators</h2>
+
+        <h3>Arithmetic Operators</h3>
+        <table>
+            <thead><tr><th>Operator</th><th>Name</th><th>Example</th><th>Result</th></tr></thead>
+            <tbody>
+                <tr><td><code>+</code></td><td>Addition</td><td><code>7 + 3</code></td><td><code>10</code></td></tr>
+                <tr><td><code>-</code></td><td>Subtraction</td><td><code>7 - 3</code></td><td><code>4</code></td></tr>
+                <tr><td><code>*</code></td><td>Multiplication</td><td><code>7 * 3</code></td><td><code>21</code></td></tr>
+                <tr><td><code>/</code></td><td>Division (float)</td><td><code>7 / 3</code></td><td><code>2.33…</code></td></tr>
+                <tr><td><code>//</code></td><td>Floor Division</td><td><code>7 // 3</code></td><td><code>2</code></td></tr>
+                <tr><td><code>%</code></td><td>Modulo</td><td><code>7 % 3</code></td><td><code>1</code></td></tr>
+                <tr><td><code>**</code></td><td>Exponentiation</td><td><code>2 ** 10</code></td><td><code>1024</code></td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout callout-info">
+            <span class="callout-icon">📌</span>
+            <div><strong>Did You Know?</strong> <code>/</code> always returns a <code>float</code> in Python 3, even for <code>6 / 2</code> → <code>3.0</code>. Use <code>//</code> for integer division. Use <code>divmod(a, b)</code> for both quotient and remainder.</div>
+        </div>
+
+        <h3>Comparison Operators</h3>
+        <table>
+            <thead><tr><th>Operator</th><th>Meaning</th><th>Example</th></tr></thead>
+            <tbody>
+                <tr><td><code>==</code></td><td>Equal to</td><td><code>5 == 5</code> → <code>True</code></td></tr>
+                <tr><td><code>!=</code></td><td>Not equal to</td><td><code>5 != 3</code> → <code>True</code></td></tr>
+                <tr><td><code>&gt;</code></td><td>Greater than</td><td><code>5 > 3</code> → <code>True</code></td></tr>
+                <tr><td><code>&lt;</code></td><td>Less than</td><td><code>3 < 5</code> → <code>True</code></td></tr>
+                <tr><td><code>&gt;=</code></td><td>Greater or equal</td><td><code>5 >= 5</code> → <code>True</code></td></tr>
+                <tr><td><code>&lt;=</code></td><td>Less or equal</td><td><code>3 <= 5</code> → <code>True</code></td></tr>
+            </tbody>
+        </table>
+
+        <p><strong>Chained Comparisons (Pythonic)</strong>:</p>
+        <pre><code><span class="comment"># Instead of: x > 0 and x < 100</span>
+<span class="number">0</span> < x < <span class="number">100</span>    <span class="comment"># Reads like math notation!</span></code></pre>
+
+        <div class="callout callout-warn">
+            <span class="callout-icon">⚠️</span>
+            <div><strong>Pitfall:</strong> <code>==</code> compares <strong>values</strong>; <code>is</code> compares <strong>identity</strong> (same object in memory). Always use <code>is</code> only for <code>None</code>: <code>if x is None</code>.</div>
+        </div>
+
+        <h3>Logical Operators</h3>
+        <table>
+            <thead><tr><th>Operator</th><th>Description</th><th>Example</th></tr></thead>
+            <tbody>
+                <tr><td><code>and</code></td><td>True if both True</td><td><code>True and False</code> → <code>False</code></td></tr>
+                <tr><td><code>or</code></td><td>True if at least one True</td><td><code>True or False</code> → <code>True</code></td></tr>
+                <tr><td><code>not</code></td><td>Inverts boolean</td><td><code>not True</code> → <code>False</code></td></tr>
+            </tbody>
+        </table>
+
+        <p><strong>Short-circuit evaluation:</strong></p>
+        <pre><code>result = <span class="keyword">None</span> <span class="keyword">or</span> <span class="string">"default"</span>     <span class="comment"># "default"</span>
+result = <span class="string">"hello"</span> <span class="keyword">and</span> <span class="string">"world"</span>   <span class="comment"># "world" (returns last evaluated)</span></code></pre>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div><strong>Going Deeper:</strong> Logical operators return the <em>actual operand</em> that decided the result, not always <code>bool</code>. Enables patterns like: <code>name = user_input or "Anonymous"</code></div>
+        </div>
+    </div>
+
+    <!-- 3. STRING FORMATTING -->
+    <div class="section" id="strings">
+        <h2>3. String Formatting</h2>
+        <p>Python offers three ways to format strings. <strong>f-strings are the modern standard.</strong></p>
+
+        <h3>f-Strings (Python 3.6+ — Recommended) ⭐</h3>
+        <pre><code>name = <span class="string">"Eswar"</span>
+age = <span class="number">30</span>
+<span class="builtin">print</span>(<span class="string">f"My name is </span>{name}<span class="string"> and I am </span>{age}<span class="string"> years old."</span>)
+
+<span class="comment"># Expressions inside braces</span>
+<span class="builtin">print</span>(<span class="string">f"Next year I'll be </span>{age + <span class="number">1</span>}<span class="string">"</span>)
+<span class="builtin">print</span>(<span class="string">f"Name uppercase: </span>{name.upper()}<span class="string">"</span>)
+
+<span class="comment"># Number formatting</span>
+pi = <span class="number">3.14159</span>
+<span class="builtin">print</span>(<span class="string">f"Pi: </span>{pi:<span class="number">.2f</span>}<span class="string">"</span>)           <span class="comment"># 3.14</span>
+<span class="builtin">print</span>(<span class="string">f"Big: </span>{<span class="number">1000000</span>:,}<span class="string">"</span>)        <span class="comment"># 1,000,000</span>
+<span class="builtin">print</span>(<span class="string">f"Pct: </span>{<span class="number">0.856</span>:<span class="number">.1%</span>}<span class="string">"</span>)       <span class="comment"># 85.6%</span></code></pre>
+
+        <h3><code>.format()</code> Method</h3>
+        <pre><code><span class="builtin">print</span>(<span class="string">"Hello, {}! Age: {}"</span>.format(name, age))
+<span class="builtin">print</span>(<span class="string">"Hello, {0}! {0} is {1}"</span>.format(name, age))   <span class="comment"># Positional</span>
+<span class="builtin">print</span>(<span class="string">"Hello, {n}!"</span>.format(n=name))                 <span class="comment"># Named</span></code></pre>
+
+        <h3><code>%</code> Formatting (Legacy — Avoid)</h3>
+        <pre><code><span class="builtin">print</span>(<span class="string">"Hello, %s! Age: %d"</span> % (name, age))
+<span class="builtin">print</span>(<span class="string">"Pi: %.2f"</span> % pi)</code></pre>
+
+        <table>
+            <thead><tr><th>Specifier</th><th>Type</th><th>Example</th></tr></thead>
+            <tbody>
+                <tr><td><code>%s</code></td><td>String</td><td><code>"Hi %s" % "world"</code></td></tr>
+                <tr><td><code>%d</code></td><td>Integer</td><td><code>"Age: %d" % 25</code></td></tr>
+                <tr><td><code>%f</code></td><td>Float</td><td><code>"Pi: %.2f" % 3.14</code></td></tr>
+                <tr><td><code>%x</code></td><td>Hex</td><td><code>"%x" % 255</code> → <code>ff</code></td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div><strong>Best Practice:</strong> Always use <strong>f-strings</strong> for new code — fastest, most readable, most Pythonic. Use <code>.format()</code> only when the template string is stored externally (e.g., config file).</div>
+        </div>
+    </div>
+
+    <!-- 4. MATH LIBRARY -->
+    <div class="section" id="math">
+        <h2>4. The <code>math</code> Library</h2>
+
+        <pre><code><span class="keyword">import</span> math</code></pre>
+
+        <h3>Constants</h3>
+        <table>
+            <thead><tr><th>Constant</th><th>Value</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td><code>math.pi</code></td><td><code>3.14159…</code></td><td>π (pi)</td></tr>
+                <tr><td><code>math.e</code></td><td><code>2.71828…</code></td><td>Euler's number</td></tr>
+                <tr><td><code>math.tau</code></td><td><code>6.28318…</code></td><td>τ = 2π</td></tr>
+                <tr><td><code>math.inf</code></td><td><code>inf</code></td><td>Positive infinity</td></tr>
+                <tr><td><code>math.nan</code></td><td><code>nan</code></td><td>Not a Number</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Common Functions</h3>
+        <pre><code>math.sqrt(<span class="number">16</span>)         <span class="comment"># 4.0</span>
+math.pow(<span class="number">2</span>, <span class="number">10</span>)       <span class="comment"># 1024.0 (always returns float)</span>
+math.ceil(<span class="number">3.2</span>)        <span class="comment"># 4</span>
+math.floor(<span class="number">3.8</span>)       <span class="comment"># 3</span>
+math.factorial(<span class="number">5</span>)     <span class="comment"># 120</span>
+math.gcd(<span class="number">12</span>, <span class="number">8</span>)       <span class="comment"># 4</span>
+math.log(<span class="number">100</span>, <span class="number">10</span>)     <span class="comment"># 2.0</span>
+math.log2(<span class="number">1024</span>)       <span class="comment"># 10.0</span>
+math.sin(math.pi/<span class="number">2</span>)   <span class="comment"># 1.0 (radians)</span>
+math.degrees(math.pi)  <span class="comment"># 180.0</span></code></pre>
+
+        <div class="callout callout-info">
+            <span class="callout-icon">📌</span>
+            <div><strong>Note:</strong> <code>math.pi</code> is a <strong>constant</strong>, not a function — no parentheses. Use <code>**</code> for integer powers: <code>2 ** 10</code> → <code>1024</code> (int) vs <code>math.pow(2, 10)</code> → <code>1024.0</code> (float).</div>
+        </div>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div><strong>Going Deeper:</strong> For AI/ML work, you'll use <code>numpy</code> instead of <code>math</code> — it operates on arrays. Also check <code>statistics</code> (mean, median) and <code>random</code> (random numbers, shuffling).</div>
+        </div>
+    </div>
+
+    <!-- 5. DATA STRUCTURES -->
+    <div class="section" id="datastructures">
+        <h2>5. Data Structures</h2>
+
+        <h3>Quick Comparison</h3>
+        <table>
+            <thead><tr><th>Structure</th><th>Ordered</th><th>Mutable</th><th>Duplicates</th><th>Syntax</th></tr></thead>
+            <tbody>
+                <tr><td><strong>List</strong></td><td>✅</td><td>✅</td><td>✅</td><td><code>[1, 2, 3]</code></td></tr>
+                <tr><td><strong>Tuple</strong></td><td>✅</td><td>❌</td><td>✅</td><td><code>(1, 2, 3)</code></td></tr>
+                <tr><td><strong>Dict</strong></td><td>✅ (3.7+)</td><td>✅</td><td>Keys: ❌</td><td><code>{"a": 1}</code></td></tr>
+                <tr><td><strong>Set</strong></td><td>❌</td><td>✅</td><td>❌</td><td><code>{1, 2, 3}</code></td></tr>
+            </tbody>
+        </table>
+
+        <h3>Lists — Ordered, Mutable Sequences</h3>
+        <pre><code>fruits = [<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"cherry"</span>]
+
+<span class="comment"># Access & Slice</span>
+fruits[<span class="number">0</span>]             <span class="comment"># "apple"</span>
+fruits[<span class="number">-1</span>]            <span class="comment"># "cherry" (last)</span>
+fruits[<span class="number">1</span>:<span class="number">3</span>]           <span class="comment"># ["banana", "cherry"]</span>
+
+<span class="comment"># Modify</span>
+fruits.append(<span class="string">"date"</span>)
+fruits.insert(<span class="number">1</span>, <span class="string">"avocado"</span>)
+fruits.remove(<span class="string">"banana"</span>)
+popped = fruits.pop()
+
+<span class="comment"># List comprehensions (Pythonic!)</span>
+squares = [x**<span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">10</span>)]
+evens = [x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">20</span>) <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>]</code></pre>
+
+        <h3>Dictionaries — Key-Value Mappings</h3>
+        <pre><code>person = {
+    <span class="string">"name"</span>: <span class="string">"Eswar"</span>,
+    <span class="string">"age"</span>: <span class="number">30</span>,
+    <span class="string">"skills"</span>: [<span class="string">"Python"</span>, <span class="string">"AI"</span>]
+}
+
+person[<span class="string">"name"</span>]                <span class="comment"># "Eswar"</span>
+person.get(<span class="string">"email"</span>, <span class="string">"N/A"</span>)    <span class="comment"># "N/A" (safe access)</span>
+
+<span class="keyword">for</span> key, value <span class="keyword">in</span> person.items():
+    <span class="builtin">print</span>(<span class="string">f"</span>{key}: {value}<span class="string">"</span>)</code></pre>
+
+        <div class="callout callout-warn">
+            <span class="callout-icon">⚠️</span>
+            <div><strong>Pitfall:</strong> <code>person["missing"]</code> raises <code>KeyError</code>. Always use <code>.get()</code> for safe access.</div>
+        </div>
+
+        <h3>Tuples — Immutable Sequences</h3>
+        <pre><code>coords = (<span class="number">10.5</span>, <span class="number">20.3</span>)
+x, y = coords        <span class="comment"># Tuple unpacking</span>
+
+<span class="comment"># Single-element tuple (note the comma!)</span>
+single = (<span class="number">42</span>,)       <span class="comment"># Tuple</span>
+not_tuple = (<span class="number">42</span>)     <span class="comment"># Just an int!</span></code></pre>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div><strong>When to use:</strong> Tuples for fixed data (coordinates, RGB). They're faster than lists and can be dict keys.</div>
+        </div>
+
+        <h3>Sets — Unordered, Unique Elements</h3>
+        <pre><code>nums = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">2</span>}  <span class="comment"># {1, 2, 3}</span>
+
+a = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>}
+b = {<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>}
+
+a | b    <span class="comment"># Union: {1, 2, 3, 4, 5, 6}</span>
+a & b    <span class="comment"># Intersection: {3, 4}</span>
+a - b    <span class="comment"># Difference: {1, 2}</span>
+a ^ b    <span class="comment"># Symmetric Diff: {1, 2, 5, 6}</span></code></pre>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">💡</span>
+            <div><strong>Best Practice:</strong> <code>x in my_set</code> is <strong>O(1)</strong> vs <strong>O(n)</strong> for lists. Use sets for fast membership testing.</div>
+        </div>
+
+        <div class="callout callout-warn">
+            <span class="callout-icon">⚠️</span>
+            <div><strong>Pitfall:</strong> <code>{}</code> creates an empty <strong>dictionary</strong>, not a set. Use <code>set()</code> for an empty set.</div>
+        </div>
+    </div>
+
+    <!-- 6. MAGIC COMMENTS -->
+    <div class="section" id="magic">
+        <h2>6. Magic Comments</h2>
+        <p>Special comments that affect how Python interprets the source file.</p>
+
+        <h3>Encoding Declaration</h3>
+        <pre><code><span class="comment"># -*- coding: utf-8 -*-</span></code></pre>
+        <p>Declares the file's character encoding. <strong>Rarely needed in Python 3</strong> (UTF-8 is default).</p>
+
+        <h3>Shebang Line</h3>
+        <pre><code><span class="comment">#!/usr/bin/env python3</span></code></pre>
+        <p>Tells Unix/macOS which interpreter to use when running the script directly.</p>
+
+        <h3>Other Common Special Comments</h3>
+        <table>
+            <thead><tr><th>Comment</th><th>Purpose</th></tr></thead>
+            <tbody>
+                <tr><td><code># type: ignore</code></td><td>Skip type checking (mypy/pyright)</td></tr>
+                <tr><td><code># noqa</code></td><td>Skip linting (flake8)</td></tr>
+                <tr><td><code># pragma: no cover</code></td><td>Exclude from test coverage</td></tr>
+                <tr><td><code># TODO:</code></td><td>Mark planned work (IDE-recognized)</td></tr>
+                <tr><td><code># FIXME:</code></td><td>Mark known bugs (IDE-recognized)</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TAKEAWAYS -->
+    <div class="section takeaways" id="takeaways">
+        <h2>✅ Key Takeaways</h2>
+        <ol>
+            <li>Python is <strong>dynamically typed</strong> — types are inferred, not declared</li>
+            <li><strong>Multiple assignment</strong> and <strong>tuple unpacking</strong> are Pythonic patterns you should use</li>
+            <li>Use <strong>f-strings</strong> for all string formatting in modern Python</li>
+            <li><code>math.pi</code> is a constant (no parentheses); use <code>**</code> over <code>math.pow()</code> for integer powers</li>
+            <li><strong>Lists</strong> = mutable sequences, <strong>Tuples</strong> = immutable, <strong>Dicts</strong> = key-value, <strong>Sets</strong> = unique & fast lookup</li>
+            <li>Understand <strong>type coercion</strong> (implicit) vs <strong>type conversion</strong> (explicit)</li>
+            <li>Know your falsy values: <code>0</code>, <code>0.0</code>, <code>""</code>, <code>[]</code>, <code>{}</code>, <code>None</code>, <code>False</code></li>
+        </ol>
+    </div>
+
+    <!-- RESOURCES -->
+    <div class="section resources">
+        <h2>🔗 Resources & References</h2>
+        <ul>
+            <li><a href="https://docs.python.org/3/tutorial/" target="_blank">Python Official Tutorial</a></li>
+            <li><a href="https://realpython.com/python-data-types/" target="_blank">Python Data Types — Real Python</a></li>
+            <li><a href="https://peps.python.org/pep-0498/" target="_blank">f-String Formatting — PEP 498</a></li>
+            <li><a href="https://docs.python.org/3/library/math.html" target="_blank">Python <code>math</code> Module Docs</a></li>
+            <li><a href="https://colab.research.google.com/" target="_blank">Google Colab</a> — IDE used in this bootcamp</li>
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>
