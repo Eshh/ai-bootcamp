@@ -124,6 +124,19 @@ a:hover {
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Sidebar collapsed state — desktop */
+.app-layout:not(.sidebar-open) .sidebar {
+  transform: translateX(-100%);
+}
+
+.app-layout:not(.sidebar-open) .main-content {
+  margin-left: 0;
+}
+
+.app-layout.sidebar-open .sidebar {
+  transform: translateX(0);
+}
+
 /* ========== HEADER ========== */
 .app-header {
   height: var(--header-height);
@@ -421,6 +434,16 @@ a:hover {
 .sidebar-footer p {
   font-size: 12px;
   color: var(--text-light);
+}
+
+.sidebar-footer-name {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 2px;
 }
 
 /* ========== SIDEBAR OVERLAY ========== */

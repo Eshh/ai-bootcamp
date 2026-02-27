@@ -14,12 +14,14 @@ function ScrollToTop() {
 }
 
 function AppContent() {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(true);
     const location = useLocation();
 
-    // Auto-close sidebar on navigation (mobile)
+    // Auto-close sidebar on navigation (mobile only)
     useEffect(() => {
-        setSidebarOpen(false);
+        if (window.innerWidth <= 768) {
+            setSidebarOpen(false);
+        }
     }, [location.pathname]);
 
     // Close sidebar on Escape key
