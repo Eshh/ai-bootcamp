@@ -33,7 +33,7 @@ short_circuit_or = None or "default"
 
 # String Formatting
 name = "Eswar"
-age = 30
+age = 28
 print(f"My name is {name} and I am {age} years old.")
 print(f"Pi to 2 decimals: {pi:.2f}")
 
@@ -62,12 +62,16 @@ fruits.reverse()
 fruits_copy = fruits.copy()
 fruits.clear()
 
-list_comp = [x**2 for x in range(10)]
+# List Comprehension (Important!)
+# Syntax: [expression for item in iterable if condition]
+squares = [x**2 for x in range(10)]
+evens = [x for x in range(20) if x % 2 == 0]
+upper_fruits = [fruit.upper() for fruit in fruits_copy]
 
 # Dictionaries
 person = {
     "name": "Eswar",
-    "age": 30,
+    "age": 28,
     "skills": ["Python", "AI"]
 }
 print(person["name"])
@@ -97,6 +101,9 @@ nums.discard(2)
 nums.remove(3)
 nums.pop()
 nums.clear()
+e = dict() # this is a dictionary
+f = set() # this is a set
+g = {} # this is also a dictionary
 
 a = {1, 2, 3, 4}
 b = {3, 4, 5, 6}

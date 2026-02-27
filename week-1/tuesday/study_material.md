@@ -302,11 +302,29 @@ fruits.sort()                 # Sort in-place
 sorted(fruits)                # Returns new sorted list
 ```
 
-> 💡 **Best Practice:** Use **list comprehensions** for creating lists from transformations:
-> ```python
-> squares = [x**2 for x in range(10)]            # [0, 1, 4, 9, ...]
-> evens = [x for x in range(20) if x % 2 == 0]   # [0, 2, 4, 6, ...]
-> ```
+### List Comprehensions (Core Pythonic Feature) 🌟
+
+List comprehensions provide a concise, readable way to create lists. They are faster than traditional `for` loops and represent the "Pythonic" path for data transformation.
+
+**Syntax:** `[expression for item in iterable if condition]`
+
+```python
+# Traditional way:
+squares = []
+for x in range(10):
+    squares.append(x**2)
+
+# List Comprehension way (Preferred!):
+squares = [x**2 for x in range(10)]            # [0, 1, 4, 9, ...]
+
+# With filtering condition:
+evens = [x for x in range(20) if x % 2 == 0]   # [0, 2, 4, 6, ...]
+
+# String transformation
+upper_fruits = [fruit.upper() for fruit in ["apple", "banana", "cherry"]]
+```
+
+> 💡 **Why use them?** They reduce boilerplate code, execute faster at the C-level, and read almost like English. Master list comprehensions early, as they are foundational in AI/ML data manipulation.
 
 ### Dictionaries — Key-Value Mappings
 
@@ -334,6 +352,79 @@ for key, value in person.items():
 
 > 📌 **Did You Know?** Since Python 3.7, dictionaries maintain **insertion order** as a language guarantee (it was an implementation detail in 3.6).
 
+#### Creating Dictionaries from Pairs & the `dict()` Constructor
+
+Beyond the `{}` literal, Python offers several ways to construct dictionaries:
+
+```python
+# From a list of tuples
+from_pairs = dict([("a", 1), ("b", 2)])
+# {'a': 1, 'b': 2}
+
+# Tuples inside the list can use single or double parentheses — the outer
+# layer is the tuple, the inner value is the key
+from_pairs = dict([(("a"), 1), (("b"), 2)])   # Same result — ("a") is just "a"
+# {'a': 1, 'b': 2}
+```
+
+> ⚠️ **Common Pitfall — Unhashable Keys:** Dictionary keys **must** be hashable (immutable) types. Using a **list** as a key raises a `TypeError`:
+>
+> ```python
+> # ❌ This will crash!
+> bad_dict = dict([(["a"], 1), (["b"], 2)])
+> # TypeError: unhashable type: 'list'
+>
+> # ✅ Use tuples instead — they are hashable
+> good_dict = dict([(( "a",), 1), (("b",), 2)])
+> ```
+>
+> **Why?** Python uses hashing to store and look up keys in O(1) time. Mutable types like `list`, `dict`, and `set` cannot be hashed because their contents can change after insertion. Allowed key types: `str`, `int`, `float`, `tuple` (if it contains only hashable elements), `bool`, `frozenset`.
+
+#### Building Dictionaries with `zip()`
+
+The `zip()` function pairs elements from two (or more) iterables together — perfect for creating dictionaries from separate key and value lists:
+
+```python
+keys = ["name", "age", "city"]
+values = ["Innocito", 4, "Vizag"]
+
+# Combine into a dictionary using a dict comprehension + zip
+from_lists = {k: v for k, v in zip(keys, values)}
+# {'name': 'Innocito', 'age': 4, 'city': 'Vizag'}
+```
+
+> 💡 **Pro Tip:** `zip()` stops at the **shortest** iterable. If your lists have different lengths, extra items are silently dropped. Always verify lengths match before zipping, or use `itertools.zip_longest()` for padding.
+
+```python
+# Mismatched lengths — the extra key "country" is dropped!
+keys = ["name", "age", "city", "country"]
+values = ["Innocito", 4, "Vizag"]
+result = dict(zip(keys, values))
+# {'name': 'Innocito', 'age': 4, 'city': 'Vizag'}  — no "country" key!
+```
+
+#### Swapping Keys and Values
+
+A common pattern is inverting a dictionary so that values become keys and vice versa:
+
+```python
+original = {"name": "Innocito", "age": 4, "city": "Vizag"}
+swapped = {v: k for k, v in original.items()}
+# {'Innocito': 'name', 4: 'age', 'Vizag': 'city'}
+```
+
+> ⚠️ **Caution:** This only works cleanly when **all values are unique and hashable**. If two keys share the same value, one will be lost in the swap.
+
+#### Extracting Keys, Values, and Items
+
+```python
+company = {"name": "Innocito", "age": 4, "city": "Vizag"}
+
+list(company.keys())     # ['name', 'age', 'city']
+list(company.values())   # ['Innocito', 4, 'Vizag']
+list(company.items())    # [('name', 'Innocito'), ('age', 4), ('city', 'Vizag')]
+```
+
 ### Tuples — Immutable Sequences
 
 ```python
@@ -358,26 +449,58 @@ not_tuple = (42)     # This is just the integer 42
 
 ### Sets — Unordered, Unique Elements
 
+Sets are Python's implementation of the **mathematical set** — an unordered collection of unique elements. They are optimized for membership testing, deduplication, and set-theoretic operations.
+
 ```python
-unique_numbers = {1, 2, 3, 3, 2}    # {1, 2, 3} — duplicates removed
+# Creating sets
+set_a = {1, 2, 3, 4, 5}
+set_b = {4, 5, 6, 7, 8}
+
+# Duplicates are automatically removed
+set_a = {1, 2, 3, 4, 5, 5}    # {1, 2, 3, 4, 5} — the extra 5 is gone
 
 # Add & Remove
-unique_numbers.add(4)
-unique_numbers.discard(2)    # No error if missing (unlike .remove())
+set_a.add(6)
+set_a.discard(2)    # No error if missing (unlike .remove())
+```
 
-# Set Operations (the real power of sets)
-a = {1, 2, 3, 4}
-b = {3, 4, 5, 6}
+#### Set Operations — Union, Intersection & Difference
 
-a | b       # Union: {1, 2, 3, 4, 5, 6}
-a & b       # Intersection: {3, 4}
-a - b       # Difference: {1, 2}
-a ^ b       # Symmetric Difference: {1, 2, 5, 6}
+These mirror the operations from mathematical set theory:
+
+```python
+set_a = {1, 2, 3, 4, 5}
+set_b = {4, 5, 6, 7, 8}
+
+# Union — all elements from both sets (duplicates removed)
+union_set = set_a | set_b
+# {1, 2, 3, 4, 5, 6, 7, 8}
+
+# Intersection — only elements present in BOTH sets
+intersection_set = set_a & set_b
+# {4, 5}
+
+# Difference — elements in set_a but NOT in set_b
+diff_set = set_a - set_b
+# {1, 2, 3}
+
+# Symmetric Difference — elements in either set, but NOT in both
+sym_diff = set_a ^ set_b
+# {1, 2, 3, 6, 7, 8}
+```
+
+You can also use method syntax:
+
+```python
+set_a.union(set_b)              # Same as set_a | set_b
+set_a.intersection(set_b)       # Same as set_a & set_b
+set_a.difference(set_b)         # Same as set_a - set_b
+set_a.symmetric_difference(set_b)  # Same as set_a ^ set_b
 ```
 
 > 💡 **Best Practice:** Use sets for **membership testing** — `x in my_set` is **O(1)** average time vs **O(n)** for lists. If you're checking "is this item in my collection?" frequently, convert to a set first.
 
-> ⚠️ **Common Pitfall:** `{}` creates an **empty dictionary**, not an empty set. Use `set()` for an empty set.
+> ⚠️ **Common Pitfall:** `{}` creates an **empty dictionary**, not an empty set. Use `set()` for an empty set. Similarly, `dict()` with empty parentheses creates an empty dictionary.
 
 ---
 
@@ -420,6 +543,37 @@ for index, fruit in enumerate(fruits):
 ```
 
 > 💡 **Best Practice:** Avoid using `for i in range(len(items)):` to access list elements by index. Always use `for item in items:` or `for i, item in enumerate(items):`.
+
+**Iterating Over Dictionaries**
+
+Dictionaries offer three iteration views: `.keys()`, `.values()`, and `.items()`:
+
+```python
+company = {"name": "Innocito", "age": 25, "city": "Vizag"}
+
+# Iterate over key-value pairs
+for key, value in company.items():
+    print(f"Value of {key} is {value}")
+# Value of name is Innocito
+# Value of age is 25
+# Value of city is Vizag
+```
+
+**The Underscore `_` Convention for Unused Variables**
+
+When you only need one part of an unpacked pair, use `_` as a throwaway variable to signal intent:
+
+```python
+# We only care about keys, not values
+for key, _ in company.items():
+    print(f"Key: {key}")
+
+# We only care about values, not keys
+for _, value in company.items():
+    print(f"Value: {value}")
+```
+
+> 💡 **Pro Tip:** The `_` is just a convention — it's a valid variable name. But linters and IDEs recognise it as "intentionally unused", which keeps your code clean and warning-free.
 
 ### While Loops
 

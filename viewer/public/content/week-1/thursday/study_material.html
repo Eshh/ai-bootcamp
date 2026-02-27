@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bootcamp — Week 1, Thursday | Python Intermediate & Pandas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8f9fc;
+            --surface: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-light: #e0e7ff;
+            --accent: #06b6d4;
+            --accent-light: #cffafe;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --amber: #f59e0b;
+            --amber-light: #fef3c7;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 40%, #06b6d4 100%);
+            color: white;
+            padding: 48px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 650px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .toc h2 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .toc ol {
+            list-style: none;
+            counter-reset: toc-counter;
+        }
+
+        .toc li {
+            counter-increment: toc-counter;
+            margin-bottom: 6px;
+        }
+
+        .toc li::before {
+            content: counter(toc-counter) ".";
+            color: var(--primary);
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .toc a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .toc a:hover {
+            color: var(--primary);
+        }
+
+        /* Section Cards */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.2s;
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .section h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .section h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .section h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .section h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 20px 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Paragraphs & Lists */
+        p {
+            margin-bottom: 12px;
+        }
+
+        ul,
+        ol {
+            margin: 8px 0 16px 20px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        /* Code */
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 14px;
+        }
+
+        :not(pre)>code {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 13.5px;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px 24px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 12px 0 20px;
+            line-height: 1.6;
+            font-size: 13.5px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        pre code {
+            color: inherit;
+            background: none;
+            padding: 0;
+        }
+
+        .comment {
+            color: #94a3b8;
+        }
+
+        .keyword {
+            color: #c084fc;
+        }
+
+        .string {
+            color: #34d399;
+        }
+
+        .number {
+            color: #fbbf24;
+        }
+
+        .function {
+            color: #60a5fa;
+        }
+
+        .builtin {
+            color: #f472b6;
+        }
+
+        .error {
+            color: #f87171;
+        }
+
+        .output {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 14.5px;
+        }
+
+        thead th {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        thead th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        tr:hover {
+            background: var(--primary-light);
+        }
+
+        /* Callout boxes */
+        .callout {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 14px 0;
+            font-size: 14.5px;
+            line-height: 1.6;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .callout-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .callout-tip {
+            background: var(--green-light);
+            border-left: 4px solid var(--green);
+        }
+
+        .callout-info {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent);
+        }
+
+        .callout-warn {
+            background: var(--amber-light);
+            border-left: 4px solid var(--amber);
+        }
+
+        .callout-danger {
+            background: var(--red-light);
+            border-left: 4px solid var(--red);
+        }
+
+        .callout strong {
+            font-weight: 600;
+        }
+
+        /* Key Takeaways */
+        .takeaways {
+            background: linear-gradient(135deg, #e0e7ff 0%, #cffafe 100%);
+            border: 1px solid var(--primary);
+        }
+
+        .takeaways h2 {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .takeaways ol {
+            counter-reset: takeaway;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .takeaways li {
+            counter-increment: takeaway;
+            padding: 8px 0 8px 36px;
+            position: relative;
+        }
+
+        .takeaways li::before {
+            content: counter(takeaway);
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Resources links */
+        .resources a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed var(--primary);
+            transition: border-color 0.2s;
+        }
+
+        .resources a:hover {
+            border-bottom-style: solid;
+        }
+
+        /* Learning Objectives */
+        .objectives-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .objectives-list li {
+            padding: 6px 0 6px 28px;
+            position: relative;
+        }
+
+        .objectives-list li::before {
+            content: '🎯';
+            position: absolute;
+            left: 0;
+        }
+
+        /* Q&A Section */
+        .qa-item {
+            margin-bottom: 16px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .qa-item strong {
+            color: var(--primary);
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                font-size: 12pt;
+            }
+
+            .header {
+                background: #4f46e5 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+
+            pre {
+                font-size: 10pt;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            pre {
+                padding: 14px;
+                font-size: 12.5px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-content">
+            <span class="header-badge">📘 AI Bootcamp — Week 1</span>
+            <h1>Python Intermediate & Pandas</h1>
+            <p>Dictionary Comprehension, Copying, Naming Conventions, Import Aliases, Pandas Series & DataFrames</p>
+            <p style="margin-top:12px; opacity:0.75; font-size:14px;">📅 Thursday, 26 February 2026</p>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- TABLE OF CONTENTS -->
+        <nav class="toc">
+            <h2>📑 Contents</h2>
+            <ol>
+                <li><a href="#dict-comp">Dictionary Comprehension</a></li>
+                <li><a href="#copying">Shallow Copy vs. Deep Copy</a></li>
+                <li><a href="#naming">Python Naming Conventions (PEP 8)</a></li>
+                <li><a href="#underscore">The Underscore <code>_</code> Convention</a></li>
+                <li><a href="#imports">Import Aliases & Namespaces</a></li>
+                <li><a href="#series">Pandas — Series</a></li>
+                <li><a href="#dataframes">Pandas — DataFrames</a></li>
+                <li><a href="#qa">Q&A Highlights</a></li>
+                <li><a href="#takeaways">Key Takeaways</a></li>
+            </ol>
+        </nav>
+
+        <!-- LEARNING OBJECTIVES -->
+        <div class="section">
+            <h2>🎯 Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Master <strong>dictionary comprehension</strong> for concise dict construction</li>
+                <li>Understand the difference between <strong>shallow copy</strong> and <strong>deep copy</strong></li>
+                <li>Follow <strong>Python naming conventions</strong> (PEP 8) for variables, classes, and constants</li>
+                <li>Use the <strong>underscore <code>_</code></strong> convention for unused variables</li>
+                <li>Understand <strong>import aliases</strong> and Python's <strong>namespace</strong> system</li>
+                <li>Create and manipulate <strong>Pandas Series</strong> — the 1D labeled array</li>
+                <li>Build and explore <strong>Pandas DataFrames</strong> — the 2D tabular workhorse</li>
+            </ul>
+        </div>
+
+        <!-- 1. DICTIONARY COMPREHENSION -->
+        <div class="section" id="dict-comp">
+            <h2>1. Dictionary Comprehension</h2>
+
+            <p>Dictionary comprehensions let you build dicts in a single, readable expression — just like list
+                comprehensions, but for key-value pairs.</p>
+            <p><strong>Syntax:</strong> <code>{key_expr: value_expr for item in iterable if condition}</code></p>
+
+            <h3>Basic Example — Squares Mapping</h3>
+            <pre><code><span class="comment"># Traditional way</span>
+squares = {}
+<span class="keyword">for</span> x <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, <span class="number">6</span>):
+    squares[x] = x ** <span class="number">2</span>
+
+<span class="comment"># Dictionary comprehension (Preferred!)</span>
+squares = {x: x**<span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, <span class="number">6</span>)}
+<span class="comment"># {1: 1, 2: 4, 3: 9, 4: 16, 5: 25}</span></code></pre>
+
+            <h3>With Filtering</h3>
+            <pre><code><span class="comment"># Only even numbers</span>
+even_squares = {x: x**<span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, <span class="number">11</span>) <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>}
+<span class="comment"># {2: 4, 4: 16, 6: 36, 8: 64, 10: 100}</span></code></pre>
+
+            <h3>Transforming Existing Dictionaries</h3>
+            <pre><code>prices = {<span class="string">"apple"</span>: <span class="number">1.20</span>, <span class="string">"banana"</span>: <span class="number">0.50</span>, <span class="string">"cherry"</span>: <span class="number">2.00</span>}
+
+<span class="comment"># Apply 10% discount</span>
+discounted = {item: <span class="builtin">round</span>(price * <span class="number">0.9</span>, <span class="number">2</span>) <span class="keyword">for</span> item, price <span class="keyword">in</span> prices.items()}
+<span class="comment"># {'apple': 1.08, 'banana': 0.45, 'cherry': 1.8}</span></code></pre>
+
+            <h3>Swapping Keys and Values</h3>
+            <pre><code>original = {<span class="string">"name"</span>: <span class="string">"Innocito"</span>, <span class="string">"age"</span>: <span class="number">4</span>, <span class="string">"city"</span>: <span class="string">"Vizag"</span>}
+swapped = {v: k <span class="keyword">for</span> k, v <span class="keyword">in</span> original.items()}
+<span class="comment"># {'Innocito': 'name', 4: 'age', 'Vizag': 'city'}</span></code></pre>
+
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Pitfall:</strong> If multiple keys have the same value, swapping will lose entries — only
+                    the last one survives. Always verify values are unique before swapping.</div>
+            </div>
+
+            <h3>Building Dicts from Two Lists with <code>zip()</code></h3>
+            <pre><code>keys = [<span class="string">"name"</span>, <span class="string">"age"</span>, <span class="string">"city"</span>]
+values = [<span class="string">"Innocito"</span>, <span class="number">4</span>, <span class="string">"Vizag"</span>]
+
+from_lists = {k: v <span class="keyword">for</span> k, v <span class="keyword">in</span> <span class="builtin">zip</span>(keys, values)}
+<span class="comment"># {'name': 'Innocito', 'age': 4, 'city': 'Vizag'}</span></code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Pro Tip:</strong> For simple cases, <code>dict(zip(keys, values))</code> is even more
+                    concise. Use comprehension when you need to transform keys or values during construction.</div>
+            </div>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Did You Know?</strong> Python also has <strong>set comprehensions</strong>
+                    (<code>{x for x in iterable}</code>) and <strong>generator expressions</strong>
+                    (<code>(x for x in iterable)</code>). The syntax family is consistent.</div>
+            </div>
+        </div>
+
+        <!-- 2. SHALLOW & DEEP COPY -->
+        <div class="section" id="copying">
+            <h2>2. Shallow Copy vs. Deep Copy</h2>
+
+            <p>When you assign one variable to another, you create a <strong>reference</strong> to the same object — not
+                a copy. This is critical for mutable objects like lists and dicts.</p>
+
+            <h3>The Problem — Shared References</h3>
+            <pre><code>original = {<span class="string">"name"</span>: <span class="string">"Innocito"</span>, <span class="string">"skills"</span>: [<span class="string">"Python"</span>, <span class="string">"AI"</span>]}
+alias = original          <span class="comment"># Not a copy — same object!</span>
+
+alias[<span class="string">"name"</span>] = <span class="string">"Changed"</span>
+<span class="builtin">print</span>(original[<span class="string">"name"</span>])   <span class="comment"># "Changed" — original is affected!</span>
+<span class="builtin">print</span>(<span class="builtin">id</span>(original) == <span class="builtin">id</span>(alias))  <span class="comment"># True — same memory address</span></code></pre>
+
+            <h3>Shallow Copy — <code>copy.copy()</code> or <code>.copy()</code></h3>
+            <p>Creates a new top-level object, but nested elements are still shared references.</p>
+            <pre><code><span class="keyword">import</span> copy
+
+original = {<span class="string">"name"</span>: <span class="string">"Innocito"</span>, <span class="string">"skills"</span>: [<span class="string">"Python"</span>, <span class="string">"AI"</span>]}
+
+<span class="comment"># Two equivalent ways to shallow copy</span>
+shallow_1 = copy.copy(original)
+shallow_2 = original.copy()       <span class="comment"># Built-in method</span>
+
+<span class="builtin">print</span>(<span class="builtin">id</span>(original) == <span class="builtin">id</span>(shallow_1))  <span class="comment"># False — different objects</span>
+
+<span class="comment"># Top-level changes are independent</span>
+shallow_1[<span class="string">"name"</span>] = <span class="string">"Changed"</span>
+<span class="builtin">print</span>(original[<span class="string">"name"</span>])               <span class="comment"># "Innocito" — unaffected ✅</span>
+
+<span class="comment"># BUT nested mutable objects are still shared!</span>
+shallow_1[<span class="string">"skills"</span>].append(<span class="string">"ML"</span>)
+<span class="builtin">print</span>(original[<span class="string">"skills"</span>])             <span class="comment"># ["Python", "AI", "ML"] — affected! ⚠️</span></code></pre>
+
+            <h3>Deep Copy — <code>copy.deepcopy()</code></h3>
+            <p>Recursively copies everything. The clone is completely independent.</p>
+            <pre><code><span class="keyword">import</span> copy
+
+original = {<span class="string">"name"</span>: <span class="string">"Innocito"</span>, <span class="string">"skills"</span>: [<span class="string">"Python"</span>, <span class="string">"AI"</span>]}
+deep = copy.deepcopy(original)
+
+deep[<span class="string">"skills"</span>].append(<span class="string">"ML"</span>)
+<span class="builtin">print</span>(original[<span class="string">"skills"</span>])   <span class="comment"># ["Python", "AI"] — completely independent ✅</span></code></pre>
+
+            <h3>When to Use Each</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>New Object?</th>
+                        <th>Nested Objects</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Assignment</strong> (<code>=</code>)</td>
+                        <td>❌ Same ref</td>
+                        <td>Shared</td>
+                        <td>Two names for the same object</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Shallow Copy</strong></td>
+                        <td>✅ New top-level</td>
+                        <td>Shared</td>
+                        <td>Flat dicts/lists</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deep Copy</strong></td>
+                        <td>✅ Full clone</td>
+                        <td>Independent</td>
+                        <td>Nested/complex structures</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Performance Note:</strong> Deep copy is <strong>more expensive</strong> than shallow copy —
+                    it must recursively traverse and duplicate every nested object. Use only when you need full
+                    independence.</div>
+            </div>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Pro Tip:</strong> Verify identity with <code>id()</code>:
+                    <code>id(original) != id(deep)</code> confirms they are different objects in memory.</div>
+            </div>
+        </div>
+
+        <!-- 3. NAMING CONVENTIONS -->
+        <div class="section" id="naming">
+            <h2>3. Python Naming Conventions (PEP 8)</h2>
+
+            <p>Python has strong community conventions defined in <a href="https://peps.python.org/pep-0008/"
+                    target="_blank" style="color: var(--primary);">PEP 8</a>. Following them makes your code readable by
+                any Python developer.</p>
+
+            <h3>Variables & Functions — <code>snake_case</code></h3>
+            <pre><code><span class="comment"># ✅ Pythonic (snake_case)</span>
+number_start = <span class="number">10</span>
+user_name = <span class="string">"eswar"</span>
+total_count = <span class="number">42</span>
+
+<span class="keyword">def</span> <span class="function">calculate_average</span>(numbers):
+    <span class="keyword">return</span> <span class="builtin">sum</span>(numbers) / <span class="builtin">len</span>(numbers)
+
+<span class="comment"># ❌ Not Pythonic (camelCase — Java/JavaScript style)</span>
+numberStart = <span class="number">10</span>
+userName = <span class="string">"eswar"</span>
+
+<span class="keyword">def</span> <span class="function">calculateAverage</span>(numbers):
+    <span class="keyword">return</span> <span class="builtin">sum</span>(numbers) / <span class="builtin">len</span>(numbers)</code></pre>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Did You Know?</strong> Python won't stop you from using camelCase — it will execute fine.
+                    But PEP 8 is universally accepted, and linters like <code>flake8</code> and <code>pylint</code> will
+                    flag non-PEP 8 names.</div>
+            </div>
+
+            <h3>Class Names — <code>PascalCase</code></h3>
+            <pre><code><span class="comment"># ✅ Correct</span>
+<span class="keyword">class</span> <span class="function">NumberStart</span>:
+    <span class="keyword">pass</span>
+
+<span class="keyword">class</span> <span class="function">DataProcessor</span>:
+    <span class="keyword">pass</span></code></pre>
+
+            <h3>Constants — <code>UPPER_SNAKE_CASE</code></h3>
+            <pre><code>MAX_RETRY_COUNT = <span class="number">3</span>
+DATABASE_URL = <span class="string">"postgres://localhost/mydb"</span>
+PI = <span class="number">3.14159265</span></code></pre>
+
+            <h3>Complete Naming Guide</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Element</th>
+                        <th>Convention</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Variables</td>
+                        <td><code>snake_case</code></td>
+                        <td><code>user_age</code>, <code>total_items</code></td>
+                    </tr>
+                    <tr>
+                        <td>Functions</td>
+                        <td><code>snake_case</code></td>
+                        <td><code>get_user()</code>, <code>parse_data()</code></td>
+                    </tr>
+                    <tr>
+                        <td>Classes</td>
+                        <td><code>PascalCase</code></td>
+                        <td><code>UserProfile</code>, <code>DataLoader</code></td>
+                    </tr>
+                    <tr>
+                        <td>Constants</td>
+                        <td><code>UPPER_SNAKE_CASE</code></td>
+                        <td><code>MAX_SIZE</code>, <code>API_KEY</code></td>
+                    </tr>
+                    <tr>
+                        <td>Modules</td>
+                        <td><code>snake_case</code></td>
+                        <td><code>data_utils.py</code></td>
+                    </tr>
+                    <tr>
+                        <td>Private</td>
+                        <td><code>_leading_underscore</code></td>
+                        <td><code>_internal_method()</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 4. UNDERSCORE CONVENTION -->
+        <div class="section" id="underscore">
+            <h2>4. The Underscore <code>_</code> — Throwaway Variable</h2>
+
+            <p>Use <code>_</code> when you need to unpack a value but don't intend to use it:</p>
+            <pre><code>company = {<span class="string">"name"</span>: <span class="string">"Innocito"</span>, <span class="string">"age"</span>: <span class="number">25</span>, <span class="string">"city"</span>: <span class="string">"Vizag"</span>}
+
+<span class="comment"># Only need keys, not values</span>
+<span class="keyword">for</span> key, _ <span class="keyword">in</span> company.items():
+    <span class="builtin">print</span>(<span class="string">f"Key: </span>{key}<span class="string">"</span>)
+
+<span class="comment"># Ignoring the loop variable</span>
+<span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">5</span>):
+    <span class="builtin">print</span>(<span class="string">"Hello!"</span>)</code></pre>
+
+            <h3>Other Uses of <code>_</code></h3>
+            <pre><code><span class="comment"># Discard unwanted elements in tuple unpacking</span>
+first, _, third = (<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)
+_, *rest = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]  <span class="comment"># rest = [2, 3, 4, 5]</span>
+
+<span class="comment"># Visual separator in large numbers (3.6+)</span>
+million = <span class="number">1_000_000</span></code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Best Practice:</strong> Using <code>_</code> signals intent to other developers and
+                    suppresses "unused variable" warnings from linters.</div>
+            </div>
+        </div>
+
+        <!-- 5. IMPORT ALIASES & NAMESPACES -->
+        <div class="section" id="imports">
+            <h2>5. Import Aliases & Namespaces</h2>
+
+            <h3>Import Aliases — <code>import ... as</code></h3>
+            <p>Python lets you create short aliases for long module names — standard in data science:</p>
+            <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd            <span class="comment"># The universal convention</span>
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np             <span class="comment"># Everyone uses "np"</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+
+df = pd.DataFrame({<span class="string">"x"</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]})
+arr = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</code></pre>
+
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Don't invent your own aliases.</strong> The data science community has strong conventions
+                    (<code>pd</code>, <code>np</code>, <code>plt</code>, <code>sns</code>). Non-standard aliases confuse
+                    collaborators.</div>
+            </div>
+
+            <h3>Selective Imports — <code>from ... import</code></h3>
+            <pre><code><span class="keyword">from</span> math <span class="keyword">import</span> pi, sqrt
+<span class="keyword">from</span> copy <span class="keyword">import</span> deepcopy
+
+area = pi * r**<span class="number">2</span>
+clone = deepcopy(original)</code></pre>
+
+            <h3>Namespaces — Avoiding Naming Conflicts</h3>
+            <pre><code><span class="keyword">import</span> math
+<span class="keyword">import</span> cmath    <span class="comment"># Complex math</span>
+
+math.sqrt(<span class="number">4</span>)    <span class="comment"># Real square root → 2.0</span>
+cmath.sqrt(-<span class="number">1</span>)  <span class="comment"># Complex square root → 1j</span>
+<span class="comment"># Without namespaces, these would collide!</span></code></pre>
+
+            <p><strong>Key namespaces:</strong> Built-in → Global → Enclosing → Local. Python resolves names using the
+                <strong>LEGB rule</strong>.</p>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Pro Tip:</strong> Avoid <code>from module import *</code> — it dumps everything into your
+                    namespace and can silently overwrite names. Explicit imports are always better.</div>
+            </div>
+        </div>
+
+        <!-- 6. PANDAS SERIES -->
+        <div class="section" id="series">
+            <h2>6. Pandas — Series</h2>
+
+            <p><strong>Pandas</strong> is Python's premier library for data manipulation. A <strong>Series</strong> is a
+                one-dimensional labeled array — like a column in a spreadsheet.</p>
+
+            <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</code></pre>
+
+            <h3>Creating a Series</h3>
+            <pre><code><span class="comment"># From a list — automatic integer index</span>
+s = pd.Series([<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>])
+
+<span class="comment"># From a list with custom index</span>
+s = pd.Series([<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>], index=[<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>, <span class="string">"e"</span>])
+<span class="comment"># a    10</span>
+<span class="comment"># b    20</span>
+<span class="comment"># c    30</span>
+<span class="comment"># d    40</span>
+<span class="comment"># e    50</span>
+
+<span class="comment"># From a dictionary — keys become index</span>
+from_dict = pd.Series({<span class="string">"x"</span>: <span class="number">100</span>, <span class="string">"y"</span>: <span class="number">200</span>})</code></pre>
+
+            <h3>Inspecting a Series</h3>
+            <pre><code>s = pd.Series([<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>], index=[<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>, <span class="string">"e"</span>])
+
+<span class="builtin">type</span>(s)              <span class="comment"># pandas.core.series.Series</span>
+s.dtype              <span class="comment"># int64</span>
+s.shape              <span class="comment"># (5,) — returns a tuple</span>
+s.size               <span class="comment"># 5</span>
+s.index              <span class="comment"># Index(['a', 'b', 'c', 'd', 'e'])</span>
+s.values             <span class="comment"># array([10, 20, 30, 40, 50])</span></code></pre>
+
+            <h3>Converting to Python Types</h3>
+            <pre><code>s.to_dict()          <span class="comment"># {'a': 10, 'b': 20, ...}</span>
+s.values.tolist()    <span class="comment"># [10, 20, 30, 40, 50]</span>
+s.index.to_list()    <span class="comment"># ['a', 'b', 'c', 'd', 'e']</span></code></pre>
+
+            <h3>Accessing Elements</h3>
+            <pre><code><span class="comment"># By label</span>
+s[<span class="string">"a"</span>]               <span class="comment"># 10</span>
+s[[<span class="string">"a"</span>, <span class="string">"c"</span>]]        <span class="comment"># Sub-series with 'a' and 'c'</span>
+
+<span class="comment"># Using .loc (label) and .iloc (position)</span>
+s.loc[<span class="string">"b"</span>]           <span class="comment"># 20</span>
+s.iloc[<span class="number">1</span>]            <span class="comment"># 20</span></code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Best Practice:</strong> Always prefer <code>.loc[]</code> and <code>.iloc[]</code> over raw
+                    <code>[]</code> — they're explicit about labels vs positions and prevent subtle bugs.</div>
+            </div>
+
+            <h3>Common Series Methods</h3>
+            <pre><code>s.sum()              <span class="comment"># 150</span>
+s.mean()             <span class="comment"># 30.0</span>
+s.median()           <span class="comment"># 30.0</span>
+s.std()              <span class="comment"># 15.81...</span>
+s.describe()         <span class="comment"># count, mean, std, min, quartiles, max</span>
+s.value_counts()     <span class="comment"># Frequency of each unique value</span>
+
+<span class="comment"># Vectorized operations (no loops needed!)</span>
+s * <span class="number">2</span>                <span class="comment"># Each element doubled</span>
+s > <span class="number">25</span>               <span class="comment"># Boolean Series</span></code></pre>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Did You Know?</strong> Pandas operations are <strong>vectorized</strong> — they operate on
+                    entire arrays at once without loops. Powered by NumPy, this is orders of magnitude faster than
+                    <code>for</code> loops.</div>
+            </div>
+        </div>
+
+        <!-- 7. PANDAS DATAFRAMES -->
+        <div class="section" id="dataframes">
+            <h2>7. Pandas — DataFrames</h2>
+
+            <p>A <strong>DataFrame</strong> is a 2D tabular data structure — a collection of Series sharing the same
+                index. Think of it as a spreadsheet or SQL table. DataFrames are the <strong>central object</strong> in
+                Pandas and the foundation of virtually all data work in Python.</p>
+
+            <h3>Creating DataFrames</h3>
+            <pre><code><span class="comment"># From a dictionary of lists/tuples (most common)</span>
+df = pd.DataFrame({
+    <span class="string">"name"</span>: (<span class="string">"Innocito"</span>, <span class="string">"K"</span>, <span class="string">"T"</span>),
+    <span class="string">"age"</span>: [<span class="number">25</span>, <span class="number">30</span>, <span class="number">35</span>],
+    <span class="string">"city"</span>: [<span class="string">"Vizag"</span>, <span class="string">"Hyd"</span>, <span class="string">"Bangalore"</span>]
+})
+
+<span class="comment"># From a list of dictionaries (useful for API/JSON data)</span>
+df = pd.DataFrame([
+    {<span class="string">"name"</span>: <span class="string">"Innocito"</span>, <span class="string">"age"</span>: <span class="number">25</span>, <span class="string">"city"</span>: <span class="string">"Vizag"</span>},
+    {<span class="string">"name"</span>: <span class="string">"K"</span>,        <span class="string">"age"</span>: <span class="number">25</span>, <span class="string">"city"</span>: <span class="string">"Vizag"</span>},
+])
+
+<span class="comment"># From a NumPy array with column names</span>
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+data = np.array([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]])
+df = pd.DataFrame(data, columns=[<span class="string">"x"</span>, <span class="string">"y"</span>])</code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Pro Tip:</strong> When creating from a list of dicts, missing keys become <code>NaN</code>.
+                    Useful for incomplete/sparse data.</div>
+            </div>
+
+            <h3>Reading Data from Files (Real-World Loading)</h3>
+            <p>In practice, you'll rarely construct DataFrames manually — you'll load data from files:</p>
+            <pre><code><span class="comment"># CSV — the most common format in data science</span>
+df = pd.read_csv(<span class="string">"data.csv"</span>)
+df = pd.read_csv(<span class="string">"data.csv"</span>, index_col=<span class="number">0</span>)              <span class="comment"># First column as index</span>
+df = pd.read_csv(<span class="string">"data.csv"</span>, usecols=[<span class="string">"name"</span>, <span class="string">"age"</span>])   <span class="comment"># Only specific columns</span>
+
+<span class="comment"># Excel / JSON</span>
+df = pd.read_excel(<span class="string">"data.xlsx"</span>, sheet_name=<span class="string">"Sheet1"</span>)
+df = pd.read_json(<span class="string">"data.json"</span>)
+
+<span class="comment"># From clipboard (useful during exploration!)</span>
+df = pd.read_clipboard()</code></pre>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Did You Know?</strong> <code>pd.read_csv()</code> has over 50 parameters! Key ones:
+                    <code>sep</code> (delimiter), <code>header</code>, <code>na_values</code>, <code>parse_dates</code>,
+                    <code>dtype</code>, <code>nrows</code> (read only N rows for previews).</div>
+            </div>
+
+            <h3>Inspecting DataFrames — Your First Steps</h3>
+            <pre><code>df.head(<span class="number">5</span>)           <span class="comment"># First 5 rows — always start here</span>
+df.tail(<span class="number">3</span>)           <span class="comment"># Last 3 rows</span>
+df.sample(<span class="number">5</span>)         <span class="comment"># 5 random rows — great for large datasets</span>
+df.shape             <span class="comment"># (rows, columns)</span>
+df.columns           <span class="comment"># Column names</span>
+df.dtypes            <span class="comment"># Data type of each column</span>
+df.info()            <span class="comment"># THE most useful method — types, nulls, memory</span>
+df.describe()        <span class="comment"># Statistical summary of numeric columns</span>
+df.nunique()         <span class="comment"># Count unique values per column</span>
+df.isnull().sum()    <span class="comment"># Count missing values per column</span></code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>The 5-Step Data Inspection Routine:</strong><br>
+                    1. <code>df.shape</code> — How big is the data?<br>
+                    2. <code>df.head()</code> — What does it look like?<br>
+                    3. <code>df.info()</code> — What types, any nulls?<br>
+                    4. <code>df.describe()</code> — What are the distributions?<br>
+                    5. <code>df.isnull().sum()</code> — Where are the gaps?</div>
+            </div>
+
+            <h3>Accessing Columns</h3>
+            <p>Each column is a <strong>Series</strong>:</p>
+            <pre><code>df.name              <span class="comment"># Returns 'name' column as Series</span>
+df[<span class="string">"name"</span>]           <span class="comment"># Same result (bracket notation)</span>
+df[[<span class="string">"name"</span>, <span class="string">"age"</span>]]  <span class="comment"># Multiple columns → DataFrame</span></code></pre>
+
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Pitfall:</strong> Dot notation (<code>df.name</code>) fails for column names with spaces or
+                    that clash with DataFrame methods (<code>count</code>, <code>mean</code>, <code>index</code>). Use
+                    bracket notation.</div>
+            </div>
+
+            <h3>Selecting Rows — <code>loc</code> vs <code>iloc</code></h3>
+            <p>These are the two primary indexers. Understanding the difference is critical:</p>
+            <pre><code><span class="comment"># .iloc — Integer Location (position-based)</span>
+df.iloc[<span class="number">0</span>]           <span class="comment"># First row</span>
+df.iloc[<span class="number">0</span>:<span class="number">3</span>]         <span class="comment"># First three rows (exclusive end)</span>
+df.iloc[<span class="number">0</span>, <span class="number">2</span>]        <span class="comment"># Row 0, Column 2 (single cell)</span>
+df.iloc[:, <span class="number">0</span>:<span class="number">2</span>]      <span class="comment"># All rows, first two columns</span>
+
+<span class="comment"># .loc — Label-based (uses index labels and column names)</span>
+df.loc[<span class="number">0</span>]            <span class="comment"># Row with index label 0</span>
+df.loc[<span class="number">0</span>:<span class="number">2</span>]          <span class="comment"># Rows 0 to 2 INCLUSIVE!</span>
+df.loc[<span class="number">0</span>, <span class="string">"name"</span>]   <span class="comment"># Row 0, column "name"</span>
+
+<span class="comment"># Boolean indexing (most powerful — filtering)</span>
+df[df[<span class="string">"age"</span>] > <span class="number">25</span>]
+df[(df[<span class="string">"age"</span>] > <span class="number">25</span>) & (df[<span class="string">"city"</span>] == <span class="string">"Vizag"</span>)]
+df[df[<span class="string">"name"</span>].str.contains(<span class="string">"Inn"</span>)]</code></pre>
+
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Key Difference:</strong> <code>.loc</code> is <strong>inclusive</strong> on both ends
+                    (<code>df.loc[0:2]</code> includes row 2), while <code>.iloc</code> is <strong>exclusive</strong> on
+                    the end (<code>df.iloc[0:2]</code> stops before row 2). This catches many beginners!</div>
+            </div>
+
+            <h3>Adding, Modifying & Removing Columns</h3>
+            <pre><code><span class="comment"># Add a new column</span>
+df[<span class="string">"experience"</span>] = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>]
+
+<span class="comment"># Computed column</span>
+df[<span class="string">"senior"</span>] = df[<span class="string">"age"</span>] > <span class="number">28</span>
+df[<span class="string">"age_group"</span>] = df[<span class="string">"age"</span>].apply(<span class="keyword">lambda</span> x: <span class="string">"Young"</span> <span class="keyword">if</span> x < <span class="number">30</span> <span class="keyword">else</span> <span class="string">"Senior"</span>)
+
+<span class="comment"># Rename columns</span>
+df.rename(columns={<span class="string">"name"</span>: <span class="string">"full_name"</span>}, inplace=<span class="keyword">True</span>)
+
+<span class="comment"># Drop columns / rows</span>
+df.drop(columns=[<span class="string">"experience"</span>], inplace=<span class="keyword">True</span>)
+df.drop(index=[<span class="number">0</span>, <span class="number">1</span>], inplace=<span class="keyword">True</span>)
+
+<span class="comment"># Reorder columns</span>
+df = df[[<span class="string">"name"</span>, <span class="string">"city"</span>, <span class="string">"age"</span>]]</code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>inplace=True vs Reassignment:</strong> <code>df.drop(columns=["col"], inplace=True)</code>
+                    modifies directly. Modern best practice: use <strong>reassignment</strong>
+                    (<code>df = df.drop(...)</code>) for readability and method chaining.</div>
+            </div>
+
+            <h3>Sorting</h3>
+            <pre><code>df.sort_values(<span class="string">"age"</span>)                          <span class="comment"># Ascending</span>
+df.sort_values(<span class="string">"age"</span>, ascending=<span class="keyword">False</span>)         <span class="comment"># Descending</span>
+df.sort_values([<span class="string">"city"</span>, <span class="string">"age"</span>], ascending=[<span class="keyword">True</span>, <span class="keyword">False</span>])
+df = df.sort_values(<span class="string">"age"</span>).reset_index(drop=<span class="keyword">True</span>)</code></pre>
+
+            <h3>Grouping & Aggregation — <code>groupby()</code></h3>
+            <p><code>groupby</code> splits data into groups, applies a function, then combines results:</p>
+            <pre><code><span class="comment"># Average age by city</span>
+df.groupby(<span class="string">"city"</span>)[<span class="string">"age"</span>].mean()
+
+<span class="comment"># Multiple aggregations at once</span>
+df.groupby(<span class="string">"city"</span>)[<span class="string">"age"</span>].agg([<span class="string">"mean"</span>, <span class="string">"min"</span>, <span class="string">"max"</span>, <span class="string">"count"</span>])
+
+<span class="comment"># Named aggregation (Pandas 0.25+)</span>
+df.groupby(<span class="string">"city"</span>).agg(
+    avg_age=(<span class="string">"age"</span>, <span class="string">"mean"</span>),
+    total=(<span class="string">"name"</span>, <span class="string">"count"</span>),
+    oldest=(<span class="string">"age"</span>, <span class="string">"max"</span>)
+)</code></pre>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Did You Know?</strong> The <code>groupby</code> pattern is called
+                    <strong>Split-Apply-Combine</strong>: split by groups, apply a function, combine results. This
+                    appears in SQL, R, and every data processing framework.</div>
+            </div>
+
+            <h3>Using <code>apply()</code> — Custom Transformations</h3>
+            <pre><code><span class="comment"># Apply to a column</span>
+df[<span class="string">"name_length"</span>] = df[<span class="string">"name"</span>].apply(<span class="builtin">len</span>)
+
+<span class="comment"># Apply a custom function</span>
+<span class="keyword">def</span> <span class="function">categorize_age</span>(age):
+    <span class="keyword">if</span> age < <span class="number">25</span>: <span class="keyword">return</span> <span class="string">"Junior"</span>
+    <span class="keyword">elif</span> age < <span class="number">35</span>: <span class="keyword">return</span> <span class="string">"Mid"</span>
+    <span class="keyword">else</span>: <span class="keyword">return</span> <span class="string">"Senior"</span>
+
+df[<span class="string">"category"</span>] = df[<span class="string">"age"</span>].apply(categorize_age)
+
+<span class="comment"># Apply across rows (axis=1)</span>
+df[<span class="string">"summary"</span>] = df.apply(<span class="keyword">lambda</span> row: <span class="string">f"</span>{row[<span class="string">'name'</span>]}<span class="string"> from </span>{row[<span class="string">'city'</span>]}<span class="string">"</span>, axis=<span class="number">1</span>)</code></pre>
+
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Performance Warning:</strong> <code>apply(axis=1)</code> runs a Python loop — it's slow on
+                    large datasets. Prefer vectorized: <code>df["x"] * 2</code> is orders of magnitude faster than
+                    <code>df["x"].apply(lambda v: v * 2)</code>.</div>
+            </div>
+
+            <h3>Handling Missing Data — <code>NaN</code></h3>
+            <pre><code><span class="comment"># Detect missing values</span>
+df.isnull().sum()        <span class="comment"># Count NaN per column</span>
+df.isnull().any()        <span class="comment"># Which columns have NaN?</span>
+
+<span class="comment"># Remove missing values</span>
+df.dropna()              <span class="comment"># Drop rows with ANY NaN</span>
+df.dropna(subset=[<span class="string">"age"</span>])  <span class="comment"># Only drop if 'age' is NaN</span>
+
+<span class="comment"># Fill missing values</span>
+df.fillna(<span class="number">0</span>)             <span class="comment"># Replace NaN with 0</span>
+df[<span class="string">"age"</span>].fillna(df[<span class="string">"age"</span>].mean())  <span class="comment"># Fill with column mean</span>
+df.fillna(method=<span class="string">"ffill"</span>)   <span class="comment"># Forward fill</span></code></pre>
+
+            <h3>String Methods — <code>.str</code> Accessor</h3>
+            <pre><code>df[<span class="string">"name"</span>].str.lower()           <span class="comment"># Lowercase all names</span>
+df[<span class="string">"name"</span>].str.upper()           <span class="comment"># Uppercase</span>
+df[<span class="string">"name"</span>].str.len()             <span class="comment"># Length of each name</span>
+df[<span class="string">"name"</span>].str.contains(<span class="string">"Inn"</span>)   <span class="comment"># Boolean: contains substring?</span>
+df[<span class="string">"name"</span>].str.replace(<span class="string">"K"</span>, <span class="string">"Kumar"</span>)
+df[<span class="string">"city"</span>].str.strip()          <span class="comment"># Remove whitespace</span></code></pre>
+
+            <h3>Merging DataFrames — <code>merge()</code>, <code>concat()</code></h3>
+            <pre><code><span class="comment"># Concatenate vertically</span>
+combined = pd.concat([df1, df2], ignore_index=<span class="keyword">True</span>)
+
+<span class="comment"># Merge (SQL-style joins)</span>
+employees = pd.DataFrame({<span class="string">"emp_id"</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="string">"name"</span>: [<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]})
+salaries = pd.DataFrame({<span class="string">"emp_id"</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>], <span class="string">"salary"</span>: [<span class="number">50000</span>, <span class="number">60000</span>, <span class="number">70000</span>]})
+
+pd.merge(employees, salaries, on=<span class="string">"emp_id"</span>, how=<span class="string">"inner"</span>)   <span class="comment"># Only matching</span>
+pd.merge(employees, salaries, on=<span class="string">"emp_id"</span>, how=<span class="string">"left"</span>)    <span class="comment"># All from left</span>
+pd.merge(employees, salaries, on=<span class="string">"emp_id"</span>, how=<span class="string">"outer"</span>)   <span class="comment"># Everything</span></code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Pro Tip:</strong> The <code>how</code> parameter mirrors SQL join types:
+                    <code>inner</code>, <code>left</code>, <code>right</code>, <code>outer</code>. If you know SQL, you
+                    already know Pandas merging!</div>
+            </div>
+
+            <h3>Saving Data — Writing to Files</h3>
+            <pre><code>df.to_csv(<span class="string">"output.csv"</span>, index=<span class="keyword">False</span>)     <span class="comment"># index=False avoids row numbers</span>
+df.to_excel(<span class="string">"output.xlsx"</span>, index=<span class="keyword">False</span>, sheet_name=<span class="string">"Report"</span>)
+df.to_json(<span class="string">"output.json"</span>, orient=<span class="string">"records"</span>)
+df.to_clipboard(index=<span class="keyword">False</span>)           <span class="comment"># Paste into Excel/Sheets</span></code></pre>
+
+            <h3>Real-World DataFrame Workflow</h3>
+            <p>Here's a typical data analysis pipeline showing how these pieces fit together:</p>
+            <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 1. Load data</span>
+df = pd.read_csv(<span class="string">"employees.csv"</span>)
+
+<span class="comment"># 2. Inspect</span>
+<span class="builtin">print</span>(df.shape)
+<span class="builtin">print</span>(df.info())
+
+<span class="comment"># 3. Clean</span>
+df.dropna(subset=[<span class="string">"salary"</span>], inplace=<span class="keyword">True</span>)
+df[<span class="string">"department"</span>] = df[<span class="string">"department"</span>].str.strip().str.lower()
+
+<span class="comment"># 4. Transform</span>
+df[<span class="string">"annual_bonus"</span>] = df[<span class="string">"salary"</span>] * <span class="number">0.10</span>
+df[<span class="string">"seniority"</span>] = df[<span class="string">"years"</span>].apply(<span class="keyword">lambda</span> y: <span class="string">"Senior"</span> <span class="keyword">if</span> y > <span class="number">5</span> <span class="keyword">else</span> <span class="string">"Junior"</span>)
+
+<span class="comment"># 5. Analyze</span>
+summary = df.groupby(<span class="string">"department"</span>).agg(
+    avg_salary=(<span class="string">"salary"</span>, <span class="string">"mean"</span>),
+    total_employees=(<span class="string">"name"</span>, <span class="string">"count"</span>),
+    total_bonus=(<span class="string">"annual_bonus"</span>, <span class="string">"sum"</span>)
+).sort_values(<span class="string">"avg_salary"</span>, ascending=<span class="keyword">False</span>)
+
+<span class="comment"># 6. Export</span>
+summary.to_csv(<span class="string">"department_summary.csv"</span>)</code></pre>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Did You Know?</strong> This <strong>Load → Inspect → Clean → Transform → Analyze →
+                        Export</strong> pipeline is the standard workflow for 90% of data analysis tasks. Master it and
+                    you can tackle most data problems.</div>
+            </div>
+        </div>
+
+        <!-- Q&A HIGHLIGHTS -->
+        <div class="section" id="qa">
+            <h2>❓ Q&A Highlights</h2>
+
+            <div class="qa-item">
+                <p><strong>Q: How do you copy an object — shallow or deep?</strong></p>
+                <p>Use <code>.copy()</code> or <code>copy.copy()</code> for shallow. Use <code>copy.deepcopy()</code>
+                    for deep. Shallow shares nested references; deep is a full, independent clone but more expensive.
+                </p>
+            </div>
+
+            <div class="qa-item">
+                <p><strong>Q: Why does <code>{}</code> create a dict and not a set?</strong></p>
+                <p>Because <code>{}</code> was historically for dictionaries. Use <code>set()</code> for an empty set.
+                    For non-empty sets, <code>{1, 2, 3}</code> works.</p>
+            </div>
+
+            <div class="qa-item">
+                <p><strong>Q: Can I use camelCase in Python?</strong></p>
+                <p>It works — Python doesn't enforce naming — but PEP 8 recommends <code>snake_case</code> for
+                    variables/functions. CamelCase is for class names (<code>PascalCase</code>).</p>
+            </div>
+        </div>
+
+        <!-- KEY TAKEAWAYS -->
+        <div class="section takeaways" id="takeaways">
+            <h2>✅ Key Takeaways</h2>
+            <ol>
+                <li><strong>Dictionary comprehensions</strong> are the concise, Pythonic way to build dicts</li>
+                <li>Assignments create <strong>references</strong>, not copies — use <code>copy.copy()</code> or
+                    <code>copy.deepcopy()</code></li>
+                <li><strong>Shallow copy</strong> for flat structures; <strong>deep copy</strong> for nested objects
+                </li>
+                <li>Follow <strong>PEP 8</strong>: <code>snake_case</code> for variables, <code>PascalCase</code> for
+                    classes, <code>UPPER_SNAKE_CASE</code> for constants</li>
+                <li>Use <code>_</code> for <strong>intentionally unused</strong> variables</li>
+                <li>Use <strong>standard import aliases</strong> (<code>pd</code>, <code>np</code>, <code>plt</code>)
+                </li>
+                <li>A <strong>Pandas Series</strong> is 1D; a <strong>DataFrame</strong> is 2D</li>
+                <li>Prefer <code>.loc[]</code> and <code>.iloc[]</code> for explicit indexing</li>
+                <li>Pandas operations are <strong>vectorized</strong> — avoid <code>for</code> loops</li>
+            </ol>
+        </div>
+
+        <!-- RESOURCES -->
+        <div class="section resources">
+            <h2>🔗 Resources & References</h2>
+            <ul>
+                <li><a href="https://peps.python.org/pep-0008/" target="_blank">PEP 8 — Python Style Guide</a></li>
+                <li><a href="https://docs.python.org/3/library/copy.html" target="_blank">Python <code>copy</code>
+                        Module Docs</a></li>
+                <li><a href="https://pandas.pydata.org/docs/getting_started/index.html" target="_blank">Pandas Getting
+                        Started</a></li>
+                <li><a href="https://pandas.pydata.org/docs/reference/api/pandas.Series.html" target="_blank">Pandas
+                        Series Documentation</a></li>
+                <li><a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html" target="_blank">Pandas
+                        DataFrame Documentation</a></li>
+                <li><a href="https://pandas.pydata.org/docs/user_guide/10min.html" target="_blank">10 Minutes to
+                        Pandas</a></li>
+                <li><a href="https://colab.research.google.com/" target="_blank">Google Colab</a> — The IDE used in this
+                    bootcamp</li>
+            </ul>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

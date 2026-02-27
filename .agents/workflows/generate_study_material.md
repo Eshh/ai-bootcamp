@@ -51,19 +51,29 @@ bootcamp/
 ├── week-1/
 │   ├── tuesday/
 │   │   ├── study_material.md       # Word/Google Docs friendly (copy-pasteable)
-│   │   └── study_material.html     # Neatly styled HTML version
+│   │   ├── study_material.html     # Neatly styled HTML version
+│   │   └── notebooks/              # Jupyter notebooks from the session
+│   │       └── *.ipynb
 │   └── thursday/
 │       ├── study_material.md
-│       └── study_material.html
+│       ├── study_material.html
+│       └── notebooks/
+│           └── *.ipynb
 ├── week-2/
 │   ├── tuesday/
 │   │   ├── study_material.md
-│   │   └── study_material.html
+│   │   ├── study_material.html
+│   │   └── notebooks/
 │   └── thursday/
 │       ├── study_material.md
-│       └── study_material.html
+│       ├── study_material.html
+│       └── notebooks/
 └── ...
 ```
+
+> **Naming convention**: Folders are lowercase, e.g. `week-1`, `tuesday`, `thursday`.
+
+> **Notebooks**: When the user provides Jupyter notebooks (`.ipynb` files), place them in the `notebooks/` subfolder under the relevant day's directory. These are exercise/demo notebooks from the session and should be preserved alongside the study material. If notebooks are in a different location (e.g., Downloads), copy or move them to the correct day's `notebooks/` folder.
 
 > **Naming convention**: Folders are lowercase, e.g. `week-1`, `tuesday`, `thursday`.
 
