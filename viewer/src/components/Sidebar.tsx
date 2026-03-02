@@ -11,12 +11,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <aside className={`sidebar ${isOpen ? "open" : ""}`}>
             <div className="sidebar-brand">
                 <div className="sidebar-brand-row">
-                    <h2>🚀 AI Bootcamp</h2>
+                    <h2>📚 LearnHub</h2>
                     <button className="sidebar-close" onClick={onClose} aria-label="Close sidebar">
                         ✕
                     </button>
                 </div>
-                <p>Study Materials</p>
+                <p>AI Bootcamp — Study Materials</p>
             </div>
 
             <nav className="sidebar-nav">

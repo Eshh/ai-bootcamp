@@ -172,7 +172,53 @@ Produce a document with these sections (omit any that aren't applicable):
   - A sticky or visible table of contents at the top for quick navigation.
   - Print-friendly styles so it can be printed or saved as PDF from the browser.
 
+### Step 5.5: Generate Voice Narration Summary
+
+After generating the study materials, create a **concise narration summary** for the voice playback feature in the viewer app.
+
+#### Purpose
+The viewer app has a "Quick Audio Summary" feature that uses browser Text-to-Speech to narrate a summary of each day's content. This summary is stored in the `summary` field of the `DayInfo` entry in `viewer/src/data/curriculum.ts`.
+
+#### Summary Guidelines
+- **Length**: 150–250 words (approximately 1–2 minutes of narration at normal speed)
+- **Content**: Key concepts only — no code examples, no lengthy explanations. Mention critical gotchas and common pitfalls.
+- **Tone**: Conversational but technically precise — as if a knowledgeable friend is giving a quick recap
+- **Structure**: Use paragraph breaks (`\n\n`) between conceptual groups for readability in text preview mode
+- **Format**: Plain text (no markdown, no bullets, no headers) — it will be read aloud by TTS
+
+#### What to Include
+1. Core concepts covered in the session (one sentence each)
+2. Critical distinctions or gotchas students must remember (e.g., "empty curly braces create a dictionary, not a set")
+3. Best practices mentioned (e.g., "always use f-strings in modern Python")
+4. Key terminology with brief definitions where needed
+
+#### What to Exclude
+- Code examples or syntax details
+- Session logistics, dates, or administrative info
+- Detailed explanations (the full study material covers that)
+- Markdown formatting of any kind
+
+#### Output
+Add the `summary` field to the corresponding `DayInfo` entry in:
+`/Users/eswarprasadkona/Desktop/code/Personal/AI/bootcamp/viewer/src/data/curriculum.ts`
+
+Use a template literal (backtick string) for multi-paragraph summaries. Example:
+```typescript
+{
+    day: "Tuesday",
+    slug: "tuesday",
+    title: "...",
+    // ... other fields ...
+    summary: `First paragraph about core concepts.
+
+Second paragraph about important gotchas and best practices.
+
+Third paragraph about tools and workflows covered.`,
+},
+```
+
 ### Step 6: Present to User
 - Notify the user that the files have been created.
 - Provide the full paths to both output files.
+- Mention that the voice narration summary has been added to `curriculum.ts`.
 - Optionally open the HTML file in the browser for a quick preview.

@@ -34,7 +34,7 @@ export default function Header({ onMenuToggle, sidebarOpen }: HeaderProps) {
                     <span className="hamburger-line" />
                 </button>
                 <div className="header-title-group">
-                    <h1>📚 AI Bootcamp — Study Materials</h1>
+                    <h1>📚 LearnHub</h1>
                     <span className="header-subtitle">by Eswar Prasad Kona</span>
                 </div>
             </div>

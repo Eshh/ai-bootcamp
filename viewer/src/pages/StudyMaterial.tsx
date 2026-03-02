@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { curriculum } from "../data/curriculum";
+import VoiceNarration from "../components/VoiceNarration";
 
 export default function StudyMaterial() {
     const { weekSlug, daySlug } = useParams<{
@@ -31,6 +32,12 @@ export default function StudyMaterial() {
                     {day.day} — {day.title}
                 </span>
             </div>
+            {day.summary && (
+                <VoiceNarration
+                    summary={day.summary}
+                    dayTitle={`${day.day} — ${day.title}`}
+                />
+            )}
             <div className="content-iframe-container">
                 <iframe
                     className="content-iframe"
@@ -41,3 +48,4 @@ export default function StudyMaterial() {
         </div>
     );
 }
+
