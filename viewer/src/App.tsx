@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import StudyMaterial from "./pages/StudyMaterial";
+import PasswordGate from "./components/PasswordGate";
 
 function ScrollToTop() {
     const { pathname } = useLocation();
@@ -54,10 +55,12 @@ function AppContent() {
 
 function App() {
     return (
-        <BrowserRouter>
-            <ScrollToTop />
-            <AppContent />
-        </BrowserRouter>
+        <PasswordGate>
+            <BrowserRouter>
+                <ScrollToTop />
+                <AppContent />
+            </BrowserRouter>
+        </PasswordGate>
     );
 }
 

@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bootcamp — Week 2, Tuesday | NumPy Fundamentals & Advanced Pandas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8f9fc;
+            --surface: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-light: #e0e7ff;
+            --accent: #06b6d4;
+            --accent-light: #cffafe;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --amber: #f59e0b;
+            --amber-light: #fef3c7;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #059669 0%, #0d9488 40%, #06b6d4 100%);
+            color: white;
+            padding: 48px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 650px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .toc h2 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .toc ol {
+            list-style: none;
+            counter-reset: toc-counter;
+        }
+
+        .toc li {
+            counter-increment: toc-counter;
+            margin-bottom: 6px;
+        }
+
+        .toc li::before {
+            content: counter(toc-counter) ".";
+            color: var(--primary);
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .toc a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .toc a:hover {
+            color: var(--primary);
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.2s;
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .section h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .section h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .section h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .section h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 20px 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+
+        ul,
+        ol {
+            margin: 8px 0 16px 20px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 14px;
+        }
+
+        :not(pre)>code {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 13.5px;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px 24px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 12px 0 20px;
+            line-height: 1.6;
+            font-size: 13.5px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        pre code {
+            color: inherit;
+            background: none;
+            padding: 0;
+        }
+
+        .comment {
+            color: #94a3b8;
+        }
+
+        .keyword {
+            color: #c084fc;
+        }
+
+        .string {
+            color: #34d399;
+        }
+
+        .number {
+            color: #fbbf24;
+        }
+
+        .function {
+            color: #60a5fa;
+        }
+
+        .builtin {
+            color: #f472b6;
+        }
+
+        .output {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 14.5px;
+        }
+
+        thead th {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        thead th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        tr:hover {
+            background: var(--primary-light);
+        }
+
+        .callout {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 14px 0;
+            font-size: 14.5px;
+            line-height: 1.6;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .callout-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .callout-tip {
+            background: var(--green-light);
+            border-left: 4px solid var(--green);
+        }
+
+        .callout-info {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent);
+        }
+
+        .callout-warn {
+            background: var(--amber-light);
+            border-left: 4px solid var(--amber);
+        }
+
+        .callout-danger {
+            background: var(--red-light);
+            border-left: 4px solid var(--red);
+        }
+
+        .callout strong {
+            font-weight: 600;
+        }
+
+        .takeaways {
+            background: linear-gradient(135deg, #e0e7ff 0%, #cffafe 100%);
+            border: 1px solid var(--primary);
+        }
+
+        .takeaways h2 {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .takeaways ol {
+            counter-reset: takeaway;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .takeaways li {
+            counter-increment: takeaway;
+            padding: 8px 0 8px 36px;
+            position: relative;
+        }
+
+        .takeaways li::before {
+            content: counter(takeaway);
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .resources a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed var(--primary);
+            transition: border-color 0.2s;
+        }
+
+        .resources a:hover {
+            border-bottom-style: solid;
+        }
+
+        .objectives-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .objectives-list li {
+            padding: 6px 0 6px 28px;
+            position: relative;
+        }
+
+        .objectives-list li::before {
+            content: '🎯';
+            position: absolute;
+            left: 0;
+        }
+
+        .qa-item {
+            margin-bottom: 16px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .qa-item strong {
+            color: var(--primary);
+        }
+
+        @media print {
+            body {
+                background: white;
+                font-size: 12pt;
+            }
+
+            .header {
+                background: #059669 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+
+            pre {
+                font-size: 10pt;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            pre {
+                padding: 14px;
+                font-size: 12.5px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-content">
+            <span class="header-badge">📘 AI Bootcamp — Week 2</span>
+            <h1>NumPy Fundamentals & Advanced Pandas</h1>
+            <p>NumPy Arrays, Data Types, Random Generation, Advanced Filtering, Column Creation & Real-World CSV
+                Analysis</p>
+            <p style="margin-top:12px; opacity:0.75; font-size:14px;">📅 Tuesday, 3 March 2026</p>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- TABLE OF CONTENTS -->
+        <nav class="toc">
+            <h2>📑 Contents</h2>
+            <ol>
+                <li><a href="#numpy-intro">NumPy — The Foundation of Scientific Python</a></li>
+                <li><a href="#creating-arrays">Creating NumPy Arrays</a></li>
+                <li><a href="#dtypes">NumPy Data Types (dtype)</a></li>
+                <li><a href="#creation-funcs">Array Creation Functions</a></li>
+                <li><a href="#random">NumPy Random Values</a></li>
+                <li><a href="#operations">Essential Array Operations</a></li>
+                <li><a href="#numpy-vs-pandas">NumPy vs Pandas — When to Use Which</a></li>
+                <li><a href="#filtering">Advanced Pandas — Filtering & Querying</a></li>
+                <li><a href="#new-columns">Creating New Columns from Existing Data</a></li>
+                <li><a href="#describe">Pandas describe() — Statistical Summary</a></li>
+                <li><a href="#qa">Q&A Highlights</a></li>
+                <li><a href="#takeaways">Key Takeaways</a></li>
+            </ol>
+        </nav>
+
+        <!-- LEARNING OBJECTIVES -->
+        <div class="section">
+            <h2>🎯 Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Understand <strong>NumPy's role</strong> as the foundation beneath Pandas, scikit-learn, and the
+                    entire Python data stack</li>
+                <li>Create and manipulate <strong>1D and 2D NumPy arrays</strong> with precise control over shape and
+                    data types</li>
+                <li>Apply NumPy's <strong>array shape rules</strong> — all rows in a 2D array must have equal length
+                </li>
+                <li>Generate <strong>random values</strong> using NumPy's random module</li>
+                <li>Perform <strong>advanced Pandas filtering</strong> across multiple columns</li>
+                <li>Create <strong>new columns</strong> derived from existing data using conditional logic</li>
+                <li>Read and analyze <strong>real-world CSV datasets</strong> using the full Pandas workflow</li>
+            </ul>
+        </div>
+
+        <!-- 1. NUMPY INTRO -->
+        <div class="section" id="numpy-intro">
+            <h2>1. NumPy — The Foundation of Scientific Python</h2>
+
+            <p>NumPy is the <strong>bedrock</strong> of Python's entire data science and ML ecosystem. Pandas,
+                scikit-learn, TensorFlow, and PyTorch all build on top of NumPy arrays.</p>
+            <pre><code><span class="keyword">import</span> numpy <span class="keyword">as</span> np    <span class="comment"># Always use 'np' alias — this is universal</span></code></pre>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Did You Know?</strong> NumPy arrays are stored in <strong>contiguous blocks of
+                        memory</strong> (unlike Python lists, which are arrays of pointers). This is why NumPy
+                    operations are 10–100x faster than equivalent Python loops.</div>
+            </div>
+
+            <h3>Why NumPy Over Python Lists?</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Python List</th>
+                        <th>NumPy Array</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Type</strong></td>
+                        <td>Can hold mixed types</td>
+                        <td>Homogeneous (all same type)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Speed</strong></td>
+                        <td>Slow (Python loops)</td>
+                        <td>Fast (C-optimized vectorized ops)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory</strong></td>
+                        <td>More memory</td>
+                        <td>Less memory (single dtype)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Operations</strong></td>
+                        <td>No built-in math</td>
+                        <td>Full math, linear algebra, stats</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Broadcasting</strong></td>
+                        <td>Not supported</td>
+                        <td>Automatic shape matching</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 2. CREATING ARRAYS -->
+        <div class="section" id="creating-arrays">
+            <h2>2. Creating NumPy Arrays</h2>
+
+            <h3>1D Arrays — From Python Lists</h3>
+            <pre><code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+arr_1d = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])
+<span class="builtin">print</span>(arr_1d)          <span class="comment"># [1 2 3 4 5]</span>
+<span class="builtin">print</span>(arr_1d.dtype)    <span class="comment"># int64</span>
+<span class="builtin">print</span>(arr_1d.shape)    <span class="comment"># (5,)</span></code></pre>
+
+            <h3>2D Arrays — Matrices</h3>
+            <pre><code>arr_2d = np.array([
+    [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],
+    [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]
+])
+<span class="builtin">print</span>(arr_2d.shape)    <span class="comment"># (2, 3) — 2 rows, 3 columns</span>
+<span class="builtin">print</span>(arr_2d.ndim)     <span class="comment"># 2 — number of dimensions</span>
+<span class="builtin">print</span>(arr_2d.size)     <span class="comment"># 6 — total elements</span></code></pre>
+
+            <div class="callout callout-danger">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Critical Rule — Shape Consistency:</strong> Every row in a 2D array <strong>must</strong>
+                    have the same number of elements. If you omit an element (e.g., <code>[[1, 2, 3], [4, 5]]</code>),
+                    the shape is <strong>lost</strong> and you get an array of Python objects instead.</div>
+            </div>
+
+            <pre><code><span class="comment"># ❌ BAD — Inconsistent row lengths</span>
+broken = np.array([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">5</span>]])
+<span class="builtin">print</span>(broken.shape)   <span class="comment"># (2,) — NOT (2, 3)! Shape is gone.</span>
+<span class="builtin">print</span>(broken.dtype)    <span class="comment"># object — falls back to storing Python objects</span>
+
+<span class="comment"># ✅ GOOD — Consistent row lengths</span>
+correct = np.array([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])
+<span class="builtin">print</span>(correct.shape)   <span class="comment"># (2, 3) — proper 2D array</span></code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Pro Tip:</strong> If you get a <code>dtype</code> of <code>object</code> on a numeric
+                    array, it's almost always because your rows have inconsistent lengths. Check your data!</div>
+            </div>
+
+            <h3>3D Arrays</h3>
+            <pre><code>arr_3d = np.array([
+    [[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>]],
+    [[<span class="number">5</span>, <span class="number">6</span>], [<span class="number">7</span>, <span class="number">8</span>]]
+])
+<span class="builtin">print</span>(arr_3d.shape)    <span class="comment"># (2, 2, 2)</span>
+<span class="builtin">print</span>(arr_3d.ndim)     <span class="comment"># 3</span></code></pre>
+        </div>
+
+        <!-- 3. DTYPES -->
+        <div class="section" id="dtypes">
+            <h2>3. NumPy Data Types (dtype)</h2>
+
+            <p>NumPy arrays are <strong>homogeneous</strong> — every element has the same type. The <code>dtype</code>
+                is inferred from your data, but you can control it explicitly.</p>
+
+            <pre><code><span class="comment"># Default dtype inference</span>
+int_arr = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])
+<span class="builtin">print</span>(int_arr.dtype)      <span class="comment"># int64</span>
+
+float_arr = np.array([<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>])
+<span class="builtin">print</span>(float_arr.dtype)    <span class="comment"># float64</span>
+
+<span class="comment"># Mix ints and floats → NumPy "upcasts" to float</span>
+mixed = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3.0</span>])
+<span class="builtin">print</span>(mixed.dtype)        <span class="comment"># float64 — all promoted to float</span>
+<span class="builtin">print</span>(mixed)              <span class="comment"># [1. 2. 3.] — note the dots!</span></code></pre>
+
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Key Insight (from session):</strong> By default, NumPy takes <code>float64</code>. If you
+                    explicitly provide integers, it will be <code>int64</code>. But any single float in the array causes
+                    all values to be promoted to <code>float64</code>.</div>
+            </div>
+
+            <h3>Specifying dtype Explicitly</h3>
+            <pre><code>arr = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], dtype=np.float32)
+<span class="builtin">print</span>(arr.dtype)    <span class="comment"># float32</span>
+
+<span class="comment"># Common dtypes</span>
+np.int32       <span class="comment"># 32-bit integer</span>
+np.int64       <span class="comment"># 64-bit integer (default for ints)</span>
+np.float32     <span class="comment"># 32-bit float (common in ML for GPU)</span>
+np.float64     <span class="comment"># 64-bit float (default for floats)</span>
+np.bool_       <span class="comment"># Boolean</span></code></pre>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Did You Know?</strong> In machine learning, you'll often use <code>float32</code> instead
+                    of <code>float64</code> to save memory and speed up GPU computations. TensorFlow and PyTorch default
+                    to <code>float32</code>.</div>
+            </div>
+        </div>
+
+        <!-- 4. CREATION FUNCTIONS -->
+        <div class="section" id="creation-funcs">
+            <h2>4. Array Creation Functions</h2>
+
+            <pre><code><span class="comment"># Arrays of zeros</span>
+zeros_1d = np.zeros(<span class="number">5</span>)             <span class="comment"># [0. 0. 0. 0. 0.]</span>
+zeros_2d = np.zeros((<span class="number">3</span>, <span class="number">4</span>))        <span class="comment"># 3×4 matrix of zeros</span>
+
+<span class="comment"># Arrays of ones</span>
+ones = np.ones((<span class="number">2</span>, <span class="number">3</span>))             <span class="comment"># 2×3 matrix of ones</span>
+
+<span class="comment"># Arrays filled with a specific value</span>
+filled = np.full((<span class="number">2</span>, <span class="number">3</span>), <span class="number">42</span>)       <span class="comment"># 2×3 matrix filled with 42</span>
+
+<span class="comment"># Identity matrix</span>
+eye = np.eye(<span class="number">3</span>)                    <span class="comment"># 3×3 identity matrix</span>
+
+<span class="comment"># Range of values</span>
+range_arr = np.arange(<span class="number">0</span>, <span class="number">10</span>, <span class="number">2</span>)    <span class="comment"># [0, 2, 4, 6, 8]</span>
+linspace = np.linspace(<span class="number">0</span>, <span class="number">1</span>, <span class="number">5</span>)    <span class="comment"># [0. 0.25 0.5 0.75 1.]</span></code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Pro Tip:</strong> <code>np.zeros()</code> and <code>np.ones()</code> take a
+                    <strong>tuple</strong> for the shape, not separate arguments. Use <code>np.zeros((3, 4))</code>, not
+                    <code>np.zeros(3, 4)</code>.</div>
+            </div>
+        </div>
+
+        <!-- 5. RANDOM VALUES -->
+        <div class="section" id="random">
+            <h2>5. NumPy Random Values</h2>
+
+            <p>NumPy's random module is essential for generating test data, simulations, and initializing ML model
+                weights.</p>
+
+            <h3>Modern Approach — Generator API (NumPy 1.17+)</h3>
+            <pre><code>rng = np.random.default_rng()
+
+<span class="comment"># 5 random floats between 0 and 1</span>
+random_floats = rng.random(<span class="number">5</span>)
+
+<span class="comment"># Random integers</span>
+random_ints = rng.integers(low=<span class="number">1</span>, high=<span class="number">100</span>, size=<span class="number">5</span>)
+
+<span class="comment"># Random 2D array</span>
+random_matrix = rng.random((<span class="number">3</span>, <span class="number">4</span>))
+
+<span class="comment"># Normal distribution (mean=0, std=1)</span>
+normal_vals = rng.standard_normal(<span class="number">1000</span>)</code></pre>
+
+            <h3>Legacy Approach (Still Common)</h3>
+            <pre><code>np.random.rand(<span class="number">5</span>)           <span class="comment"># 5 random floats [0, 1)</span>
+np.random.randint(<span class="number">1</span>, <span class="number">10</span>, <span class="number">5</span>) <span class="comment"># 5 random ints from 1 to 9</span>
+np.random.randn(<span class="number">3</span>, <span class="number">3</span>)       <span class="comment"># 3×3, standard normal</span>
+np.random.seed(<span class="number">42</span>)          <span class="comment"># Set seed for reproducibility</span></code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Best Practice:</strong> Use the modern <code>default_rng()</code> Generator API for new
+                    code. It's faster, has better statistical properties, and supports independent random streams for
+                    parallelism.</div>
+            </div>
+
+            <h3>Reproducibility with Seeds</h3>
+            <pre><code><span class="comment"># Reproducible results — critical for ML experiments</span>
+rng = np.random.default_rng(seed=<span class="number">42</span>)
+<span class="builtin">print</span>(rng.random(<span class="number">3</span>))    <span class="comment"># Always the same values</span></code></pre>
+        </div>
+
+        <!-- 6. ESSENTIAL OPERATIONS -->
+        <div class="section" id="operations">
+            <h2>6. Essential Array Operations</h2>
+
+            <h3>Arithmetic (Vectorized — No Loops!)</h3>
+            <pre><code>a = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])
+
+a + <span class="number">10</span>           <span class="comment"># [11, 12, 13, 14, 15]</span>
+a * <span class="number">2</span>            <span class="comment"># [ 2,  4,  6,  8, 10]</span>
+a ** <span class="number">2</span>           <span class="comment"># [ 1,  4,  9, 16, 25]</span>
+
+<span class="comment"># Between arrays</span>
+b = np.array([<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>])
+a + b            <span class="comment"># [11, 22, 33, 44, 55]</span></code></pre>
+
+            <h3>Aggregation Functions</h3>
+            <pre><code>arr = np.array([<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>])
+
+np.sum(arr)       <span class="comment"># 150</span>
+np.mean(arr)      <span class="comment"># 30.0</span>
+np.median(arr)    <span class="comment"># 30.0</span>
+np.std(arr)       <span class="comment"># 14.14...</span>
+np.min(arr)       <span class="comment"># 10</span>
+np.max(arr)       <span class="comment"># 50</span>
+np.argmax(arr)    <span class="comment"># 4 — index of maximum</span></code></pre>
+
+            <h3>2D Aggregation with Axis</h3>
+            <pre><code>matrix = np.array([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],
+                   [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])
+
+np.sum(matrix)            <span class="comment"># 21 — sum of ALL elements</span>
+np.sum(matrix, axis=<span class="number">0</span>)    <span class="comment"># [5, 7, 9] — sum DOWN columns</span>
+np.sum(matrix, axis=<span class="number">1</span>)    <span class="comment"># [6, 15] — sum ACROSS rows</span></code></pre>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Did You Know?</strong> <code>axis=0</code> means "collapse rows" (operate down each
+                    column), and <code>axis=1</code> means "collapse columns" (operate across each row). The axis you
+                    specify is the one that <strong>disappears</strong>.</div>
+            </div>
+
+            <h3>Reshaping Arrays</h3>
+            <pre><code>arr = np.arange(<span class="number">12</span>)           <span class="comment"># [0, 1, 2, ..., 11]</span>
+matrix = arr.reshape(<span class="number">3</span>, <span class="number">4</span>)   <span class="comment"># 3 rows × 4 columns</span>
+matrix = arr.reshape(<span class="number">4</span>, -<span class="number">1</span>)  <span class="comment"># -1 means "figure it out" → 4×3</span>
+arr.flatten()              <span class="comment"># Back to 1D</span></code></pre>
+
+            <h3>Indexing and Slicing</h3>
+            <pre><code>matrix = np.array([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],
+                   [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>],
+                   [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>]])
+
+matrix[<span class="number">0</span>, <span class="number">2</span>]       <span class="comment"># 3 — row 0, column 2</span>
+matrix[<span class="number">1</span>, :]       <span class="comment"># [4, 5, 6] — entire row 1</span>
+matrix[:, <span class="number">1</span>]       <span class="comment"># [2, 5, 8] — entire column 1</span>
+matrix[<span class="number">0</span>:<span class="number">2</span>, <span class="number">1</span>:<span class="number">3</span>]   <span class="comment"># [[2, 3], [5, 6]] — submatrix</span>
+
+<span class="comment"># Boolean indexing</span>
+arr = np.array([<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>])
+arr[arr > <span class="number">25</span>]      <span class="comment"># [30, 40, 50]</span></code></pre>
+        </div>
+
+        <!-- 7. NUMPY VS PANDAS -->
+        <div class="section" id="numpy-vs-pandas">
+            <h2>7. NumPy vs Pandas — When to Use Which</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>NumPy</th>
+                        <th>Pandas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Pure numerical computation</td>
+                        <td>✅</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Linear algebra / matrix math</td>
+                        <td>✅</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ML model inputs/outputs</td>
+                        <td>✅</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Tabular data with column names</td>
+                        <td></td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>Mixed data types</td>
+                        <td></td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>Data cleaning / exploration</td>
+                        <td></td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>Reading CSV/Excel files</td>
+                        <td></td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>Time series analysis</td>
+                        <td></td>
+                        <td>✅</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Key Insight:</strong> Pandas is built <strong>on top of</strong> NumPy. Every Series and
+                    DataFrame stores data internally as NumPy arrays. When you call <code>.values</code> on a Series,
+                    you get the underlying NumPy array.</div>
+            </div>
+        </div>
+
+        <!-- 8. ADVANCED FILTERING -->
+        <div class="section" id="filtering">
+            <h2>8. Advanced Pandas — Filtering & Querying</h2>
+
+            <h3>Single-Column Filtering</h3>
+            <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+df = pd.read_csv(<span class="string">"housing_data.csv"</span>)
+
+<span class="comment"># Basic filter</span>
+expensive = df[df[<span class="string">"price"</span>] > <span class="number">500000</span>]
+
+<span class="comment"># Using .query() for cleaner syntax</span>
+expensive = df.query(<span class="string">"price > 500000"</span>)
+vizag = df.query(<span class="string">"city == 'Vizag'"</span>)</code></pre>
+
+            <h3>Multi-Column Filtering</h3>
+            <pre><code><span class="comment"># AND condition: use & (not 'and')</span>
+filtered = df[(df[<span class="string">"price"</span>] > <span class="number">300000</span>) & (df[<span class="string">"bedrooms"</span>] >= <span class="number">3</span>)]
+
+<span class="comment"># OR condition: use | (not 'or')</span>
+filtered = df[(df[<span class="string">"city"</span>] == <span class="string">"Vizag"</span>) | (df[<span class="string">"city"</span>] == <span class="string">"Hyderabad"</span>)]
+
+<span class="comment"># NOT condition: use ~</span>
+not_vizag = df[~(df[<span class="string">"city"</span>] == <span class="string">"Vizag"</span>)]
+
+<span class="comment"># Combine with .query() — more readable</span>
+result = df.query(<span class="string">"price > 300000 and bedrooms >= 3 and city == 'Vizag'"</span>)</code></pre>
+
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Common Pitfall:</strong> You <strong>must</strong> use <code>&</code>, <code>|</code>,
+                    <code>~</code> operators (not Python's <code>and</code>, <code>or</code>, <code>not</code>) in
+                    Pandas filtering. You also <strong>must</strong> wrap each condition in parentheses.</div>
+            </div>
+
+            <h3>The <code>.isin()</code> Method</h3>
+            <pre><code>cities = [<span class="string">"Vizag"</span>, <span class="string">"Hyderabad"</span>, <span class="string">"Bangalore"</span>]
+result = df[df[<span class="string">"city"</span>].isin(cities)]
+
+<span class="comment"># Much cleaner than chaining multiple OR conditions!</span></code></pre>
+        </div>
+
+        <!-- 9. CREATING NEW COLUMNS -->
+        <div class="section" id="new-columns">
+            <h2>9. Creating New Columns from Existing Data</h2>
+
+            <h3>Simple Computed Columns</h3>
+            <pre><code>df[<span class="string">"price_per_sqft"</span>] = df[<span class="string">"price"</span>] / df[<span class="string">"sqft"</span>]</code></pre>
+
+            <h3>Conditional Columns — <code>np.where()</code></h3>
+            <pre><code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># Binary classification: like if-else for entire columns</span>
+df[<span class="string">"is_expensive"</span>] = np.where(df[<span class="string">"price"</span>] > <span class="number">500000</span>, <span class="string">"Expensive"</span>, <span class="string">"Affordable"</span>)</code></pre>
+
+            <h3>Multi-Category — <code>pd.cut()</code> and <code>np.select()</code></h3>
+            <pre><code><span class="comment"># Bin continuous values into categories</span>
+df[<span class="string">"size_category"</span>] = pd.cut(
+    df[<span class="string">"sqft"</span>],
+    bins=[<span class="number">0</span>, <span class="number">800</span>, <span class="number">1500</span>, <span class="number">3000</span>, <span class="builtin">float</span>(<span class="string">"inf"</span>)],
+    labels=[<span class="string">"Small"</span>, <span class="string">"Medium"</span>, <span class="string">"Large"</span>, <span class="string">"Mansion"</span>]
+)
+
+<span class="comment"># np.select() for complex multiple conditions</span>
+conditions = [
+    df[<span class="string">"bedrooms"</span>] == <span class="number">1</span>,
+    df[<span class="string">"bedrooms"</span>] == <span class="number">2</span>,
+    df[<span class="string">"bedrooms"</span>] == <span class="number">3</span>,
+    df[<span class="string">"bedrooms"</span>] >= <span class="number">4</span>,
+]
+choices = [<span class="string">"Single"</span>, <span class="string">"Double"</span>, <span class="string">"Triple"</span>, <span class="string">"4+ BHK"</span>]
+df[<span class="string">"bedroom_type"</span>] = np.select(conditions, choices, default=<span class="string">"Unknown"</span>)</code></pre>
+
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Performance Reminder:</strong> <code>.apply(axis=1)</code> is slow because it runs a Python
+                    loop row by row. Use vectorized alternatives (<code>np.where()</code>, <code>np.select()</code>,
+                    <code>pd.cut()</code>) whenever possible — they are 10–100x faster.</div>
+            </div>
+        </div>
+
+        <!-- 10. DESCRIBE -->
+        <div class="section" id="describe">
+            <h2>10. Pandas <code>describe()</code> — Statistical Summary</h2>
+
+            <pre><code><span class="comment"># Numeric columns — count, mean, std, min, quartiles, max</span>
+df.describe()
+
+<span class="comment"># Include ALL columns (even non-numeric)</span>
+df.describe(include=<span class="string">"all"</span>)
+
+<span class="comment"># Custom percentiles</span>
+df.describe(percentiles=[<span class="number">.10</span>, <span class="number">.25</span>, <span class="number">.50</span>, <span class="number">.75</span>, <span class="number">.90</span>])</code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Pro Tip:</strong> <code>describe()</code> is your best friend for quick sanity checks.
+                    Unreasonable min/max, a large gap between mean and median (skewness), or unexpected counts — all
+                    visible at a glance.</div>
+            </div>
+        </div>
+
+        <!-- Q&A -->
+        <div class="section" id="qa">
+            <h2>❓ Q&A Highlights</h2>
+
+            <div class="qa-item">
+                <p><strong>Q: What happens if a value is missing in a 2D NumPy array?</strong></p>
+                <p>A: NumPy will <strong>not</strong> create a proper 2D array. The shape will be lost — you'll get an
+                    array of Python list objects with <code>dtype=object</code>. All rows <strong>must</strong> have the
+                    same number of elements. This is fundamentally different from Pandas, which handles missing values
+                    with <code>NaN</code>.</p>
+            </div>
+
+            <div class="qa-item">
+                <p><strong>Q: What is the default dtype in NumPy?</strong></p>
+                <p>A: Integers become <code>int64</code>, floats become <code>float64</code>. Mixing ints and floats
+                    causes automatic upcasting to <code>float64</code> to prevent data loss.</p>
+            </div>
+
+            <div class="qa-item">
+                <p><strong>Q: Can we use <code>np.random.rand()</code> directly?</strong></p>
+                <p>A: Yes, but the modern recommended approach is <code>np.random.default_rng()</code> which has better
+                    statistical properties and supports independent random streams.</p>
+            </div>
+        </div>
+
+        <!-- TAKEAWAYS -->
+        <div class="section takeaways" id="takeaways">
+            <h2>✅ Key Takeaways</h2>
+            <ol>
+                <li><strong>NumPy is the foundation</strong> — Pandas, scikit-learn, and deep learning frameworks all
+                    build on NumPy arrays</li>
+                <li>NumPy arrays are <strong>homogeneous</strong> and <strong>fixed-shape</strong> — all elements same
+                    type, all rows equal length</li>
+                <li>Default dtypes: <code>int64</code> for integers, <code>float64</code> for floats. Mixing causes
+                    <strong>upcasting</strong></li>
+                <li>Use the <strong>modern <code>default_rng()</code> API</strong> for random number generation</li>
+                <li>For Pandas filtering, use <code>&</code>, <code>|</code>, <code>~</code> (not <code>and</code>,
+                    <code>or</code>, <code>not</code>) and <strong>always wrap in parentheses</strong></li>
+                <li>Create new columns efficiently with <strong>vectorized operations</strong> — avoid
+                    <code>.apply()</code> when possible</li>
+                <li>Always run the <strong>5-Step Data Inspection Routine</strong> on new datasets</li>
+                <li>The <code>axis</code> parameter: the axis you specify is the one that <strong>disappears</strong>
+                </li>
+            </ol>
+        </div>
+
+        <!-- RESOURCES -->
+        <div class="section resources">
+            <h2>🔗 Resources & References</h2>
+            <ul>
+                <li><a href="https://numpy.org/doc/stable/" target="_blank">NumPy Official Documentation</a></li>
+                <li><a href="https://numpy.org/doc/stable/user/quickstart.html" target="_blank">NumPy Quickstart
+                        Tutorial</a></li>
+                <li><a href="https://numpy.org/doc/stable/user/absolute_beginners.html" target="_blank">NumPy for
+                        Absolute Beginners</a></li>
+                <li><a href="https://numpy.org/doc/stable/reference/random/generator.html" target="_blank">Random
+                        Generator API</a></li>
+                <li><a href="https://pandas.pydata.org/docs/user_guide/indexing.html#boolean-indexing"
+                        target="_blank">Pandas Boolean Indexing</a></li>
+                <li><a href="https://pandas.pydata.org/docs/reference/api/pandas.cut.html" target="_blank">Pandas cut()
+                        and qcut()</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

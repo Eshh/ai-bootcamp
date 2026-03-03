@@ -76,4 +76,35 @@ Pandas Series is a one-dimensional labeled array — like a supercharged list wi
             },
         ],
     },
+    {
+        week: 2,
+        slug: "week-2",
+        title: "NumPy & Advanced Pandas",
+        description: "NumPy arrays, data types, random generation, advanced Pandas filtering, column creation, and real-world CSV analysis",
+        days: [
+            {
+                day: "Tuesday",
+                slug: "tuesday",
+                title: "NumPy Fundamentals & Advanced Pandas",
+                subtitle: "Arrays, Data Types, Random Generation, Filtering, Column Creation",
+                topics: [
+                    "NumPy Arrays (1D, 2D, 3D)",
+                    "Data Types & Upcasting",
+                    "Array Creation Functions",
+                    "Random Value Generation",
+                    "Vectorized Operations & Aggregation",
+                    "Advanced Pandas Filtering",
+                    "Creating New Columns",
+                ],
+                contentPath: "/content/week-2/tuesday/study_material.html",
+                summary: `This session introduced NumPy — the numerical computing backbone of Python's data science ecosystem. NumPy provides the ndarray, a fixed-size homogeneous multidimensional array stored in contiguous memory, making it 10 to 100 times faster than Python lists for numerical work. Pandas, scikit-learn, TensorFlow, and PyTorch all build on top of NumPy.
+
+NumPy arrays are homogeneous — every element must be the same type. The default dtype is int64 for integers and float64 for floats. Critical gotcha: if you mix even one float into an integer array, NumPy upcasts everything to float64. Another critical rule: every row in a 2D array must have the same length. If rows are inconsistent, the shape is lost and NumPy falls back to dtype object — a common source of silent bugs.
+
+For random number generation, use the modern default_rng Generator API instead of the legacy np.random functions. It's faster, has better statistical properties, and supports independent streams. Always set a seed for reproducibility in ML experiments.
+
+On the Pandas side, this session covered advanced filtering. You must use ampersand, pipe, and tilde operators — not Python's and, or, not — and always wrap conditions in parentheses. The isin method is much cleaner than chaining multiple OR conditions. For creating new columns, prefer vectorized operations like np.where for binary conditions, np.select for multiple conditions, and pd.cut for binning continuous values. Avoid apply with axis equals one whenever possible — it runs a slow Python loop under the hood.`,
+            },
+        ],
+    },
 ];
