@@ -105,6 +105,29 @@ For random number generation, use the modern default_rng Generator API instead o
 
 On the Pandas side, this session covered advanced filtering. You must use ampersand, pipe, and tilde operators — not Python's and, or, not — and always wrap conditions in parentheses. The isin method is much cleaner than chaining multiple OR conditions. For creating new columns, prefer vectorized operations like np.where for binary conditions, np.select for multiple conditions, and pd.cut for binning continuous values. Avoid apply with axis equals one whenever possible — it runs a slow Python loop under the hood.`,
             },
+            {
+                day: "Thursday",
+                slug: "thursday",
+                title: "Introduction to Data Science & Machine Learning",
+                subtitle: "ML Workflow, Supervised vs Unsupervised vs Reinforcement Learning",
+                topics: [
+                    "Data Science vs AI/ML",
+                    "Rule-Based vs Machine Learning",
+                    "Supervised Learning (Classification & Regression)",
+                    "Unsupervised Learning (Clustering & Association)",
+                    "The Machine Learning Workflow",
+                ],
+                contentPath: "/content/week-2/thursday/study_material.html",
+                summary: `This session introduced Data Science and Machine Learning, covering the full AI ecosystem hierarchy: AI contains Machine Learning, which contains Deep Learning. Data Science sits at the intersection of Statistics, Programming, and Domain Expertise. Predictive Analytics is the practical application at the ML and DS intersection.
+
+Data falls into three types: Structured data fits neatly into rows and columns — spreadsheets, SQL, CSV. Unstructured data has no fixed schema — text, images, audio. About 80 percent of enterprise data is unstructured, which is why Deep Learning and NLP are so valuable. Semi-structured data like JSON and XML sits in between.
+
+The core paradigm shift: in rule-based systems, humans manually write rules — this is limited by human capacity and carries human bias. In machine learning, the machine automatically learns rules from data and expected outputs.
+
+Machine Learning has three types. Supervised learning uses labeled data with a known target — Regression for continuous targets like house prices, Classification for categorical targets like spam detection. Critical gotcha: Logistic Regression is a classification algorithm despite its name. Unsupervised learning works with unlabeled data to find hidden structure — Clustering groups similar data, Association Rules find co-occurrence patterns like Netflix recommendations, Dimensionality Reduction compresses features. Reinforcement learning learns through trial and error with reward and penalty feedback loops — used in robotics and game AI.
+
+The ML Workflow is iterative: Business Understanding, Data Collection, Exploratory Data Analysis, Data Preparation, Modelling, Evaluation, Deployment, and Monitoring. Data preparation takes 60 to 80 percent of total effort. Model drift is a critical production concern — models decay as real-world distributions change and must be monitored and retrained. Never evaluate a model on training data — always split into separate train and test sets.`,
+            },
         ],
     },
 ];

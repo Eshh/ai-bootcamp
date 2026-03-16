@@ -1,0 +1,811 @@
+Introduction to
+
+Data Science &
+Machine Learning
+From raw data to intelligent predictions
+
+Session Agenda
+What is Data Science?
+
+01
+
+Definitions, AI/ML/DS ecosystem & the DS process
+
+Predictive Analytics
+
+02
+
+How Do We Make Predictions?
+
+03
+
+Benchmarks, rule-based models & ML comparison
+
+Introduction to Machine Learning
+
+04
+
+Tools & Ecosystem
+
+05
+
+Python, libraries, platforms & resources
+
+Types of analytics, PA workflow & applications
+
+ML types, algorithms, applications & workflow
+
+Roadmap & Q&A
+
+06
+
+Your learning path & open discussion
+
+What is Data Science?
+"Data Science is the art of extracting actionable insights from large, complex datasets using statistics, programming, and domain
+expertise."
+
+Probability, distributions, hypothesis testing
+
+★ Domain Expertise
+
+</> Programming & CS
+
+∑ Statistics & Math
+
++
+
+Python, SQL, algorithms, data structures
+
+= DATA SCIENCE
+
++
+
+Business context, industry knowledge
+
+AI · ML · Deep Learning · Data Science · Predictive Analytics
+These terms are related but distinct — here's how they nest and intersect:
+Artificial Intelligence
+
+Machine Learning
+
+Deep Learning
+
+Data
+Science
+
+Gen AI
+
+Predictive Analytics
+
+AI
+
+Machines simulating
+human thinking
+
+ML
+
+Learning patterns from
+data
+
+DL
+
+Neural networks with
+many layers
+
+DS
+
+Stats + ML + domain
+expertise
+
+Predictive Analytics sits at the intersection of ML and Data Science — using algorithms to forecast future outcomes from historical data.
+
+PA
+
+Using data & ML to
+predict outcomes
+
+The Data Science Process
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+Problem
+Definition
+
+Data
+Collection
+
+Data
+Cleaning
+
+EDA
+
+Modeling
+
+Evaluation
+
+Deployment
+
+›
+Frame the business
+question
+
+›
+Gather raw data
+from sources
+
+›
+Handle
+missing/noisy data
+
+›
+Visualize & find
+patterns
+
+›
+Train ML
+algorithms
+
+⟳ This is an iterative process — you'll often cycle back to earlier steps as you learn more about the data
+
+›
+Measure model
+performance
+
+Put model into
+production
+
+Types of Data
+⊞ Structured Data
+
+❖ Unstructured Data
+
+Spreadsheets & CSV files
+
+Text & social media posts
+
+SQL databases
+
+Images & videos
+
+Financial transactions
+
+Audio recordings
+
+Sensor readings
+
+Email & documents
+
+Survey responses
+
+Web pages (HTML)
+
+e.g. Age: 25 | Income: $60K | Churn: Yes
+
+Semi-Structured:
+
+e.g. "I love this product! 5 stars ★★★★★ "
+
+JSON · XML · HTML · Server Logs · CSV with headers · Email with metadata
+
+Has some structure but doesn't fit neatly into rows & columns
+
+What is Predictive Analytics?
+
+Predictive analytics is the process of using data, statistical algorithms, and machine learning techniques to analyze
+current and historical data to make predictions about future events or behaviors.
+
+Turns historical patterns into future insights
+
+Types of Analytics
+
+Descriptive Analytics
+Analyzes historical data to understand changes that have occurred
+
+Provides insight into past performance and reasons behind success or failure
+
+Uses Business Intelligence (BI), dashboards, and data visualization
+
+Example: Monthly sales reports showing historical sales trends
+
+Predictive Analytics
+Uses statistical models and forecast techniques to predict outcomes
+
+Forecasts future probabilities and trends based on historical data
+
+Employs statistical algorithms and machine learning models
+
+Example: Predicting customer churn based on engagement metrics
+
+Prescriptive Analytics
+Goes beyond predicting — suggests actions to benefit from predictions
+
+Advises on possible outcomes and recommends actions
+
+Uses simulation algorithms, optimization, and real-time decision-making
+
+Example: Logistics company optimizing routes to minimize costs
+
+How Does Predictive Analytics Work?
+1
+
+2
+
+3
+
+4
+
+5
+
+Data Collection
+Gather relevant data from various sources
+
+Data Cleaning
+Remove inconsistencies and prepare data
+
+Data Analysis
+Explore and understand patterns in data
+
+Deployment
+Deploy the trained model into production
+
+Model Monitoring
+Continuously monitor and improve performance
+
+Applications of Predictive Analytics
+Business
+
+Healthcare
+
+💼
+Forecasting sales, optimizing
+marketing campaigns
+
+🏥
+Predicting disease
+outbreaks, personalizing
+treatment plans
+
+Finance
+
+Sports
+
+💰
+Assessing credit risks,
+detecting fraudulent
+transactions
+
+🏆
+Enhancing team
+performance, predicting
+injury risks
+
+Benefits of Predictive Analytics
+Improved Decision Making — More data-driven and informed decisions
+
+Increased Efficiency — Streamline processes and reduce waste
+
+Enhanced Risk Management — Identify and mitigate potential risks early
+
+Competitive Advantage — Stay ahead by predicting trends before they happen
+
+How Do We Make Predictions?
+
+Selecting Benchmark Models
+Mean/Median Based Models — Use central tendency for baseline predictions
+
+Rule Based Models — Create prediction rules from data analysis and domain knowledge
+
+Machine Learning Models — Algorithms that learn patterns from data automatically
+
+Rule Based Models
+
+Creating a set of rules to make predictions based on detailed data analysis and business understanding. Rules are
+manually crafted by domain experts.
+
+Example: If Weather=Sunny & Humidity=Normal → Play=Yes
+
+Rule Based System vs Machine Learning
+Rule Based System
+
+Machine Learning
+
+Data → Human Analysis → Rules
+
+Data → Algorithm → Rules
+
+Humans craft prediction rules
+
+Machine learns rules automatically
+
+Works well for simple problems
+
+Excels at complex problems
+
+Limited by human understanding
+
+Scales with more data
+
+What is Machine Learning?
+"Instead of writing explicit rules, we give the machine DATA and let it LEARN the rules itself."
+
+Traditional Programming
+
+Machine Learning
+
+Input Data
+
+Input Data
+
+Hardcoded Rules
+
+Expected Output
+
+VS
+→ Output
+
+● You manually write every rule
+
+→ Learns Rules!
+
+● Machine discovers patterns automatically
+
+Advantages of Machine Learning
+Adaptability & Speed — Quickly analyzes large amounts of data
+
+Scalability — Efficiently processes information as datasets grow
+
+Consistency & Objectivity — No fatigue or human biases in predictions
+
+Applications of Machine Learning
+Smart Navigation
+
+Finance
+
+Marketing
+
+Real-time traffic data analysis and route
+optimization
+
+Fraud detection, risk management, and
+creditworthiness prediction
+
+Customer data analysis to improve
+marketing strategies
+
+Education
+
+Agriculture
+
+E-commerce
+
+Personalized learning by assessing student
+strengths and weaknesses
+
+Optimize crop yields, predict crop health,
+recommend actions
+
+Enhanced customer experiences with
+personalized suggestions
+
+Real-World Applications
+🏥 Healthcare
+
+💰 Finance
+
+🛒 E-Commerce
+
+Cancer detection, drug discovery, patient
+readmission prediction
+
+Fraud detection, credit scoring, algorithmic
+trading
+
+Product recommendations, dynamic pricing,
+demand forecasting
+
+🚗 Transport
+
+📱 Social Media
+
+🌾 Agriculture
+
+Self-driving cars, route optimization, traffic
+prediction
+
+Content moderation, feed ranking, ad
+targeting
+
+Crop yield prediction, pest detection,
+precision farming
+
+Types of Machine Learning
+
+Three Main Types of Machine Learning
+1
+
+2
+
+3
+
+Supervised Learning
+Learning with labeled data — target variable is known
+
+Unsupervised Learning
+Learning without labels — finding hidden patterns
+
+Reinforcement Learning
+Learning through trial and error with feedback
+
+Supervised Machine Learning
+
+In supervised learning, there is a dependent or Target Variable, and the goal is to predict the target variable based on
+input or independent variables.
+
+The algorithm learns from labeled training data
+
+Supervised ML: Two Categories
+Classification
+
+Regression
+
+Target variable is categorical
+
+Target variable is continuous
+
+Predict spam email
+
+House price prediction
+
+Predict movie genre
+
+Customer lifetime value
+
+Predict customer churn
+
+Predict future temperature
+
+Unsupervised Machine Learning
+
+No Target Variable to predict. It focuses on finding hidden patterns and relationships within the data and grouping
+observations with similar patterns.
+
+Discovers structure in data without predefined answers
+
+Types of Unsupervised Learning
+Clustering — Organize similar objects into groups
+
+Association Rules — Find interesting relations among features
+
+Dimensionality Reduction — Reduce features while retaining important information
+
+Reinforcement Machine Learning
+
+Algorithms make decisions based on feedback from the environment. They follow a trial and error approach —
+receiving rewards for desirable actions and penalties for undesirable ones.
+
+Feedback Loop: Action → Environment → Reward/Penalty → Learn
+
+Spectrum of Machine Learning
+From Structure to Freedom
+
+Key Differences
+
+Supervised ML: Answers known in advance
+
+Supervised: Labeled data required
+
+Unsupervised ML: Searching for hidden patterns
+
+Unsupervised: No labels needed
+
+Reinforcement ML: Continually adjusting based on feedback
+
+Reinforcement: Environment interaction
+
+Key ML Algorithms — Big Picture
+(We'll deep-dive each in future sessions)
+
+Linear Regression
+
+Supervised
+
+Predict continuous values (price, score)
+
+Decision Trees
+
+Supervised
+
+Complex pattern recognition (images, NLP)
+
+Random Forest
+
+Supervised
+
+Ensemble of trees — high accuracy
+
+Unsupervised
+
+Group similar data points together
+
+Neural Networks
+
+Supervised
+
+Binary classification (yes/no)
+
+Rules-based classification & regression
+
+K-Means Clustering
+
+Logistic Regression
+
+SVM
+
+Supervised
+
+Find optimal decision boundary
+
+Deep Learning
+
+K-Nearest Neighbors
+Classify by similarity/proximity
+
+Supervised
+
+Machine Learning Workflow
+
+Machine Learning Workflow
+
+Business
+Understanding
+
+→
+
+Data
+Collection
+
+Model
+Evaluation
+
+→
+
+→
+
+Exploratory
+Data Analysis
+
+Model
+Deployment
+
+Each step feeds into the next — forming an iterative, data-driven pipeline.
+
+→
+
+Data
+Preparation
+
+→
+
+Modelling
+
+→
+
+Data Preparation
+1
+
+2
+
+3
+
+4
+
+5
+
+Data Division
+Split into train and test data for reliable evaluation
+
+Data Cleaning
+Remove invalid values, impute missing values, treat outliers
+
+Data Transformation
+Convert data from one format to another
+
+Data Restructuring
+Combine data from multiple sources
+
+Feature Engineering
+Create new features by combining existing ones
+
+Modelling & Evaluation
+Train different ML algorithms using the prepared dataset
+
+Regression Models — Predict continuous values
+
+Classification Models — Predict categorical outcomes
+
+Unsupervised ML Models — Find hidden patterns
+
+Evaluate with metrics: MAE, RMSE, Accuracy, Precision, Recall
+
+Model Deployment
+
+The trained and evaluated model is deployed or integrated into the ecosystem. This is the final step where the model
+starts making real predictions.
+
+From data to decisions — the ML pipeline comes full circle
+
+Tools & Ecosystem
+The Python data science stack — everything you need to get started
+Language
+
+Data Manipulation
+
+Visualization
+
+Python
+
+Pandas
+
+Matplotlib
+
+Primary DS/ML language
+
+DataFrames & wrangling
+
+Static charts & plots
+
+R
+
+NumPy
+
+Seaborn
+
+Statistical computing
+
+Numerical arrays
+
+Statistical viz
+
+ML / Deep Learning Libraries
+Scikit-learn
+
+TensorFlow
+
+PyTorch
+
+Jupyter
+
+Classical ML
+
+Deep learning
+
+Research DL
+
+Interactive notebooks
+
+Platforms:
+
+Google Colab · Kaggle · Databricks · AWS SageMaker · Azure ML · Hugging Face
+
+Key Takeaways
+
+Predictive
+Analytics
+
+→
+
+Types of
+Analytics
+
+Unsupervised
+ML
+
+→
+
+→
+
+Machine
+Learning
+
+→
+
+ML
+Workflow
+
+→
+
+Reinforcement
+ML
+
+Each concept builds on the last — together they form the complete data science toolkit.
+
+Supervised
+ML
+
+→
+
+What's Coming Next
+Session-by-session breakdown of this course
+
+Linear & Logistic Regression
+
+K-Means & Clustering
+
+NLP & Text Classification
+
+Supervised
+
+Unsupervised
+
+NLP
+
+End-to-End Capstone Project
+
+Decision Trees & Random Forests
+
+Neural Networks & Deep Learning
+
+Model Evaluation & Tuning
+
+Project
+
+Today we planted the seed. Each session, you'll go deeper. Let's build something amazing together! 🚀
+
+Supervised
+
+Deep Learning
+
+MLOps
+
+Continue Learning
+
+This was an introduction to Data Science, Predictive Modeling, and Machine Learning. In the next sections, we'll dive
+deeper into each algorithm type.
+
+Stay curious. Keep learning. Build the future. 🚀
+
+What we covered today:
+
+Questions &
+Discussion
+Open floor — ask anything!
+
+✓
+
+✓
+
+✓
+
+✓
+
+✓
+
+✓
+
+Next: Linear & Logistic Regression →
+
+What Data Science is and why it matters
+
+The end-to-end data science process
+
+Machine Learning fundamentals
+
+Supervised · Unsupervised · Reinforcement
+
+Key algorithms overview
+
+The Python tools ecosystem
+
+

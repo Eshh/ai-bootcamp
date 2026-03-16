@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bootcamp — Week 2, Thursday | Intro to Data Science & Machine Learning</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8f9fc;
+            --surface: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-light: #e0e7ff;
+            --accent: #06b6d4;
+            --accent-light: #cffafe;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --amber: #f59e0b;
+            --amber-light: #fef3c7;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #0891b2 100%);
+            color: white;
+            padding: 48px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 500px; height: 500px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%; left: -10%;
+            width: 300px; height: 300px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+        }
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+        .header-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+        .header h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+        .header p { font-size: 16px; opacity: 0.9; max-width: 650px; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+        .toc h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 14px; }
+        .toc ol { list-style: none; counter-reset: toc-counter; }
+        .toc li { counter-increment: toc-counter; margin-bottom: 6px; }
+        .toc li::before { content: counter(toc-counter) "."; color: var(--primary); font-weight: 600; margin-right: 8px; }
+        .toc a { color: var(--text); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .toc a:hover { color: var(--primary); }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.2s;
+        }
+        .section:hover { box-shadow: var(--shadow-md); }
+        .section h2 { font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); }
+        .section h3 { font-size: 17px; font-weight: 600; color: var(--text); margin: 24px 0 12px; }
+        .section h3:first-of-type { margin-top: 0; }
+        .section h4 { font-size: 15px; font-weight: 600; color: var(--text-muted); margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        p { margin-bottom: 12px; }
+        ul, ol { margin: 8px 0 16px 20px; }
+        li { margin-bottom: 4px; }
+
+        code { font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; }
+        :not(pre) > code { background: var(--primary-light); color: var(--primary); padding: 2px 7px; border-radius: 5px; font-size: 13.5px; }
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px 24px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 12px 0 20px;
+            line-height: 1.6;
+            font-size: 13.5px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        pre code { color: inherit; background: none; padding: 0; }
+        .comment { color: #94a3b8; }
+        .keyword { color: #c084fc; }
+        .string { color: #34d399; }
+        .number { color: #fbbf24; }
+        .function { color: #60a5fa; }
+        .builtin { color: #f472b6; }
+        .output { color: #94a3b8; font-style: italic; }
+
+        table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 14.5px; }
+        thead th { background: var(--primary); color: white; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        thead th:first-child { border-radius: 8px 0 0 0; }
+        thead th:last-child { border-radius: 0 8px 0 0; }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+        tr:nth-child(even) { background: #f8fafc; }
+        tr:hover { background: var(--primary-light); }
+
+        .callout { padding: 14px 18px; border-radius: 10px; margin: 14px 0; font-size: 14.5px; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; }
+        .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+        .callout-tip { background: var(--green-light); border-left: 4px solid var(--green); }
+        .callout-info { background: var(--accent-light); border-left: 4px solid var(--accent); }
+        .callout-warn { background: var(--amber-light); border-left: 4px solid var(--amber); }
+        .callout-danger { background: var(--red-light); border-left: 4px solid var(--red); }
+        .callout strong { font-weight: 600; }
+
+        .takeaways { background: linear-gradient(135deg, #e0e7ff 0%, #cffafe 100%); border: 1px solid var(--primary); }
+        .takeaways h2 { color: var(--primary); border-bottom-color: var(--primary); }
+        .takeaways ol { counter-reset: takeaway; list-style: none; padding-left: 0; }
+        .takeaways li { counter-increment: takeaway; padding: 8px 0 8px 36px; position: relative; }
+        .takeaways li::before {
+            content: counter(takeaway);
+            position: absolute; left: 0; top: 8px;
+            width: 24px; height: 24px;
+            background: var(--primary); color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 600;
+        }
+
+        .resources a { color: var(--primary); text-decoration: none; font-weight: 500; border-bottom: 1px dashed var(--primary); transition: border-color 0.2s; }
+        .resources a:hover { border-bottom-style: solid; }
+
+        .objectives-list { list-style: none; margin-left: 0; }
+        .objectives-list li { padding: 6px 0 6px 28px; position: relative; }
+        .objectives-list li::before { content: '🎯'; position: absolute; left: 0; }
+
+        .qa-item { margin-bottom: 16px; padding: 16px; background: #f8fafc; border-radius: 8px; border-left: 3px solid var(--accent); }
+        .qa-item strong { color: var(--primary); }
+
+        .ml-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 16px 0 24px; }
+        .ml-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align: center; }
+        .ml-card .icon { font-size: 32px; margin-bottom: 8px; }
+        .ml-card h4 { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 6px; text-transform: none; letter-spacing: 0; }
+        .ml-card p { font-size: 13px; color: var(--text-muted); margin: 0; }
+
+        .ecosystem-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+        .eco-chip { background: var(--primary-light); border: 1px solid #c7d2fe; border-radius: 8px; padding: 12px 14px; font-size: 13.5px; font-weight: 600; color: var(--primary); text-align: center; }
+        .eco-chip span { display: block; font-size: 11px; font-weight: 400; color: var(--text-muted); margin-top: 2px; }
+
+        .workflow-steps { margin: 16px 0; }
+        .workflow-step { display: flex; gap: 16px; margin-bottom: 12px; align-items: flex-start; }
+        .step-num { flex-shrink: 0; width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+        .step-content { flex: 1; padding-top: 4px; }
+        .step-content strong { display: block; font-size: 15px; margin-bottom: 4px; }
+        .step-content p { font-size: 14px; color: var(--text-muted); margin: 0; }
+
+        @media print {
+            body { background: white; font-size: 12pt; }
+            .header { background: #1e3a5f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .section { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+            pre { font-size: 10pt; }
+        }
+        @media (max-width: 640px) {
+            .header h1 { font-size: 24px; }
+            .section { padding: 20px; }
+            pre { padding: 14px; font-size: 12.5px; }
+            table { font-size: 13px; }
+            .ml-cards { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-content">
+        <div class="header-badge">&#x1F4C5; Week 2 &nbsp;&middot;&nbsp; Thursday &nbsp;&middot;&nbsp; AI Bootcamp</div>
+        <h1>Introduction to Data Science &amp; Machine Learning</h1>
+        <p>From raw data to intelligent predictions — the shift from rule-based programming to automated learning, with a deep dive into all three ML paradigms and the end-to-end ML workflow.</p>
+    </div>
+</header>
+
+<div class="container">
+
+    <nav class="toc">
+        <h2>&#x1F4D1; Table of Contents</h2>
+        <ol>
+            <li><a href="#objectives">Learning Objectives</a></li>
+            <li><a href="#ecosystem">The AI / ML / DS Ecosystem</a></li>
+            <li><a href="#analytics-types">Types of Analytics</a></li>
+            <li><a href="#data-types">Types of Data</a></li>
+            <li><a href="#rule-vs-ml">Rule-Based Systems vs. Machine Learning</a></li>
+            <li><a href="#ml-types">The Three Pillars of ML</a></li>
+            <li><a href="#algorithms">Key ML Algorithms — Big Picture</a></li>
+            <li><a href="#workflow">The Machine Learning Workflow</a></li>
+            <li><a href="#code">Hands-On: Pandas Filtering &amp; Column Creation</a></li>
+            <li><a href="#numpy">NumPy Fundamentals Review</a></li>
+            <li><a href="#ecosystem-tools">The Python DS/ML Tool Ecosystem</a></li>
+            <li><a href="#qa">Q&amp;A Highlights</a></li>
+            <li><a href="#takeaways">Key Takeaways</a></li>
+            <li><a href="#resources">Resources &amp; References</a></li>
+        </ol>
+    </nav>
+
+    <!-- Learning Objectives -->
+    <section class="section" id="objectives">
+        <h2>&#x1F3AF; Learning Objectives</h2>
+        <ul class="objectives-list">
+            <li>Differentiate between AI, Machine Learning, Deep Learning, Data Science, and Predictive Analytics</li>
+            <li>Classify data as Structured, Unstructured, or Semi-Structured</li>
+            <li>Contrast traditional rule-based models with machine learning models</li>
+            <li>Identify and explain the three types of Machine Learning and their sub-types</li>
+            <li>Understand the end-to-end ML Workflow from problem framing to deployment and monitoring</li>
+            <li>Know the core Python / DS / ML tool ecosystem</li>
+            <li>Apply Pandas filtering using <code>&amp;</code>, <code>|</code>, <code>.isin()</code>, and <code>.query()</code></li>
+            <li>Create new DataFrame columns using vectorized operations and <code>apply()</code></li>
+        </ul>
+    </section>
+
+    <!-- AI / ML / DS Ecosystem -->
+    <section class="section" id="ecosystem">
+        <h2>&#x1F4D6; The AI / ML / DS Ecosystem</h2>
+        <p>These terms are related but distinct — they nest and intersect. Understanding the hierarchy prevents confusion when reading papers, job descriptions, or documentation.</p>
+
+        <div style="background:#f1f5f9;border-radius:12px;padding:24px;margin:16px 0;text-align:center;line-height:2.4;">
+            <span style="background:#e0e7ff;border:2px solid #4f46e5;border-radius:8px;padding:4px 18px;color:#4f46e5;font-weight:700;font-size:14px;">&#x2601;&#xFE0F; Artificial Intelligence</span><br>
+            <span style="color:#94a3b8;font-size:13px;">&#9660; subset</span><br>
+            <span style="background:#cffafe;border:2px solid #06b6d4;border-radius:8px;padding:4px 18px;color:#0891b2;font-weight:700;font-size:14px;">&#x1F9E0; Machine Learning</span><br>
+            <span style="color:#94a3b8;font-size:13px;">&#9660; subset</span><br>
+            <span style="background:#fce7f3;border:2px solid #ec4899;border-radius:8px;padding:4px 18px;color:#be185d;font-weight:700;font-size:14px;">&#x1F578;&#xFE0F; Deep Learning &#x2192; &#x2728; Generative AI</span>
+            <div style="margin-top:16px;color:#64748b;font-size:12px;">
+                &#x1F4CA; Data Science <em>(Stats + ML + Domain)</em> &nbsp;&nbsp;&nbsp; &#x1F52E; Predictive Analytics <em>(ML + DS intersection)</em>
+            </div>
+        </div>
+
+        <h3>&#x2601;&#xFE0F; Artificial Intelligence (AI)</h3>
+        <p>The broadest overarching concept. AI refers to any technique that enables computers to mimic human intelligence — from simple <code>if-else</code> rule-based expert systems to complex neural networks.</p>
+
+        <h3>&#x1F9E0; Machine Learning (ML)</h3>
+        <p>A direct subset of AI. Instead of being explicitly programmed with hardcoded rules, ML systems use statistical methods to <strong>learn patterns directly from data</strong> to improve performance on a specific task.</p>
+
+        <h3>&#x1F578;&#xFE0F; Deep Learning (DL)</h3>
+        <p>A specialized subset of ML that utilizes multi-layered Artificial Neural Networks inspired by the human brain. DL requires massive amounts of data and computational power (GPUs) and excels at unstructured data: Image Recognition, NLP, and Generative AI.</p>
+
+        <h3>&#x1F4CA; Data Science (DS)</h3>
+        <p>A multidisciplinary field at the intersection of <strong>Statistics &amp; Math</strong>, <strong>Programming &amp; CS</strong>, and <strong>Domain Expertise</strong>. Data Scientists use ML to build models but also perform data engineering, visualization, and strategic analysis.</p>
+
+        <div class="callout callout-info">
+            <span class="callout-icon">&#x1F4AC;</span>
+            <div><strong>Session definition:</strong> "Data Science is the art of extracting actionable insights from large, complex datasets using statistics, programming, and domain expertise."</div>
+        </div>
+
+        <h3>&#x1F52E; Predictive Analytics (PA)</h3>
+        <p>Predictive Analytics sits at the <strong>intersection of ML and Data Science</strong>, focusing on using historical data to forecast future probabilities and trends — e.g., predicting customer churn or stock prices.</p>
+    </section>
+
+    <!-- Types of Analytics -->
+    <section class="section" id="analytics-types">
+        <h2>&#x1F4CA; Types of Analytics</h2>
+        <p>Analytics falls into three progressive stages — each more sophisticated and valuable than the last:</p>
+        <table>
+            <thead><tr><th>Type</th><th>Question</th><th>Method</th><th>Example</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Descriptive</strong></td><td>What happened?</td><td>BI dashboards, reports</td><td>Monthly sales trend report</td></tr>
+                <tr><td><strong>Predictive</strong></td><td>What will happen?</td><td>Statistical models, ML</td><td>Predict customer churn next month</td></tr>
+                <tr><td><strong>Prescriptive</strong></td><td>What should we do?</td><td>Optimization, simulation</td><td>Route optimization for logistics</td></tr>
+            </tbody>
+        </table>
+        <div class="callout callout-info">
+            <span class="callout-icon">&#x1F4CC;</span>
+            <div><strong>Going Deeper:</strong> A fourth type is increasingly discussed — <strong>Diagnostic Analytics</strong> ("Why did it happen?") — which uses drill-down and correlations to identify root causes. In practice, a full DS workflow often spans all four types.</div>
+        </div>
+    </section>
+
+    <!-- Types of Data -->
+    <section class="section" id="data-types">
+        <h2>&#x1F5C2;&#xFE0F; Types of Data</h2>
+        <p>Understanding your data type is the first decision in any DS/ML project — it determines which tools and algorithms are applicable.</p>
+        <table>
+            <thead><tr><th>Type</th><th>Description</th><th>Examples</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Structured</strong></td><td>Organized in rows &amp; columns, easily queryable with SQL</td><td>Spreadsheets, SQL databases, CSV files, financial transactions, sensor readings</td></tr>
+                <tr><td><strong>Semi-Structured</strong></td><td>Has some structure but doesn't fit neatly into tables</td><td>JSON, XML, HTML, server logs, email with metadata</td></tr>
+                <tr><td><strong>Unstructured</strong></td><td>No predefined format or fixed schema</td><td>Text &amp; social media posts, images &amp; videos, audio recordings, email bodies, web pages</td></tr>
+            </tbody>
+        </table>
+        <div class="callout callout-info">
+            <span class="callout-icon">&#x1F4CC;</span>
+            <div><strong>Did You Know?</strong> About <strong>80% of enterprise data is unstructured</strong> — text, images, audio. Traditional tools like SQL and Excel can't handle it. This is why Deep Learning and NLP are so valuable: they unlock insights from data that was previously inaccessible.</div>
+        </div>
+    </section>
+
+    <!-- Rule-Based vs ML -->
+    <section class="section" id="rule-vs-ml">
+        <h2>&#x2694;&#xFE0F; Rule-Based Systems vs. Machine Learning</h2>
+        <pre><code><span class="comment"># Traditional Rule-Based System</span>
+<span class="comment"># Data -&gt; Human Analysis -&gt; Explicit Rules -&gt; Output</span>
+<span class="keyword">if</span> weather == <span class="string">"Sunny"</span> <span class="keyword">and</span> humidity == <span class="string">"Normal"</span>:
+    prediction = <span class="string">"Play: Yes"</span>
+<span class="keyword">elif</span> weather == <span class="string">"Rainy"</span> <span class="keyword">and</span> wind == <span class="string">"Strong"</span>:
+    prediction = <span class="string">"Play: No"</span>
+<span class="comment"># ... hundreds more rules written by hand ...</span>
+
+<span class="comment"># Machine Learning</span>
+<span class="comment"># Data + Expected Output -&gt; Algorithm -&gt; Learns Rules -&gt; Output</span>
+<span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier
+model = <span class="function">DecisionTreeClassifier</span>()
+model.<span class="function">fit</span>(X_train, y_train)   <span class="comment"># machine discovers the rules!</span></code></pre>
+
+        <table>
+            <thead><tr><th>Dimension</th><th>Rule-Based System</th><th>Machine Learning</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Rule creation</strong></td><td>Humans craft rules manually</td><td>Machine discovers patterns automatically</td></tr>
+                <tr><td><strong>Simple problems</strong></td><td>Works well</td><td>Overkill</td></tr>
+                <tr><td><strong>Complex problems</strong></td><td>Breaks down quickly</td><td>Excels</td></tr>
+                <tr><td><strong>Scalability</strong></td><td>Limited by human capacity</td><td>Scales with data volume</td></tr>
+                <tr><td><strong>Consistency</strong></td><td>Varies by author</td><td>Objective, no fatigue</td></tr>
+                <tr><td><strong>Bias</strong></td><td>Human bias embedded in rules</td><td>Algorithm bias (different, solvable problem)</td></tr>
+                <tr><td><strong>Maintenance</strong></td><td>Rules must be updated manually</td><td>Model retraining handles drift</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">&#x1F4A1;</span>
+            <div><strong>Pro Tip:</strong> Rule-based systems are still valuable in <strong>strict regulatory environments</strong> where 100% interpretability is required. ML "black box" models are a major challenge in regulated industries — the field of <strong>Explainable AI (XAI)</strong> actively works on bridging this gap.</div>
+        </div>
+        <div class="callout callout-info">
+            <span class="callout-icon">&#x1F4AC;</span>
+            <div><strong>Session insight (Kumar):</strong> "More importantly, the consistency and objectivity — human bias comes into picture the moment you have rule-based systems, not with machine learning."</div>
+        </div>
+    </section>
+
+    <!-- Three Pillars of ML -->
+    <section class="section" id="ml-types">
+        <h2>&#x1F9E0; The Three Pillars of Machine Learning</h2>
+        <p>ML algorithms are categorized based on <em>how they learn</em> — the nature of the training signal they receive:</p>
+
+        <div class="ml-cards">
+            <div class="ml-card">
+                <div class="icon">&#x1F4DA;</div>
+                <h4>Supervised Learning</h4>
+                <p>Labeled data with known target. Learns input &rarr; output mapping.</p>
+            </div>
+            <div class="ml-card">
+                <div class="icon">&#x1F50D;</div>
+                <h4>Unsupervised Learning</h4>
+                <p>Unlabeled data. Discovers hidden patterns and structure.</p>
+            </div>
+            <div class="ml-card">
+                <div class="icon">&#x1F3AE;</div>
+                <h4>Reinforcement Learning</h4>
+                <p>Trial and error with reward/penalty feedback loops.</p>
+            </div>
+        </div>
+
+        <h3>1. Supervised Learning</h3>
+        <p>Learning from <strong>labeled data</strong> where the target variable is known. The algorithm learns the mapping from features (independent variables) to the target (dependent variable). Two sub-types:</p>
+
+        <h4>Classification — Categorical Target</h4>
+        <ul>
+            <li>Is this email <strong>spam or not spam</strong>? (binary)</li>
+            <li>What is the movie's <strong>genre</strong>? (multi-class)</li>
+            <li>Will this customer <strong>churn</strong> next month?</li>
+        </ul>
+
+        <h4>Regression — Continuous Target</h4>
+        <ul>
+            <li>What is the <strong>price</strong> of this house?</li>
+            <li>What will the <strong>temperature</strong> be tomorrow?</li>
+            <li>What is the <strong>customer lifetime value</strong>?</li>
+        </ul>
+
+        <table>
+            <thead><tr><th></th><th>Classification</th><th>Regression</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Target type</strong></td><td>Categorical (discrete)</td><td>Continuous (any number)</td></tr>
+                <tr><td><strong>Output</strong></td><td>A class label</td><td>A number</td></tr>
+                <tr><td><strong>Example</strong></td><td>Spam / Not Spam</td><td>House Price = $285,000</td></tr>
+                <tr><td><strong>Algorithms</strong></td><td>Logistic Regression, Decision Trees, SVM</td><td>Linear Regression, Random Forest, XGBoost</td></tr>
+                <tr><td><strong>Metric</strong></td><td>Accuracy, Precision, Recall, F1</td><td>MAE, RMSE, R&#178;</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout callout-warn">
+            <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+            <div><strong>Common Pitfall — Logistic Regression naming:</strong> Despite "Regression" in the name, <strong>Logistic Regression is a classification algorithm</strong>. It predicts a probability between 0 and 1, then applies a threshold to classify. One of the most commonly misunderstood naming conventions in ML.</div>
+        </div>
+
+        <h3>2. Unsupervised Learning</h3>
+        <p>Learning from <strong>unlabeled data</strong>. Three sub-types:</p>
+
+        <h4>Clustering</h4>
+        <p>Groups similar data points together. The algorithm discovers what "similar" means from the data itself.</p>
+        <ul>
+            <li>Grouping Netflix users who watch similar movies &rarr; recommend unwatched films from the cluster</li>
+            <li>Customer segmentation for targeted marketing</li>
+        </ul>
+
+        <h4>Association Rules</h4>
+        <p>Finds co-occurrence patterns among features.</p>
+        <ul>
+            <li>"Users who watched War Film A &amp; B also watched Film C" &rarr; recommend Film C</li>
+            <li>"Customers who buy bread also buy butter" &rarr; supermarket shelf placement</li>
+        </ul>
+
+        <h4>Dimensionality Reduction</h4>
+        <p>Reduces the number of features while retaining critical information. Essential when you have hundreds of columns.</p>
+        <ul>
+            <li>Compressing 100 financial features into 5 key components (PCA)</li>
+            <li>Visualizing high-dimensional data in 2D/3D (t-SNE, UMAP)</li>
+        </ul>
+
+        <div class="callout callout-info">
+            <span class="callout-icon">&#x1F4AC;</span>
+            <div><strong>Session example (Kumar):</strong> Netflix — two people watched 2 out of 3 war films. Since their viewing history clusters together, the third film gets recommended to whoever hasn't seen it. No "correct label" for what movies belong together — the algorithm discovers it. That's unsupervised learning.</div>
+        </div>
+
+        <h3>3. Reinforcement Learning</h3>
+        <p>Learning through <strong>trial and error</strong> via interactions with an environment:</p>
+        <pre><code>Agent &rarr; Action &rarr; Environment &rarr; Reward/Penalty &rarr; Agent (updates policy) &rarr; repeat ...</code></pre>
+        <ul>
+            <li>A robot learning to walk — falls (penalty), adjusts, eventually walks</li>
+            <li>AlphaGo learning to beat human Go champions via millions of trial games</li>
+            <li>Self-driving car — penalties for collisions, rewards for efficient routes</li>
+        </ul>
+
+        <h3>Full Comparison</h3>
+        <table>
+            <thead><tr><th></th><th>Supervised</th><th>Unsupervised</th><th>Reinforcement</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Data</strong></td><td>Labeled (input + output known)</td><td>Unlabeled</td><td>No dataset — environment feedback</td></tr>
+                <tr><td><strong>Output</strong></td><td>Prediction</td><td>Clusters / Patterns</td><td>Policy / Actions</td></tr>
+                <tr><td><strong>Use when</strong></td><td>Target variable is known</td><td>Finding hidden groupings</td><td>Sequential decision-making</td></tr>
+                <tr><td><strong>Examples</strong></td><td>Spam filter, price prediction</td><td>Customer segmentation, recommendations</td><td>Robotics, game AI, trading bots</td></tr>
+                <tr><td><strong>Key challenge</strong></td><td>Labeling data is expensive</td><td>Interpreting clusters is subjective</td><td>Designing a good reward function</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Key Algorithms -->
+    <section class="section" id="algorithms">
+        <h2>&#x1F5FA;&#xFE0F; Key ML Algorithms — Big Picture</h2>
+        <p><em>These will be covered in depth in upcoming sessions. For now, know what they do and which category they belong to.</em></p>
+        <table>
+            <thead><tr><th>Algorithm</th><th>Type</th><th>Use Case</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Linear Regression</strong></td><td>Supervised</td><td>Predict continuous values (price, score)</td></tr>
+                <tr><td><strong>Logistic Regression</strong></td><td>Supervised</td><td>Binary classification (spam, churn)</td></tr>
+                <tr><td><strong>Decision Trees</strong></td><td>Supervised</td><td>Rules-based classification &amp; regression</td></tr>
+                <tr><td><strong>Random Forest</strong></td><td>Supervised</td><td>Ensemble of trees — high accuracy</td></tr>
+                <tr><td><strong>SVM</strong></td><td>Supervised</td><td>Find optimal decision boundary</td></tr>
+                <tr><td><strong>K-Nearest Neighbors</strong></td><td>Supervised</td><td>Classify by similarity/proximity</td></tr>
+                <tr><td><strong>Neural Networks / DL</strong></td><td>Supervised</td><td>Complex patterns in images, NLP, audio</td></tr>
+                <tr><td><strong>K-Means</strong></td><td>Unsupervised</td><td>Group similar data points together</td></tr>
+            </tbody>
+        </table>
+        <div class="callout callout-tip">
+            <span class="callout-icon">&#x1F4A1;</span>
+            <div><strong>Pro Tip:</strong> The scikit-learn Algorithm Cheat Sheet is a flowchart that helps you pick the right algorithm based on your data and goal. Bookmark it at <a href="https://scikit-learn.org/stable/tutorial/machine_learning_map/" style="color:var(--primary)">scikit-learn.org</a>.</div>
+        </div>
+    </section>
+
+    <!-- ML Workflow -->
+    <section class="section" id="workflow">
+        <h2>&#x2699;&#xFE0F; The Machine Learning Workflow</h2>
+        <p>Building a model is an <strong>iterative</strong>, not linear, process. Poor evaluation often means going back to data preparation or even problem framing.</p>
+
+        <div class="workflow-steps">
+            <div class="workflow-step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <strong>Business Understanding</strong>
+                    <p>Frame the right question. What is the goal? How will predictions be used? What does success look like? A wrong question here propagates through every subsequent step.</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <strong>Data Collection</strong>
+                    <p>Gather relevant data from structured (SQL, CSV), unstructured (text, images), or semi-structured (APIs, JSON) sources.</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <strong>Exploratory Data Analysis (EDA)</strong>
+                    <p>Visualize data, find correlations, spot anomalies. "Know your data before modeling it." EDA often reveals problems that would silently destroy model performance.</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                    <strong>Data Preparation (~60-80% of effort)</strong>
+                    <p>Data Cleaning (missing values, outliers, duplicates), Data Transformation (scaling, encoding), Feature Engineering (creating new columns), and Data Division (train/test split).</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">5</div>
+                <div class="step-content">
+                    <strong>Modelling</strong>
+                    <p>Training the ML algorithm to recognize patterns in the training data.</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">6</div>
+                <div class="step-content">
+                    <strong>Evaluation</strong>
+                    <p>Measuring model performance on <em>unseen</em> test data using metrics like Accuracy, Precision, Recall, MAE, RMSE.</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">7</div>
+                <div class="step-content">
+                    <strong>Deployment</strong>
+                    <p>Integrating the trained model into production systems so it can make real-world predictions.</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">8</div>
+                <div class="step-content">
+                    <strong>Monitoring</strong>
+                    <p>Continuously tracking model performance as real-world data distributions evolve over time.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">&#x1F4A1;</span>
+            <div><strong>Going Deeper — Model Drift:</strong> In production, ML models decay over time. Consumer behavior changes, trends shift, sensor calibrations drift. A model trained pre-2020 might fail dramatically due to the pandemic changing purchasing habits. This is why <strong>monitoring and retraining loops</strong> are critical components of <strong>MLOps</strong>. Practically: set automated alerts when model accuracy drops below a threshold.</div>
+        </div>
+    </section>
+
+    <!-- Pandas Code -->
+    <section class="section" id="code">
+        <h2>&#x1F4BB; Hands-On: Pandas Filtering &amp; Column Creation</h2>
+        <p>The session began by reviewing Tuesday's assignment using <code>pandas_fundamentals_2.ipynb</code>. These patterns are the building blocks of every real data analysis pipeline.</p>
+
+        <h3>Setup — Sample DataFrame</h3>
+        <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+names       = [<span class="string">'K'</span>, <span class="string">'J'</span>, <span class="string">'I'</span>, <span class="string">'D'</span>, <span class="string">'E'</span>]
+ages        = [<span class="number">25</span>, <span class="number">30</span>, <span class="number">35</span>, <span class="number">28</span>, <span class="number">22</span>]
+salaries    = [<span class="number">50000</span>, <span class="number">60000</span>, <span class="number">75000</span>, <span class="number">55000</span>, <span class="number">45000</span>]
+departments = [<span class="string">'IT'</span>, <span class="string">'HR'</span>, <span class="string">'IT'</span>, <span class="string">'Finance'</span>, <span class="string">'IT'</span>]
+
+df = pd.<span class="function">DataFrame</span>({
+    <span class="string">"name"</span>: names, <span class="string">"age"</span>: ages,
+    <span class="string">"salary"</span>: salaries, <span class="string">"department"</span>: departments
+})</code></pre>
+
+        <h3>Single Condition Filter</h3>
+        <pre><code><span class="comment"># Step 1: Build a boolean mask — inspect it!</span>
+age_filter = df[<span class="string">'age'</span>] &gt; <span class="number">25</span>
+<span class="comment"># 0 False, 1 True, 2 True, 3 True, 4 False</span>
+
+<span class="comment"># Step 2: Apply the mask</span>
+df[age_filter]          <span class="comment"># rows where age &gt; 25</span></code></pre>
+
+        <h3>.isin() — Cleaner Than Chaining OR Conditions</h3>
+        <pre><code><span class="comment"># ❌ Verbose</span>
+df[(df[<span class="string">'department'</span>] == <span class="string">'IT'</span>) | (df[<span class="string">'department'</span>] == <span class="string">'HR'</span>)]
+
+<span class="comment"># ✅ Clean and scalable</span>
+dept_filter = df[<span class="string">'department'</span>].<span class="function">isin</span>([<span class="string">'IT'</span>, <span class="string">'HR'</span>])
+df[dept_filter]</code></pre>
+
+        <h3>Combining Conditions with &amp; and |</h3>
+        <pre><code><span class="comment"># ✅ Use & | ~ with parentheses around each condition</span>
+filter_combined = (df[<span class="string">'age'</span>] &gt; <span class="number">25</span>) &amp; (df[<span class="string">'salary'</span>] &gt; <span class="number">60000</span>)
+df[filter_combined]
+<span class="comment">#   name  age  salary department</span>
+<span class="comment"># 2    I   35   75000         IT</span></code></pre>
+
+        <div class="callout callout-danger">
+            <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+            <div><strong>Critical Pitfall:</strong> Using Python's <code>and</code>/<code>or</code>/<code>not</code> instead of <code>&amp;</code>/<code>|</code>/<code>~</code> raises a <code>ValueError: The truth value of a Series is ambiguous</code>. You must use <strong>bitwise operators</strong> with Pandas boolean masks, and always <strong>wrap each condition in parentheses</strong> — operator precedence will surprise you without them.</div>
+        </div>
+
+        <h3>.query() — SQL-Like Filtering</h3>
+        <pre><code><span class="comment"># String-based — very readable for complex filters</span>
+filter_df = df.<span class="function">query</span>(<span class="string">'age &gt; 25 and salary &gt; 60000'</span>)
+filter_df = df.<span class="function">query</span>(<span class="string">"department == 'IT' or department == 'HR'"</span>)</code></pre>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">&#x1F4A1;</span>
+            <div><strong>Pro Tip:</strong> Reference external Python variables inside a query string by prefixing with <code>@</code>: <code>df.query("age &gt; @min_age")</code>. Column names with spaces must be backtick-quoted: <code>df.query("`my column` &gt; 5")</code>.</div>
+        </div>
+
+        <h3>Creating New Columns</h3>
+
+        <h4>Simple vectorized operation (fastest)</h4>
+        <pre><code>df[<span class="string">'base_salary'</span>] = df[<span class="string">'salary'</span>] * <span class="number">0.50</span></code></pre>
+
+        <h4>String methods via .str accessor</h4>
+        <pre><code>df[<span class="string">'name_upper'</span>] = df[<span class="string">'name'</span>].str.<span class="function">upper</span>()</code></pre>
+
+        <h4>Conditional column with apply() + lambda</h4>
+        <pre><code>df[<span class="string">'age_group'</span>] = df[<span class="string">'age'</span>].<span class="function">apply</span>(<span class="keyword">lambda</span> x: <span class="string">'young'</span> <span class="keyword">if</span> x &lt; <span class="number">30</span> <span class="keyword">else</span> <span class="string">'senior'</span>)</code></pre>
+
+        <h4>Named function with apply()</h4>
+        <pre><code><span class="keyword">def</span> <span class="function">age_category</span>(num):
+    <span class="keyword">if</span> num &lt; <span class="number">30</span>:
+        <span class="keyword">return</span> <span class="string">'young'</span>
+    <span class="keyword">return</span> <span class="string">'senior'</span>
+
+df[<span class="string">'age_group'</span>] = df[<span class="string">'age'</span>].<span class="function">apply</span>(age_category)</code></pre>
+
+        <h4>Multi-column logic with apply(axis=1)</h4>
+        <pre><code><span class="keyword">def</span> <span class="function">segment_staff</span>(row):
+    <span class="keyword">if</span> row[<span class="string">'age'</span>] &lt;= <span class="number">30</span> <span class="keyword">and</span> row[<span class="string">'department'</span>] == <span class="string">'IT'</span>:
+        <span class="keyword">return</span> <span class="string">'IT Junior'</span>
+    <span class="keyword">return</span> <span class="string">'senior'</span>
+
+df[<span class="string">'staff_seg'</span>] = df.<span class="function">apply</span>(segment_staff, axis=<span class="number">1</span>)</code></pre>
+
+        <div class="callout callout-warn">
+            <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+            <div>
+                <strong>Performance Warning:</strong> <code>df.apply(func, axis=1)</code> iterates row-by-row in Python — it is <strong>slow on large datasets</strong>. For production code prefer:
+                <ul style="margin: 8px 0 0 16px;">
+                    <li><code>np.where(condition, true_val, false_val)</code> — binary conditions</li>
+                    <li><code>np.select([cond1, cond2], [val1, val2], default=...)</code> — multiple conditions</li>
+                    <li>Vectorized pandas expressions wherever possible</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Dropping and Renaming</h3>
+        <pre><code><span class="comment"># Drop a column (axis=1 = columns)</span>
+df_dropped = df.<span class="function">drop</span>(<span class="string">'base_salary'</span>, axis=<span class="number">1</span>)
+
+<span class="comment"># Drop a row by index (axis=0 = rows)</span>
+df_dropped = df.<span class="function">drop</span>(<span class="number">0</span>, axis=<span class="number">0</span>)
+
+<span class="comment"># Rename a column</span>
+df_renamed = df.<span class="function">rename</span>(columns={<span class="string">'base_salary'</span>: <span class="string">'base_component'</span>})</code></pre>
+
+        <h3>Preview: Supervised ML with scikit-learn</h3>
+        <pre><code><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_absolute_error
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># Simulated house data: [sq_ft, bedrooms]</span>
+X = np.<span class="function">array</span>([[<span class="number">800</span>, <span class="number">1</span>], [<span class="number">1200</span>, <span class="number">2</span>], [<span class="number">1500</span>, <span class="number">3</span>], [<span class="number">2000</span>, <span class="number">4</span>], [<span class="number">2500</span>, <span class="number">4</span>]])
+y = np.<span class="function">array</span>([<span class="number">150000</span>, <span class="number">220000</span>, <span class="number">280000</span>, <span class="number">350000</span>, <span class="number">420000</span>])
+
+<span class="comment"># Split — never evaluate on training data!</span>
+X_train, X_test, y_train, y_test = <span class="function">train_test_split</span>(
+    X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>
+)
+
+<span class="comment"># Train (machine learns the rules from data)</span>
+model = <span class="function">LinearRegression</span>()
+model.<span class="function">fit</span>(X_train, y_train)
+
+<span class="comment"># Predict on unseen test data, then evaluate</span>
+predictions = model.<span class="function">predict</span>(X_test)
+mae = <span class="function">mean_absolute_error</span>(y_test, predictions)
+<span class="builtin">print</span>(<span class="string">f"Mean Absolute Error: ${mae:,.0f}"</span>)</code></pre>
+
+        <div class="callout callout-warn">
+            <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+            <div><strong>Never evaluate on training data.</strong> That's like testing a student with the exact questions they memorized — the model appears perfect but fails on new data. This is called <strong>overfitting</strong>. Always split into a train set (for learning) and a separate test set (for evaluation).</div>
+        </div>
+    </section>
+
+    <!-- NumPy -->
+    <section class="section" id="numpy">
+        <h2>&#x1F522; NumPy Fundamentals Review</h2>
+        <p>The <code>numpy_fundamentals.ipynb</code> notebook reinforced core array operations. NumPy is the <strong>foundation</strong> of the entire Python DS/ML stack — Pandas, scikit-learn, TensorFlow, and PyTorch all build on top of it.</p>
+
+        <pre><code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 1D array</span>
+array_1d = np.<span class="function">array</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])
+<span class="builtin">print</span>(array_1d.shape)     <span class="output"># (5,)</span>
+
+<span class="comment"># 2D array</span>
+array_2d = np.<span class="function">array</span>([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]])
+<span class="builtin">print</span>(array_2d.shape)     <span class="output"># (3, 2)  — 3 rows, 2 columns</span>
+
+<span class="comment"># Special arrays</span>
+np.<span class="function">zeros</span>(<span class="number">5</span>)                        <span class="output"># array([0., 0., 0., 0., 0.])</span>
+np.<span class="function">zeros</span>((<span class="number">3</span>, <span class="number">4</span>), dtype=<span class="builtin">int</span>)        <span class="output"># 3x4 integer zero matrix</span>
+np.<span class="function">ones</span>((<span class="number">5</span>, <span class="number">4</span>))                    <span class="output"># 5x4 matrix of ones</span>
+
+<span class="comment"># Random values</span>
+np.random.<span class="function">rand</span>(<span class="number">5</span>)                  <span class="output"># 5 random floats in [0, 1)</span>
+np.random.<span class="function">rand</span>(<span class="number">3</span>, <span class="number">3</span>)               <span class="output"># 3x3 random matrix</span></code></pre>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">&#x1F4A1;</span>
+            <div>
+                <strong>Pro Tip — Use the Modern RNG API:</strong> For reproducible ML experiments, prefer <code>default_rng</code> over legacy <code>np.random</code> functions — faster with better statistical properties:
+                <pre style="margin:8px 0 0;"><code>rng = np.random.<span class="function">default_rng</span>(seed=<span class="number">42</span>)
+rng.<span class="function">random</span>(<span class="number">5</span>)   <span class="comment"># reproducible random values</span></code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tool Ecosystem -->
+    <section class="section" id="ecosystem-tools">
+        <h2>&#x1F6E0;&#xFE0F; The Python DS/ML Tool Ecosystem</h2>
+        <p>The standard toolkit you'll use throughout this bootcamp and in real DS/ML roles:</p>
+        <div class="ecosystem-grid">
+            <div class="eco-chip">Python<span>Primary language</span></div>
+            <div class="eco-chip">NumPy<span>Numerical arrays</span></div>
+            <div class="eco-chip">Pandas<span>DataFrames</span></div>
+            <div class="eco-chip">Matplotlib<span>Static charts</span></div>
+            <div class="eco-chip">Seaborn<span>Statistical viz</span></div>
+            <div class="eco-chip">scikit-learn<span>Classical ML</span></div>
+            <div class="eco-chip">TensorFlow<span>Deep learning</span></div>
+            <div class="eco-chip">PyTorch<span>Research DL</span></div>
+            <div class="eco-chip">Jupyter<span>Notebooks</span></div>
+            <div class="eco-chip">Google Colab<span>Free GPU cloud</span></div>
+            <div class="eco-chip">Kaggle<span>GPU + datasets</span></div>
+            <div class="eco-chip">Hugging Face<span>Pre-trained models</span></div>
+        </div>
+        <div class="callout callout-info">
+            <span class="callout-icon">&#x1F4CC;</span>
+            <div><strong>Did You Know?</strong> NumPy is the <strong>foundation</strong> of the entire Python DS/ML stack. Pandas DataFrames, scikit-learn estimators, TensorFlow tensors, and PyTorch tensors all ultimately build on NumPy's <code>ndarray</code>. If NumPy didn't exist, you'd have to rebuild all of them.</div>
+        </div>
+    </section>
+
+    <!-- Q&A -->
+    <section class="section" id="qa">
+        <h2>&#x2753; Q&amp;A / Discussion Highlights</h2>
+        <div class="qa-item">
+            <strong>Q: When do you use rule-based systems vs ML?</strong>
+            <p>Rule-based when you need full interpretability and the problem is simple (strict regulatory environments, small decision trees manageable by humans). ML when the problem space is large, complex, or would require thousands of manually written rules. Many production systems use both — ML for pattern detection, rules for guardrails and compliance checks.</p>
+        </div>
+        <div class="qa-item">
+            <strong>Q: Will we implement all these algorithms?</strong>
+            <p>(Rajkumar/Kumar) Yes — the next several weeks dive into specific algorithms with hands-on implementation. The foundation laid in this session becomes meaningful once you start coding each type. Supervised learning (Linear &amp; Logistic Regression) starts next.</p>
+        </div>
+    </section>
+
+    <!-- Key Takeaways -->
+    <section class="section takeaways" id="takeaways">
+        <h2>&#x2705; Key Takeaways</h2>
+        <ol>
+            <li><strong>AI &#x2283; ML &#x2283; DL</strong> — each is a subset of the previous. Predictive Analytics sits at the ML + DS intersection.</li>
+            <li><strong>Types of Analytics:</strong> Descriptive (what happened) &#x2192; Predictive (what will happen) &#x2192; Prescriptive (what to do about it).</li>
+            <li><strong>Types of Data:</strong> Structured (tabular), Unstructured (text/images/audio), Semi-Structured (JSON/XML/logs). ~80% of enterprise data is unstructured.</li>
+            <li><strong>ML paradigm shift:</strong> Instead of humans writing rules, the machine learns rules from data + expected outputs.</li>
+            <li><strong>Supervised Learning</strong> = labeled data, known target. Two sub-types: <strong>Regression</strong> (continuous) and <strong>Classification</strong> (categorical). Logistic Regression is classification despite its name.</li>
+            <li><strong>Unsupervised Learning</strong> = unlabeled data. Key techniques: <strong>Clustering</strong>, <strong>Association Rules</strong>, <strong>Dimensionality Reduction</strong>.</li>
+            <li><strong>Reinforcement Learning</strong> = trial and error with reward/penalty loops. Used in robotics, game AI, autonomous systems.</li>
+            <li><strong>Data Preparation</strong> is the most time-consuming step (~60–80% of real project effort).</li>
+            <li><strong>Model Drift</strong> is real — models must be monitored and retrained as data distributions change in production (MLOps).</li>
+            <li><strong>Pandas filtering:</strong> Use <code>&amp;</code>, <code>|</code>, <code>~</code> — not Python's <code>and</code>/<code>or</code>/<code>not</code>. Always parenthesize conditions. Prefer <code>.isin()</code> over chained OR conditions.</li>
+            <li><strong>Column creation:</strong> Prefer vectorized operations. Use <code>np.where</code> / <code>np.select</code> over <code>apply(axis=1)</code> on large datasets.</li>
+            <li><strong>Never evaluate on training data</strong> — always split into train and test sets before building a model.</li>
+        </ol>
+    </section>
+
+    <!-- Action Items -->
+    <section class="section" id="homework">
+        <h2>&#x1F4CC; Action Items &amp; Homework</h2>
+        <ul>
+            <li><strong>Complete the Pandas assignment:</strong> Notebooks ready with filtering applied on all columns (except <code>home</code>), plus new columns created from existing ones. Demo on Tuesday.</li>
+            <li><strong>Preview upcoming sessions:</strong> Next topics are <strong>Linear Regression</strong> and <strong>Logistic Regression</strong> — revisit concepts of slope/intercept and probability to prepare.</li>
+        </ul>
+    </section>
+
+    <!-- Resources -->
+    <section class="section resources" id="resources">
+        <h2>&#x1F517; Resources &amp; References</h2>
+        <h3>Data Science Fundamentals</h3>
+        <ul>
+            <li><a href="https://developers.google.com/machine-learning/crash-course">Google Machine Learning Crash Course</a> — Free, interactive, visual</li>
+            <li><a href="https://scikit-learn.org/stable/getting_started.html">scikit-learn Getting Started</a> — The standard classical ML library</li>
+        </ul>
+        <h3>ML Types &amp; Algorithms</h3>
+        <ul>
+            <li><a href="https://scikit-learn.org/stable/tutorial/machine_learning_map/">scikit-learn Algorithm Cheat Sheet</a> — Flowchart for picking the right algorithm</li>
+            <li><a href="https://www.youtube.com/@statquest">StatQuest with Josh Starmer (YouTube)</a> — Best visual explanations of ML algorithms</li>
+        </ul>
+        <h3>Pandas &amp; NumPy</h3>
+        <ul>
+            <li><a href="https://pandas.pydata.org/docs/getting_started/index.html">Pandas Getting Started</a></li>
+            <li><a href="https://numpy.org/doc/stable/user/quickstart.html">NumPy Quickstart Tutorial</a></li>
+        </ul>
+        <h3>Platforms Used in This Bootcamp</h3>
+        <ul>
+            <li><a href="https://colab.research.google.com/">Google Colab</a> — Free Jupyter notebooks with GPU</li>
+            <li><a href="https://www.kaggle.com/">Kaggle</a> — Free GPU notebooks + public datasets + competitions</li>
+            <li><a href="https://huggingface.co/">Hugging Face</a> — Pre-trained model hub (NLP, vision, audio)</li>
+        </ul>
+    </section>
+
+</div>
+</body>
+</html>
