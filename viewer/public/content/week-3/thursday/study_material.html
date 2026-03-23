@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bootcamp — Week 3, Thursday | Regression Metrics &amp; Polynomial Regression</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8f9fc;
+            --surface: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-light: #e0e7ff;
+            --accent: #06b6d4;
+            --accent-light: #cffafe;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --amber: #f59e0b;
+            --amber-light: #fef3c7;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1d4ed8 0%, #4338ca 40%, #0891b2 100%);
+            color: white;
+            padding: 48px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 500px; height: 500px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%; left: -10%;
+            width: 300px; height: 300px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .header h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+        .header p { font-size: 16px; opacity: 0.9; max-width: 700px; }
+        .header .date-line { margin-top: 12px; opacity: 0.75; font-size: 14px; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .toc h2 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .toc ol { list-style: none; counter-reset: toc-counter; }
+        .toc li { counter-increment: toc-counter; margin-bottom: 6px; }
+        .toc li::before { content: counter(toc-counter) "."; color: var(--primary); font-weight: 600; margin-right: 8px; }
+        .toc a { color: var(--text); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .toc a:hover { color: var(--primary); }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.2s;
+        }
+
+        .section:hover { box-shadow: var(--shadow-md); }
+
+        .section h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .section h3 { font-size: 17px; font-weight: 600; color: var(--text); margin: 24px 0 12px; }
+        .section h3:first-of-type { margin-top: 0; }
+        .section h4 { font-size: 15px; font-weight: 600; color: var(--text-muted); margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        p { margin-bottom: 12px; }
+        ul, ol { margin: 8px 0 16px 20px; }
+        li { margin-bottom: 4px; }
+
+        code { font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; }
+        :not(pre)>code { background: var(--primary-light); color: var(--primary); padding: 2px 7px; border-radius: 5px; font-size: 13.5px; }
+
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px 24px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 12px 0 20px;
+            line-height: 1.6;
+            font-size: 13.5px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        pre code { color: inherit; background: none; padding: 0; }
+
+        table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 14.5px; }
+        thead th {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        thead th:first-child { border-radius: 8px 0 0 0; }
+        thead th:last-child { border-radius: 0 8px 0 0; }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+        tr:nth-child(even) { background: #f8fafc; }
+        tr:hover { background: var(--primary-light); }
+
+        .callout {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 14px 0;
+            font-size: 14.5px;
+            line-height: 1.6;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+        .callout-tip   { background: var(--green-light); border-left: 4px solid var(--green); }
+        .callout-info  { background: var(--accent-light); border-left: 4px solid var(--accent); }
+        .callout-warn  { background: var(--amber-light); border-left: 4px solid var(--amber); }
+        .callout-danger{ background: var(--red-light); border-left: 4px solid var(--red); }
+        .callout strong { font-weight: 600; }
+
+        .takeaways {
+            background: linear-gradient(135deg, #e0e7ff 0%, #cffafe 100%);
+            border: 1px solid var(--primary);
+        }
+        .takeaways h2 { color: var(--primary); border-bottom-color: var(--primary); }
+        .takeaways ol { counter-reset: takeaway; list-style: none; padding-left: 0; }
+        .takeaways li { counter-increment: takeaway; padding: 8px 0 8px 36px; position: relative; }
+        .takeaways li::before {
+            content: counter(takeaway);
+            position: absolute; left: 0; top: 8px;
+            width: 24px; height: 24px;
+            background: var(--primary); color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 600;
+        }
+
+        .resources a { color: var(--primary); text-decoration: none; font-weight: 500; border-bottom: 1px dashed var(--primary); transition: border-color 0.2s; }
+        .resources a:hover { border-bottom-style: solid; }
+
+        .objectives-list { list-style: none; margin-left: 0; }
+        .objectives-list li { padding: 6px 0 6px 28px; position: relative; }
+        .objectives-list li::before { content: '🎯'; position: absolute; left: 0; }
+
+        .qa-item { margin-bottom: 16px; padding: 16px; background: #f8fafc; border-radius: 8px; border-left: 3px solid var(--accent); }
+        .qa-item strong { color: var(--primary); }
+
+        .formula-block {
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        @media print {
+            body { background: white; font-size: 12pt; }
+            .header { background: #4338ca !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .section { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+            pre { font-size: 10pt; }
+        }
+
+        @media (max-width: 640px) {
+            .header h1 { font-size: 24px; }
+            .section { padding: 20px; }
+            pre { padding: 14px; font-size: 12.5px; }
+            table { font-size: 13px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="header-badge">&#x1F4C5; Week 3 &nbsp;&middot;&nbsp; Thursday &nbsp;&middot;&nbsp; AI Bootcamp</div>
+            <h1>Regression Metrics &amp; Polynomial Regression</h1>
+            <p>Deep dive into SST, SSR, SSE, R², Adjusted R², MAE, RMSE — computed from scratch and verified with sklearn. Polynomial regression applied and evaluated.</p>
+            <p class="date-line">&#x1F4C5; Thursday, 12 March 2026</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <nav class="toc">
+            <h2>&#x1F4D1; Table of Contents</h2>
+            <ol>
+                <li><a href="#objectives">Learning Objectives</a></li>
+                <li><a href="#concepts">Key Concepts &amp; Definitions</a></li>
+                <li><a href="#identity">The Fundamental Identity: SST = SSR + SSE</a></li>
+                <li><a href="#sst">SST — Sum of Squares Total</a></li>
+                <li><a href="#ssr">SSR — Sum of Squares Regression</a></li>
+                <li><a href="#sse">SSE — Sum of Squares Error</a></li>
+                <li><a href="#r2">R² — Coefficient of Determination</a></li>
+                <li><a href="#adj-r2">Adjusted R²</a></li>
+                <li><a href="#mae">MAE — Mean Absolute Error</a></li>
+                <li><a href="#mse-rmse">MSE and RMSE</a></li>
+                <li><a href="#poly">Polynomial Regression</a></li>
+                <li><a href="#degrees">Comparing Degrees</a></li>
+                <li><a href="#code">Technical Deep-Dive</a></li>
+                <li><a href="#qa">Q&amp;A Highlights</a></li>
+                <li><a href="#takeaways">Key Takeaways</a></li>
+                <li><a href="#homework">Action Items &amp; Homework</a></li>
+                <li><a href="#resources">Resources &amp; References</a></li>
+            </ol>
+        </nav>
+
+        <section class="section" id="objectives">
+            <h2>&#x1F3AF; Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Understand the variance decomposition identity: SST = SSR + SSE</li>
+                <li>Compute SST, SSR, and SSE from scratch using NumPy</li>
+                <li>Derive and interpret R² (Coefficient of Determination)</li>
+                <li>Understand why Adjusted R² is needed for multi-feature models</li>
+                <li>Calculate MAE, MSE, and RMSE — and know when to use each</li>
+                <li>Apply Polynomial Regression and evaluate it using regression metrics</li>
+                <li>Compare metrics across polynomial degrees to choose model complexity</li>
+            </ul>
+        </section>
+
+        <section class="section" id="concepts">
+            <h2>&#x1F4D6; Key Concepts &amp; Definitions</h2>
+            <table>
+                <thead>
+                    <tr><th>Term</th><th>Definition</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>SST</code></td><td>Sum of Squares Total. Total variance in <code>y</code>. Fixed by data — not related to the model.</td></tr>
+                    <tr><td><code>SSR</code></td><td>Sum of Squares Regression. Variance the model <strong>explains</strong> — predicted values vs the mean.</td></tr>
+                    <tr><td><code>SSE</code></td><td>Sum of Squares Error. Variance the model <strong>misses</strong> — squared residuals. OLS minimizes this.</td></tr>
+                    <tr><td><code>R²</code></td><td>Coefficient of Determination. Fraction of total variance explained. Range: ≤ 1 (higher = better).</td></tr>
+                    <tr><td><code>Adjusted R²</code></td><td>R² penalized for adding features. Use when comparing models of different sizes.</td></tr>
+                    <tr><td><code>MAE</code></td><td>Mean Absolute Error. Average absolute difference. Same units as target. Robust to outliers.</td></tr>
+                    <tr><td><code>MSE</code></td><td>Mean Squared Error. Average of squared errors. Penalizes large errors heavily. Units are squared.</td></tr>
+                    <tr><td><code>RMSE</code></td><td>Root Mean Squared Error. Square root of MSE. Back in original units. Always ≥ MAE.</td></tr>
+                    <tr><td><code>PolynomialFeatures</code></td><td>sklearn transformer that expands features into polynomial form before fitting LinearRegression.</td></tr>
+                    <tr><td>Overfitting</td><td>Model fits training data too closely (e.g., very high polynomial degree) but predicts poorly on new data.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section" id="identity">
+            <h2>1. The Fundamental Identity: SST = SSR + SSE</h2>
+            <p>Before computing any metric, this decomposition must be understood:</p>
+            <div class="formula-block">SST = SSR + SSE<br>Total = Explained + Unexplained</div>
+            <p>Think of it as a pie chart: <strong>SST</strong> is the whole pie; <strong>SSR</strong> is the slice your model explains; <strong>SSE</strong> is the leftover. A perfect model has SSR = SST and SSE = 0. A useless model has SSR ≈ 0 and SSE ≈ SST.</p>
+            <pre><code>y_mean = np.mean(y)
+
+SST = np.sum((y - y_mean) ** 2)         # actual vs mean
+SSR = np.sum((y_pred - y_mean) ** 2)    # predicted vs mean
+SSE = np.sum((y - y_pred) ** 2)         # actual vs predicted (residuals²)
+
+print(np.isclose(SST, SSR + SSE))       # should be True</code></pre>
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Important:</strong> SST is a property of your <em>data</em>, not your model. It stays the same no matter what model you use. Your model only controls SSR and SSE.</div>
+            </div>
+        </section>
+
+        <section class="section" id="sst">
+            <h2>2. SST — Sum of Squares Total</h2>
+            <div class="formula-block">SST = &Sigma;(y&#x1D56B; &minus; &#x1E8F;)&#xB2;</div>
+            <ul>
+                <li>Measures the total spread/variability in the target around its mean</li>
+                <li>The "worst case" baseline: if you had no model and just predicted the mean every time, SST is the total squared error you'd accumulate</li>
+                <li>Purely a property of the data — it does not change across models</li>
+            </ul>
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Visualization intuition:</strong> Draw vertical lines from each actual data point down to the horizontal mean line. SST equals the sum of squares of those line lengths.</div>
+            </div>
+        </section>
+
+        <section class="section" id="ssr">
+            <h2>3. SSR — Sum of Squares Regression</h2>
+            <div class="formula-block">SSR = &Sigma;(&#x177;&#x1D56B; &minus; &#x1E8F;)&#xB2;</div>
+            <ul>
+                <li>Measures how much variation the model captures by pulling predicted values away from the mean</li>
+                <li>If the regression line is flat at the mean → SSR = 0 (model explains nothing)</li>
+                <li>If the regression line passes through every point → SSR = SST (explains everything)</li>
+            </ul>
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Did You Know?</strong> SSR is named "Regression" because it captures variation <em>due to the fitted regression line</em> — the variation the model earns credit for.</div>
+            </div>
+        </section>
+
+        <section class="section" id="sse">
+            <h2>4. SSE — Sum of Squares Error</h2>
+            <div class="formula-block">SSE = &Sigma;(y&#x1D56B; &minus; &#x177;&#x1D56B;)&#xB2;</div>
+            <ul>
+                <li>Measures the variation the model fails to explain — squared residuals</li>
+                <li>SSE = 0 → perfect model (every prediction is exact)</li>
+                <li>SSE = SST → useless model (no better than always predicting the mean)</li>
+            </ul>
+            <div class="callout callout-danger">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Critical:</strong> This is exactly what <strong>OLS minimizes</strong>. The "least squares" in Ordinary Least Squares directly refers to minimizing SSE. When you call <code>LinearRegression().fit(X, y)</code>, sklearn is solving the optimization problem that makes SSE as small as possible.</div>
+            </div>
+        </section>
+
+        <section class="section" id="r2">
+            <h2>5. R² — Coefficient of Determination</h2>
+            <p>Two equivalent formulas:</p>
+            <div class="formula-block">R² = SSR / SST &nbsp;&nbsp; ("How much did the model explain?")<br>R² = 1 &minus; SSE / SST &nbsp;&nbsp; ("How much error is left compared to total?")</div>
+            <table>
+                <thead><tr><th>R² Value</th><th>Meaning</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1.0</strong></td><td>Perfect — explains 100% of variance</td></tr>
+                    <tr><td><strong>0.9+</strong></td><td>Excellent</td></tr>
+                    <tr><td><strong>0.5</strong></td><td>Mediocre — only 50% explained</td></tr>
+                    <tr><td><strong>0.0</strong></td><td>Useless — no better than predicting the mean</td></tr>
+                    <tr><td><strong>&lt; 0</strong></td><td>Worse than the mean (possible on test data with a bad model)</td></tr>
+                </tbody>
+            </table>
+            <pre><code>R2_manual  = SSR / SST
+R2_sklearn = r2_score(y, y_pred)
+print(R2_manual, R2_sklearn)   # should match</code></pre>
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Key limitations:</strong> R² always increases (or stays the same) as you add features — even useless noise. A high R² does not prove the model is correct; residual plots can still reveal problems. R² can be negative on test data — this is mathematically valid.</div>
+            </div>
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Pro Tip:</strong> Use R² as a first pass, then always inspect residual plots. Two models with the same R² can behave very differently.</div>
+            </div>
+        </section>
+
+        <section class="section" id="adj-r2">
+            <h2>6. Adjusted R²</h2>
+            <p><strong>The problem:</strong> R² never decreases when you add more features — even completely random noise features. This makes R² misleading when comparing models with different feature counts.</p>
+            <div class="formula-block">Adjusted R² = 1 &minus; (1 &minus; R²) &times; (n &minus; 1) / (n &minus; p &minus; 1)</div>
+            <p>Where <code>n</code> = number of samples, <code>p</code> = number of features.</p>
+            <pre><code>def adjusted_r2(r2, n, p):
+    return 1 - (1 - r2) * (n - 1) / (n - p - 1)
+
+n = len(y)
+p = 1  # one feature
+print(adjusted_r2(R2, n, p))</code></pre>
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Practical rule:</strong> Always use Adjusted R² when comparing models with <em>different numbers of features</em>. Note: sklearn does not provide it directly — you compute it manually or use <code>statsmodels</code>.</div>
+            </div>
+        </section>
+
+        <section class="section" id="mae">
+            <h2>7. MAE — Mean Absolute Error</h2>
+            <div class="formula-block">MAE = (1/n) &Sigma; |y&#x1D56B; &minus; &#x177;&#x1D56B;|</div>
+            <pre><code>absolute_errors = np.abs(y - y_pred)
+MAE = np.mean(absolute_errors)
+
+# Verify
+MAE_sklearn = mean_absolute_error(y, y_pred)</code></pre>
+            <ul>
+                <li>MAE is in <strong>the same units as the target</strong> — very interpretable</li>
+                <li>If predicting salary in $1000s and MAE = 3.5 → predictions are off by <strong>$3,500 on average</strong></li>
+                <li>Treats all errors equally regardless of magnitude — robust to outliers</li>
+            </ul>
+            <h3>When to use MAE</h3>
+            <ul>
+                <li>When outliers are present and you don't want them to dominate the metric</li>
+                <li>When you need an interpretable, human-friendly error measure</li>
+                <li>When every unit of error matters equally</li>
+            </ul>
+        </section>
+
+        <section class="section" id="mse-rmse">
+            <h2>8. MSE and RMSE</h2>
+            <pre><code>MSE  = np.mean((y - y_pred) ** 2)
+RMSE = np.sqrt(MSE)
+
+# Or via sklearn
+from sklearn.metrics import mean_squared_error
+MSE = mean_squared_error(y, y_pred)</code></pre>
+            <table>
+                <thead><tr><th>Property</th><th>MAE</th><th>MSE</th><th>RMSE</th></tr></thead>
+                <tbody>
+                    <tr><td>Units</td><td>Same as target</td><td>Squared units</td><td>Same as target</td></tr>
+                    <tr><td>Outlier sensitivity</td><td>✅ Robust</td><td>❌ High</td><td>❌ High</td></tr>
+                    <tr><td>Differentiable at 0?</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+                    <tr><td>Interpretable?</td><td>✅ Yes</td><td>Hard</td><td>✅ Yes</td></tr>
+                    <tr><td>Prefer when</td><td>Outliers present</td><td>Gradient-based training</td><td>Balanced reporting</td></tr>
+                </tbody>
+            </table>
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Important:</strong> RMSE ≥ MAE always. The closer they are, the more uniform the errors. If RMSE &gt;&gt; MAE, there are large outlier errors pulling the RMSE up. Never compare RMSE values across different datasets or targets.</div>
+            </div>
+        </section>
+
+        <section class="section" id="poly">
+            <h2>9. Polynomial Regression</h2>
+            <p>When the relationship between <code>X</code> and <code>y</code> is curved, a straight line underfits. Polynomial regression allows curved fits by transforming features before passing them to a linear model.</p>
+            <pre><code>from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+
+degree = 2
+poly   = PolynomialFeatures(degree=degree)
+X_poly = poly.fit_transform(X)   # X becomes [1, X, X²]
+
+model = LinearRegression()
+model.fit(X_poly, y)
+y_pred = model.predict(X_poly)</code></pre>
+            <p>For degree 2 the model learns:</p>
+            <div class="formula-block">ŷ = b₀ + b₁·X + b₂·X²</div>
+            <div class="callout callout-info">
+                <span class="callout-icon">📌</span>
+                <div><strong>Important distinction:</strong> Polynomial regression is still <em>linear regression</em> — the model is linear in its coefficients. The polynomial transformation happens to the <strong>features</strong>, not to the model equation.</div>
+            </div>
+        </section>
+
+        <section class="section" id="degrees">
+            <h2>10. Comparing Degrees — Complexity vs. Metrics</h2>
+            <pre><code>for d in range(1, 6):
+    pf = PolynomialFeatures(d)
+    Xp = pf.fit_transform(X)
+    m  = LinearRegression().fit(Xp, y)
+    yp = m.predict(Xp)
+    r2  = r2_score(y, yp)
+    mae = mean_absolute_error(y, yp)
+    sse = np.sum((y - yp) ** 2)
+    print(f"degree={d}  R²={r2:.4f}  MAE={mae:.4f}  SSE={sse:.4f}")</code></pre>
+            <p>As degree increases: R² goes up, MAE goes down, SSE goes down — <em>on training data</em>. This does not mean higher degree always wins.</p>
+            <div class="callout callout-danger">
+                <span class="callout-icon">⚠️</span>
+                <div><strong>Overfitting warning:</strong> A degree-9 polynomial on 10 points will pass through every point perfectly (R² = 1.0, SSE ≈ 0) but will wildly generalize to new data. The test set is what exposes this. Never judge a model only on training metrics.</div>
+            </div>
+            <div class="callout callout-tip">
+                <span class="callout-icon">💡</span>
+                <div><strong>Instructor's rule of thumb:</strong> Stick to degree 1 (linear) as the default. Even if R² is slightly lower, the model is more robust, interpretable, and generalizable. This is the <strong>bias–variance tradeoff</strong>: low degree = high bias; high degree = high variance.</div>
+            </div>
+        </section>
+
+        <section class="section" id="code">
+            <h2>&#x1F4BB; Technical Deep-Dive</h2>
+
+            <h3>Core Imports</h3>
+            <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error</code></pre>
+
+            <h3>Full Metrics from Scratch</h3>
+            <pre><code>X = np.array([1,2,3,4,5,6,7,8,9,10]).reshape(-1, 1)
+y = np.array([30,35,45,50,55,58,65,72,80,90])
+
+model = LinearRegression().fit(X, y)
+y_pred = model.predict(X)
+
+y_mean = np.mean(y)
+SST  = np.sum((y - y_mean) ** 2)
+SSR  = np.sum((y_pred - y_mean) ** 2)
+SSE  = np.sum((y - y_pred) ** 2)
+R2   = SSR / SST
+MAE  = np.mean(np.abs(y - y_pred))
+MSE  = np.mean((y - y_pred) ** 2)
+RMSE = np.sqrt(MSE)
+
+print(f"SST  = {SST:.2f}")
+print(f"SSR  = {SSR:.2f}")
+print(f"SSE  = {SSE:.2f}")
+print(f"R²   = {R2:.4f}")
+print(f"MAE  = {MAE:.4f}")
+print(f"RMSE = {RMSE:.4f}")
+print(np.isclose(SST, SSR + SSE))   # True</code></pre>
+
+            <h3>Adjusted R²</h3>
+            <pre><code>def adjusted_r2(r2, n, p):
+    return 1 - (1 - r2) * (n - 1) / (n - p - 1)
+
+adj = adjusted_r2(R2, n=len(y), p=1)
+print(f"Adjusted R² = {adj:.4f}")</code></pre>
+
+            <h3>Polynomial Regression Pipeline</h3>
+            <pre><code>degree = 2
+poly   = PolynomialFeatures(degree)
+X_poly = poly.fit_transform(X)
+
+model  = LinearRegression().fit(X_poly, y)
+y_pred = model.predict(X_poly)
+
+print(r2_score(y, y_pred))
+print(mean_absolute_error(y, y_pred))</code></pre>
+
+            <h3>Degree Comparison Loop</h3>
+            <pre><code>for d in range(1, 6):
+    pf = PolynomialFeatures(d)
+    Xp = pf.fit_transform(X)
+    m  = LinearRegression().fit(Xp, y)
+    yp = m.predict(Xp)
+    r2  = r2_score(y, yp)
+    mae = mean_absolute_error(y, yp)
+    sse = np.sum((y - yp) ** 2)
+    print(f"degree={d}  R²={r2:.4f}  MAE={mae:.4f}  SSE={sse:.4f}")</code></pre>
+        </section>
+
+        <section class="section" id="qa">
+            <h2>&#x2753; Q&amp;A Highlights</h2>
+            <div class="qa-item">
+                <strong>Q (Ronak):</strong> If a high-degree polynomial is underperforming, will providing more training data improve it?<br>
+                <strong>A (Kumar):</strong> Not necessarily — it depends entirely on the pattern in the data. We cannot generalize that statement. More data does not automatically fix a model with the wrong complexity.
+            </div>
+            <div class="qa-item">
+                <strong>Q (Ronak):</strong> Does less data work better for lower-degree models?<br>
+                <strong>A (Kumar):</strong> We cannot say that either. The data requirements depend on the pattern, not just the degree. Generally, prefer degree 1 to keep model complexity low.
+            </div>
+            <div class="qa-item">
+                <strong>Q (Eswar):</strong> Is the test data the best reference for comparing models after applying polynomial transformations?<br>
+                <strong>A (Kumar):</strong> Correct. The test data you kept aside is the honest reference. How far predictions have deviated from it tells you how good the model truly is.
+            </div>
+        </section>
+
+        <section class="section takeaways" id="takeaways">
+            <h2>&#x2705; Key Takeaways</h2>
+            <ol>
+                <li>SST = SSR + SSE is the fundamental identity. SST is fixed by data; your model only controls SSR and SSE.</li>
+                <li>R² = SSR / SST — the fraction of total variance the model explains.</li>
+                <li>R² always increases when you add features or raise polynomial degree. Use Adjusted R² for fair comparison across model sizes.</li>
+                <li>MAE is the most interpretable error metric — same units as target, robust to outliers.</li>
+                <li>RMSE penalizes large errors more. If RMSE &gt;&gt; MAE, large outlier errors exist.</li>
+                <li>Polynomial regression transforms features before fitting a linear model — it still uses <code>LinearRegression</code>.</li>
+                <li>Higher degree does not mean better generalization. Always evaluate on test data.</li>
+                <li>Prefer degree 1 (simplest model) unless residual analysis shows a clear non-linear pattern.</li>
+            </ol>
+        </section>
+
+        <section class="section" id="homework">
+            <h2>&#x1F4CC; Action Items &amp; Homework</h2>
+            <ul>
+                <li>Compute SST, SSR, SSE, R², and MAE for a <strong>polynomial regression model (degree 2)</strong> using the salary dataset from class</li>
+                <li>Use the starter file: <code>week-3/thursday/assignment.py</code></li>
+                <li>Run the degree comparison loop (degrees 1–5) and observe how metrics change</li>
+                <li>Note: instructor said more specific homework will be given in the <strong>next session</strong></li>
+            </ul>
+        </section>
+
+        <section class="section resources" id="resources">
+            <h2>&#x1F517; Resources &amp; References</h2>
+            <ul>
+                <li><strong>Notebook:</strong> <code>Regression Metrics - R Squared, SSR, MAE Explained.ipynb</code></li>
+                <li><strong>Starter file:</strong> <code>week-3/thursday/assignment.py</code></li>
+                <li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html" target="_blank">sklearn — r2_score docs</a></li>
+                <li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html" target="_blank">sklearn — mean_absolute_error docs</a></li>
+                <li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html" target="_blank">sklearn — PolynomialFeatures docs</a></li>
+            </ul>
+        </section>
+
+    </div>
+
+</body>
+</html>

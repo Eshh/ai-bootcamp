@@ -130,4 +130,58 @@ The ML Workflow is iterative: Business Understanding, Data Collection, Explorato
             },
         ],
     },
+    {
+        week: 3,
+        slug: "week-3",
+        title: "Linear Regression Foundations",
+        description: "Linear regression basics, OLS intuition, simple linear regression, regression metrics (R², SSR, MAE), and polynomial regression",
+        days: [
+            {
+                day: "Tuesday",
+                slug: "tuesday",
+                title: "Linear Regression Fundamentals",
+                subtitle: "OLS, Simple Linear Regression, R², Residuals, Boston Housing",
+                topics: [
+                    "What Linear Regression Predicts",
+                    "Slope, Intercept, and the Linear Equation",
+                    "Ordinary Least Squares (OLS)",
+                    "Boston Housing Dataset",
+                    "EDA Before Modelling",
+                    "Train-Test Split",
+                    "Simple Linear Regression",
+                    "R² and Residual Plots",
+                ],
+                contentPath: "/content/week-3/tuesday/study_material.html",
+                summary: `This session introduced linear regression as the baseline supervised learning algorithm for predicting continuous values such as house price, sales, or temperature. The key idea is simple: fit a line that links one or more input features to a numeric target. In simple linear regression, that line is written as intercept plus slope times the feature. The slope shows how much the prediction changes for a one-unit increase in the feature, and the intercept is the predicted value when the feature is zero.
+
+The session connected this intuition to Ordinary Least Squares, or OLS, which chooses the best-fit line by minimizing squared residuals. Residuals are the differences between actual and predicted values. We also reviewed why exploratory data analysis comes before modelling: distributions, scatter plots, and correlation heatmaps reveal skew, outliers, non-linearity, and multicollinearity. The Boston Housing dataset was used as the working example, especially the relationship between lstat and medv.
+
+Students also saw why train-test split matters for honest evaluation. R squared was introduced as the proportion of variance explained by the model, but the important gotcha is that R squared alone is not enough. Residual plots matter because visible patterns often mean a straight-line model is too simple. The homework focused on scatter plots for strongly correlated feature pairs and reviewing only up to simple linear regression.`,
+            },
+            {
+                day: "Thursday",
+                slug: "thursday",
+                title: "Regression Metrics & Polynomial Regression",
+                subtitle: "SST, SSR, SSE, R², Adjusted R², MAE, RMSE — from scratch and with sklearn",
+                topics: [
+                    "SST, SSR, SSE Decomposition",
+                    "R² — Coefficient of Determination",
+                    "Adjusted R²",
+                    "MAE — Mean Absolute Error",
+                    "MSE and RMSE",
+                    "Polynomial Regression with PolynomialFeatures",
+                    "Comparing Metrics Across Polynomial Degrees",
+                    "Overfitting and the Bias-Variance Tradeoff",
+                ],
+                contentPath: "/content/week-3/thursday/study_material.html",
+                summary: `This session went deep into regression evaluation metrics — the tools used to measure how well a model actually fits the data. The foundation is the variance decomposition identity: SST equals SSR plus SSE. SST is the total variance in the target and is fixed by the data. SSR is the variance the model explains. SSE is the variance the model misses — and this is exactly what Ordinary Least Squares minimizes.
+
+R squared equals SSR divided by SST, meaning it measures the fraction of total variance the model explains. A critical gotcha: R squared always increases or stays the same when you add more features or raise the polynomial degree, even for useless noise variables. This is why Adjusted R squared exists — it penalizes for adding features that don't genuinely improve the model.
+
+Mean Absolute Error, or MAE, is the most interpretable metric: it is in the same units as the target and robust to outliers. RMSE penalizes large errors more heavily because squaring amplifies them. When RMSE is much larger than MAE, large outlier errors are pulling the score up.
+
+Polynomial regression extends linear regression by transforming features into higher-degree versions before fitting. The model is still linear in its coefficients. Higher degree means a more flexible curve and lower training error, but also higher risk of overfitting to training data. The instructor's rule of thumb: default to degree one unless residual plots clearly show a non-linear pattern. Always evaluate on test data, not just training metrics.`,
+            },
+        ],
+    },
 ];

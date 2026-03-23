@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bootcamp — Week 3, Tuesday | Linear Regression Fundamentals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8f9fc;
+            --surface: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-light: #e0e7ff;
+            --accent: #06b6d4;
+            --accent-light: #cffafe;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --amber: #f59e0b;
+            --amber-light: #fef3c7;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1d4ed8 0%, #4338ca 40%, #0891b2 100%);
+            color: white;
+            padding: 48px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 700px;
+        }
+
+        .header .date-line {
+            margin-top: 12px;
+            opacity: 0.75;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .toc h2 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .toc ol {
+            list-style: none;
+            counter-reset: toc-counter;
+        }
+
+        .toc li {
+            counter-increment: toc-counter;
+            margin-bottom: 6px;
+        }
+
+        .toc li::before {
+            content: counter(toc-counter) ".";
+            color: var(--primary);
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .toc a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .toc a:hover {
+            color: var(--primary);
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.2s;
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .section h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .section h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .section h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .section h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 20px 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+
+        ul,
+        ol {
+            margin: 8px 0 16px 20px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 14px;
+        }
+
+        :not(pre)>code {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 13.5px;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px 24px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 12px 0 20px;
+            line-height: 1.6;
+            font-size: 13.5px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        pre code {
+            color: inherit;
+            background: none;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 14.5px;
+        }
+
+        thead th {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        thead th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        tr:hover {
+            background: var(--primary-light);
+        }
+
+        .callout {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 14px 0;
+            font-size: 14.5px;
+            line-height: 1.6;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .callout-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .callout-tip {
+            background: var(--green-light);
+            border-left: 4px solid var(--green);
+        }
+
+        .callout-info {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent);
+        }
+
+        .callout-warn {
+            background: var(--amber-light);
+            border-left: 4px solid var(--amber);
+        }
+
+        .callout-danger {
+            background: var(--red-light);
+            border-left: 4px solid var(--red);
+        }
+
+        .callout strong {
+            font-weight: 600;
+        }
+
+        .takeaways {
+            background: linear-gradient(135deg, #e0e7ff 0%, #cffafe 100%);
+            border: 1px solid var(--primary);
+        }
+
+        .takeaways h2 {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .takeaways ol {
+            counter-reset: takeaway;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .takeaways li {
+            counter-increment: takeaway;
+            padding: 8px 0 8px 36px;
+            position: relative;
+        }
+
+        .takeaways li::before {
+            content: counter(takeaway);
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .resources a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed var(--primary);
+            transition: border-color 0.2s;
+        }
+
+        .resources a:hover {
+            border-bottom-style: solid;
+        }
+
+        .objectives-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .objectives-list li {
+            padding: 6px 0 6px 28px;
+            position: relative;
+        }
+
+        .objectives-list li::before {
+            content: '🎯';
+            position: absolute;
+            left: 0;
+        }
+
+        .qa-item {
+            margin-bottom: 16px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .qa-item strong {
+            color: var(--primary);
+        }
+
+        @media print {
+            body {
+                background: white;
+                font-size: 12pt;
+            }
+
+            .header {
+                background: #4338ca !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+
+            pre {
+                font-size: 10pt;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            pre {
+                padding: 14px;
+                font-size: 12.5px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="header-badge">&#x1F4C5; Week 3 &nbsp;&middot;&nbsp; Tuesday &nbsp;&middot;&nbsp; AI Bootcamp</div>
+            <h1>Linear Regression Fundamentals &amp; Simple Linear Regression</h1>
+            <p>From intuitive house-pricing logic to Ordinary Least Squares, train-test split, R squared, and residual plots using the Boston Housing dataset.</p>
+            <p class="date-line">&#x1F4C5; Tuesday, 10 March 2026</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <nav class="toc">
+            <h2>&#x1F4D1; Table of Contents</h2>
+            <ol>
+                <li><a href="#objectives">Learning Objectives</a></li>
+                <li><a href="#what-is-lr">What Is Linear Regression?</a></li>
+                <li><a href="#equation">The Linear Regression Equation</a></li>
+                <li><a href="#ols">How OLS Finds the Best-Fit Line</a></li>
+                <li><a href="#dataset">The Boston Housing Dataset</a></li>
+                <li><a href="#eda">Why EDA Comes Before Modelling</a></li>
+                <li><a href="#split">Train-Test Split and Generalization</a></li>
+                <li><a href="#simple-lr">Simple Linear Regression</a></li>
+                <li><a href="#r2">Understanding R squared</a></li>
+                <li><a href="#residuals">Residual Plots and Model Fit</a></li>
+                <li><a href="#assignment">Assignment: Scatter Plots for Strong Correlations</a></li>
+                <li><a href="#code">Technical Deep-Dive</a></li>
+                <li><a href="#qa">Q&amp;A Highlights</a></li>
+                <li><a href="#takeaways">Key Takeaways</a></li>
+                <li><a href="#homework">Action Items &amp; Homework</a></li>
+                <li><a href="#resources">Resources &amp; References</a></li>
+            </ol>
+        </nav>
+
+        <section class="section" id="objectives">
+            <h2>&#x1F3AF; Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Understand what Linear Regression is and when to use it</li>
+                <li>Distinguish continuous prediction problems from classification problems</li>
+                <li>Interpret slope and intercept in the linear equation</li>
+                <li>Understand how OLS finds the best-fit line</li>
+                <li>Explain why EDA and train-test split matter before modelling</li>
+                <li>Build Simple Linear Regression manually and with <code>sklearn</code></li>
+                <li>Interpret R squared and residual plots at a beginner-friendly level</li>
+            </ul>
+        </section>
+
+        <section class="section" id="what-is-lr">
+            <h2>1. What Is Linear Regression?</h2>
+            <p>Linear Regression is the foundational supervised learning algorithm for predicting a <strong>continuous target</strong>. It tries to model the relationship between one or more features and a numeric output by fitting a straight line.</p>
+            <p>The instructor opened with a practical house-pricing intuition: if a 2-bedroom house is worth 1 crore and everything else is the same, then a 3-bedroom house might be estimated proportionally higher. That is not a full model yet, but it captures the core idea of a feature changing together with the target.</p>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">&#x1F4CC;</span>
+                <div><strong>Did You Know?</strong> Linear regression is called "linear" because the model is linear in the coefficients. Real-world relationships can still be messy, curved, or noisy.</div>
+            </div>
+        </section>
+
+        <section class="section" id="equation">
+            <h2>2. The Linear Regression Equation</h2>
+            <p>For simple linear regression, the model is:</p>
+            <pre><code>y_hat = w0 + w1 * X</code></pre>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>w0</code></td>
+                        <td>Intercept, the predicted value when <code>X = 0</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>w1</code></td>
+                        <td>Slope or coefficient, how much the prediction changes for a 1-unit increase in <code>X</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>X</code></td>
+                        <td>Input feature</td>
+                    </tr>
+                    <tr>
+                        <td><code>y_hat</code></td>
+                        <td>Predicted output</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">&#x1F4A1;</span>
+                <div><strong>Pro Tip:</strong> A positive coefficient means the target rises as the feature rises. A negative coefficient means the target falls as the feature rises.</div>
+            </div>
+        </section>
+
+        <section class="section" id="ols">
+            <h2>3. How OLS Finds the Best-Fit Line</h2>
+            <p>Linear regression does not pick an arbitrary line. It uses <strong>Ordinary Least Squares (OLS)</strong> to find the line that minimizes the sum of squared residuals.</p>
+            <pre><code>sum((y_actual - y_predicted) ** 2)</code></pre>
+            <p>Squaring the residuals ensures positive and negative errors do not cancel out, and it penalizes large mistakes more strongly than small ones.</p>
+
+            <pre><code>w1 = sum((Xi - X_mean) * (yi - y_mean)) / sum((Xi - X_mean) ** 2)
+w0 = y_mean - w1 * X_mean</code></pre>
+
+            <p>This is the mathematical version of the "slope and intercept" logic Kumar referred to in the session.</p>
+        </section>
+
+        <section class="section" id="dataset">
+            <h2>4. The Boston Housing Dataset</h2>
+            <p>The notebook uses the Boston Housing dataset: <strong>506 observations</strong>, <strong>13 features</strong>, and a continuous target called <code>medv</code>, which represents median home value in $1000s.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>rm</code></td>
+                        <td>Average number of rooms per dwelling</td>
+                    </tr>
+                    <tr>
+                        <td><code>lstat</code></td>
+                        <td>Percentage of lower-status population</td>
+                    </tr>
+                    <tr>
+                        <td><code>ptratio</code></td>
+                        <td>Pupil-teacher ratio</td>
+                    </tr>
+                    <tr>
+                        <td><code>tax</code></td>
+                        <td>Property-tax rate</td>
+                    </tr>
+                    <tr>
+                        <td><code>nox</code></td>
+                        <td>Nitric oxide concentration</td>
+                    </tr>
+                    <tr>
+                        <td><code>medv</code></td>
+                        <td>Median home value (target)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout callout-warn">
+                <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+                <div><strong>Important Note:</strong> The Boston Housing dataset is common in tutorials, but it is considered outdated and has ethical/statistical issues. It is acceptable for learning mechanics, but not ideal as a modern benchmark dataset.</div>
+            </div>
+        </section>
+
+        <section class="section" id="eda">
+            <h2>5. Why EDA Comes Before Modelling</h2>
+            <p>The notebook correctly performs exploratory data analysis before fitting the model. This is essential because linear models are highly sensitive to skew, outliers, multicollinearity, and non-linear relationships.</p>
+
+            <h3>EDA goals in this session</h3>
+            <ul>
+                <li>Understand the distribution of <code>medv</code></li>
+                <li>Identify which features correlate strongly with the target</li>
+                <li>Spot highly correlated feature pairs</li>
+                <li>See whether the relationships are straight or curved</li>
+            </ul>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">&#x1F4CC;</span>
+                <div><strong>Notebook finding:</strong> <code>rm</code> shows strong positive correlation with <code>medv</code>, while <code>lstat</code> shows strong negative correlation. <code>rad</code> and <code>tax</code> are also highly correlated with each other, which points toward multicollinearity.</div>
+            </div>
+        </section>
+
+        <section class="section" id="split">
+            <h2>6. Train-Test Split and Generalization</h2>
+            <p>Before modelling, the data is split into training and test sets so we can measure performance on unseen data rather than only on the examples the model already saw.</p>
+
+            <pre><code>from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)</code></pre>
+
+            <div class="callout callout-danger">
+                <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+                <div><strong>Critical Rule:</strong> Never use the test set during training, feature selection, or scaler fitting. That creates data leakage and makes results look better than they really are.</div>
+            </div>
+        </section>
+
+        <section class="section" id="simple-lr">
+            <h2>7. Simple Linear Regression</h2>
+            <p>This session intentionally stopped at <strong>Simple Linear Regression</strong>, where one feature predicts one continuous target. The notebook uses <code>lstat</code> as the single feature because it has a strong relationship with <code>medv</code>.</p>
+
+            <h3>Manual OLS with NumPy</h3>
+            <pre><code>X_simple_train = X_train['lstat'].values
+y_simple_train = y_train.values
+
+X_mean = X_simple_train.mean()
+y_mean = y_simple_train.mean()
+
+numerator = np.sum((X_simple_train - X_mean) * (y_simple_train - y_mean))
+denominator = np.sum((X_simple_train - X_mean) ** 2)
+w1 = numerator / denominator
+w0 = y_mean - w1 * X_mean</code></pre>
+
+            <h3>Simple Linear Regression with sklearn</h3>
+            <pre><code>from sklearn.linear_model import LinearRegression
+
+lr_simple = LinearRegression()
+lr_simple.fit(X_simple_train.reshape(-1, 1), y_simple_train)
+
+print(lr_simple.intercept_)
+print(lr_simple.coef_[0])</code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">&#x1F4A1;</span>
+                <div><strong>Pro Tip:</strong> Even for one feature, <code>sklearn</code> expects a 2D input array, which is why the notebook uses <code>.reshape(-1, 1)</code>.</div>
+            </div>
+        </section>
+
+        <section class="section" id="r2">
+            <h2>8. Understanding R squared</h2>
+            <p>The session described R squared as the percentage of variance the model explains. That is a useful beginner intuition, and it is close to the formal meaning of <strong>proportion of target variance explained relative to a baseline model</strong>.</p>
+
+            <ul>
+                <li><strong>R squared = 1</strong> means a perfect fit</li>
+                <li><strong>R squared = 0</strong> means no improvement over predicting the mean</li>
+                <li>Higher is usually better, but context and diagnostics still matter</li>
+            </ul>
+
+            <div class="callout callout-warn">
+                <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+                <div><strong>Important Correction:</strong> A high R squared does not automatically mean the model is truly good. You still need to compare train vs test performance, inspect residuals, and check whether the assumptions are being violated.</div>
+            </div>
+        </section>
+
+        <section class="section" id="residuals">
+            <h2>9. Residual Plots and Model Fit</h2>
+            <p>Residuals are the difference between the actual value and the predicted value.</p>
+            <pre><code>residual = actual - predicted</code></pre>
+            <p>Residual plots help reveal whether the straight-line assumption is working. Ideally, residuals should be randomly scattered around zero. If a pattern appears, especially a curve, the model may be too simple.</p>
+
+            <pre><code>residuals = y_simple_test - y_pred_simple
+
+plt.scatter(y_pred_simple, residuals)
+plt.axhline(y=0, color='red', linestyle='--')</code></pre>
+
+            <div class="callout callout-info">
+                <span class="callout-icon">&#x1F4CC;</span>
+                <div><strong>Session connection:</strong> Kumar specifically asked students to inspect the residual plot. That is a strong modelling habit because residual patterns often reveal issues before metrics do.</div>
+            </div>
+        </section>
+
+        <section class="section" id="assignment">
+            <h2>10. Assignment: Scatterplot Based on Heatmap</h2>
+            <p>Homework:</p>
+            <ul>
+                <li>Check the heatmap or correlation matrix</li>
+                <li>Find the columns where correlation is <strong>greater than 0.7</strong></li>
+                <li>Draw scatter plots for those column pairs</li>
+            </ul>
+
+            <p>Examples from the session:</p>
+            <ul>
+                <li><code>nox</code> vs <code>indus</code></li>
+                <li><code>tax</code> vs <code>rad</code></li>
+            </ul>
+
+            <pre><code>plt.scatter(df['tax'], df['rad'])
+plt.xlabel('tax')
+plt.ylabel('rad')
+plt.title('tax vs rad')
+plt.show()</code></pre>
+
+            <p>If you want to print the high-correlation pairs first, you can do:</p>
+
+            <pre><code>corr = df.corr()
+
+for col1 in corr.columns:
+    for col2 in corr.columns:
+        if col1 != col2 and corr.loc[col1, col2] > 0.7:
+            print(col1, col2, corr.loc[col1, col2])</code></pre>
+
+            <div class="callout callout-tip">
+                <span class="callout-icon">&#x1F4A1;</span>
+                <div><strong>Why this matters:</strong> The heatmap gives the number, but the scatter plot shows the actual relationship.</div>
+            </div>
+        </section>
+
+        <section class="section" id="code">
+            <h2>11. Technical Deep-Dive</h2>
+            <h3>Core imports</h3>
+            <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score</code></pre>
+
+            <h3>Helper evaluation pattern</h3>
+            <pre><code>def evaluate_model(model, X_tr, X_te, y_tr, y_te):
+    model.fit(X_tr, y_tr)
+    y_pred_train = model.predict(X_tr)
+    y_pred_test = model.predict(X_te)
+
+    train_r2 = r2_score(y_tr, y_pred_train)
+    test_r2 = r2_score(y_te, y_pred_test)
+    rmse = np.sqrt(mean_squared_error(y_te, y_pred_test))
+    mae = mean_absolute_error(y_te, y_pred_test)
+
+    return train_r2, test_r2, rmse, mae</code></pre>
+
+            <h3>Simple Linear Regression end-to-end</h3>
+            <pre><code>X_simple = df[['lstat']]
+y = df['medv']
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X_simple, y, test_size=0.2, random_state=42
+)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print("Intercept:", model.intercept_)
+print("Slope:", model.coef_[0])
+print("R²:", r2_score(y_test, y_pred))</code></pre>
+        </section>
+
+        <section class="section" id="qa">
+            <h2>12. Q&amp;A Highlights</h2>
+            <div class="qa-item">
+                <strong>Q:</strong> Should students go into multiple linear regression in this session?<br>
+                <strong>A:</strong> No. The instructor explicitly asked learners to stop at simple linear regression for now and review only up to that point.
+            </div>
+            <div class="qa-item">
+                <strong>Q:</strong> What should students prepare for next time?<br>
+                <strong>A:</strong> Review the slides and notebook up to simple linear regression, and create scatter plots for strongly correlated feature pairs in the Boston Housing dataset.
+            </div>
+        </section>
+
+        <section class="section takeaways" id="takeaways">
+            <h2>13. Key Takeaways</h2>
+            <ol>
+                <li>Linear Regression is the baseline supervised model for predicting continuous values.</li>
+                <li>Simple Linear Regression models one feature and one target using a straight line.</li>
+                <li>OLS finds the best-fit line by minimizing squared residuals.</li>
+                <li>EDA matters because it reveals correlation, skew, outliers, and non-linear structure before modelling.</li>
+                <li>Train-test split is essential for honest evaluation of generalization.</li>
+                <li>R squared is useful, but it must be read alongside residual plots and error metrics.</li>
+                <li>Residual plots help reveal when a straight-line model is too simple.</li>
+                <li>Strong feature-feature correlations can indicate multicollinearity.</li>
+            </ol>
+        </section>
+
+        <section class="section" id="homework">
+            <h2>&#x1F4CC; Action Items &amp; Homework</h2>
+            <ul>
+                <li><strong>Review only till Simple Linear Regression:</strong> Do not go into multiple linear regression yet.</li>
+                <li><strong>Look at the notebook plots:</strong> Check the regression line and residual plot once.</li>
+                <li><strong>Complete the homework:</strong> Create scatter plots for the heatmap pairs where correlation is greater than 0.7.</li>
+                <li><strong>Use the starter file:</strong> <code>assignment.py</code> has a simple version of the homework code.</li>
+                <li><strong>Bring your notebook next session:</strong> Be ready to show the scatter plots you created.</li>
+            </ul>
+        </section>
+
+        <section class="section resources" id="resources">
+            <h2>15. Resources &amp; References</h2>
+            <ul>
+                <li>Notebook: <code>Linear Regression - Complete Guide with All Techniques.ipynb</code></li>
+                <li>Slides/PDF: <code>Linear Regression - Complete Guide.pdf</code></li>
+                <li>Starter homework file: <code>assignment.py</code></li>
+                <li>Dataset used in notebook: <code>BostonHousing.csv</code></li>
+            </ul>
+        </section>
+
+    </div>
+
+</body>
+
+</html>
