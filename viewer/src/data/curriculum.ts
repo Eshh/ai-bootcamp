@@ -219,11 +219,11 @@ Finally, the session reinforced that the test dataset is our ultimate anchor. It
                     "Feature Selection strategies"
                 ],
                 contentPath: "/content/week-4/thursday/study_material.html",
-                summary: `This session focused on selecting the right regression model based on data patterns. If a feature's scatterplot shows a curve, Polynomial Regression is a better choice than a straight Linear Regression line. A critical misconception was corrected: polynomial regression doesn't add new observations, it creates new derived features to better capture non-linear relationships.
+                summary: `This session focused on practically evaluating and comparing Linear Regression and Polynomial Regression models. The core lesson is that when a scatterplot shows a curving relationship, forcing a straight Linear Regression line will lead to underfitting. Instead, you can use Polynomial Regression to create a gentle curve.
 
-Model evaluation was also a key topic. You must always compare the training R-squared score against the testing R-squared score to check for overfitting. A model with a training score of 75 percent and a testing score of 66 percent is considered decent, as the drop-off is minimal. If the testing score is significantly lower, the model is overfitted.
+A major misconception was cleared up: Polynomial regression does not change the core algorithm. It simply adds new mathematical feature columns, transforming the data before performing standard linear regression.
 
-Finally, the session emphasized feature selection. Dropping features with low correlation and isolating the top predictors can simplify your model and often improve accuracy. The workflow of building, testing, and refining models iteratively is the core of effective machine learning.`,
+The instructor also emphasized the severe danger of overfitting when using high polynomial degrees. While setting a polynomial degree of two or three helps the model gently fit the curve, using a high degree like ten or fifteen will cause the model to memorize the training data perfectly. You will see a training R-squared near 100 percent, but a plunging, negative testing R-squared, proving the model has failed catastrophically in generalization. Always rely on the testing R-squared as your strict reality check.`,
             },
         ],
     },

@@ -1,296 +1,658 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Week 4, Tuesday - Model Complexity & Representative Data</title>
+    <title>AI Bootcamp — Week 4, Tuesday | Model Complexity & Representative Data</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --bg-color: #f9fbfd;
-            --text-color: #333;
-            --code-bg: #1e1e1e;
-            --border-color: #e1e8ed;
-            --callout-bg: #e8f4fd;
+            --bg: #f8f9fc;
+            --surface: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-light: #e0e7ff;
+            --accent: #06b6d4;
+            --accent-light: #cffafe;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --amber: #f59e0b;
+            --amber-light: #fef3c7;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1d4ed8 0%, #4338ca 40%, #0891b2 100%);
+            color: white;
+            padding: 48px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 700px;
+        }
+
+        .header .date-line {
+            margin-top: 12px;
+            opacity: 0.75;
+            font-size: 14px;
         }
 
         .container {
             max-width: 900px;
-            margin: 40px auto;
-            padding: 40px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        h1, h2, h3 {
-            color: var(--primary-color);
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
-            font-weight: 600;
-        }
-
-        h1 {
-            border-bottom: 3px solid var(--accent-color);
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-
-        h2 {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
         }
 
         .toc {
-            background-color: #f8f9fa;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
         }
 
-        .toc h3 {
-            margin-top: 0;
+        .toc h2 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
         }
 
-        .toc ul {
-            list-style-type: none;
-            padding-left: 0;
+        .toc ol {
+            list-style: none;
+            counter-reset: toc-counter;
         }
 
         .toc li {
-            margin-bottom: 8px;
+            counter-increment: toc-counter;
+            margin-bottom: 6px;
+        }
+
+        .toc li::before {
+            content: counter(toc-counter) ".";
+            color: var(--primary);
+            font-weight: 600;
+            margin-right: 8px;
         }
 
         .toc a {
-            color: var(--accent-color);
+            color: var(--text);
             text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
         .toc a:hover {
-            text-decoration: underline;
+            color: var(--primary);
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.2s;
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .section h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .section h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .section h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .section h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 20px 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+
+        ul,
+        ol {
+            margin: 8px 0 16px 20px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 14px;
+        }
+
+        :not(pre)>code {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 13.5px;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px 24px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 12px 0 20px;
+            line-height: 1.6;
+            font-size: 13.5px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        pre code {
+            color: inherit;
+            background: none;
+            padding: 0;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-            background: #fff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin: 12px 0 20px;
+            font-size: 14.5px;
         }
 
-        th, td {
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
+        thead th {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
             text-align: left;
-        }
-
-        th {
-            background-color: #f4f6f8;
             font-weight: 600;
-            color: var(--primary-color);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        blockquote {
-            background-color: var(--callout-bg);
-            border-left: 5px solid var(--accent-color);
-            margin: 20px 0;
-            padding: 15px 20px;
-            border-radius: 0 8px 8px 0;
+        thead th:first-child {
+            border-radius: 8px 0 0 0;
         }
 
-        code {
-            font-family: 'Consolas', 'Courier New', Courier, monospace;
-            background-color: #f1f3f5;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            color: #d63384;
+        thead th:last-child {
+            border-radius: 0 8px 0 0;
         }
 
-        pre {
-            background-color: var(--code-bg);
-            color: #d4d4d4;
-            padding: 20px;
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        tr:hover {
+            background: var(--primary-light);
+        }
+
+        .callout {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 14px 0;
+            font-size: 14.5px;
+            line-height: 1.6;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .callout-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .callout-tip {
+            background: var(--green-light);
+            border-left: 4px solid var(--green);
+        }
+
+        .callout-info {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent);
+        }
+
+        .callout-warn {
+            background: var(--amber-light);
+            border-left: 4px solid var(--amber);
+        }
+
+        .callout-danger {
+            background: var(--red-light);
+            border-left: 4px solid var(--red);
+        }
+
+        .callout strong {
+            font-weight: 600;
+        }
+
+        .takeaways {
+            background: linear-gradient(135deg, #e0e7ff 0%, #cffafe 100%);
+            border: 1px solid var(--primary);
+        }
+
+        .takeaways h2 {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .takeaways ol {
+            counter-reset: takeaway;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .takeaways li {
+            counter-increment: takeaway;
+            padding: 8px 0 8px 36px;
+            position: relative;
+        }
+
+        .takeaways li::before {
+            content: counter(takeaway);
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .resources a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed var(--primary);
+            transition: border-color 0.2s;
+        }
+
+        .resources a:hover {
+            border-bottom-style: solid;
+        }
+
+        .objectives-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .objectives-list li {
+            padding: 6px 0 6px 28px;
+            position: relative;
+        }
+
+        .objectives-list li::before {
+            content: '🎯';
+            position: absolute;
+            left: 0;
+        }
+
+        .qa-item {
+            margin-bottom: 16px;
+            padding: 16px;
+            background: #f8fafc;
             border-radius: 8px;
-            overflow-x: auto;
-            margin: 20px 0;
+            border-left: 3px solid var(--accent);
         }
 
-        pre code {
-            background-color: transparent;
-            color: inherit;
-            padding: 0;
+        .qa-item strong {
+            color: var(--primary);
         }
 
-        .keyword { color: #569cd6; }
-        .string { color: #ce9178; }
-        .comment { color: #6a9955; font-style: italic; }
-        .function { color: #dcdcaa; }
+        @media print {
+            body {
+                background: white;
+                font-size: 12pt;
+            }
 
-        .takeaways, .homework {
-            background-color: #fdfaf6;
-            border: 1px solid #f2e3d5;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 30px;
+            .header {
+                background: #4338ca !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+
+            pre {
+                font-size: 10pt;
+            }
         }
 
-        .takeaways h2, .homework h2 {
-            margin-top: 0;
-            border-bottom: none;
-            color: #d35400;
-        }
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 24px;
+            }
 
-        @media (max-width: 768px) {
-            .container {
-                margin: 0;
-                border-radius: 0;
+            .section {
                 padding: 20px;
+            }
+
+            pre {
+                padding: 14px;
+                font-size: 12.5px;
+            }
+
+            table {
+                font-size: 13px;
             }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>📋 Session Overview</h1>
-        <ul>
-            <li><strong>Date</strong>: Week 4, Tuesday</li>
-            <li><strong>Theme</strong>: Model Complexity, Data Representation, and Model Generalization</li>
-            <li><strong>Summary</strong>: This session explored the trade-offs between model complexity (lower vs. higher polynomial degrees) and data volume. The instructor emphasized the importance of using "representative data" for training and explained why keeping models simple (degree 1) is generally preferred to avoid overfitting, even when R² scores might initially appear lower.</li>
-        </ul>
 
-        <div class="toc">
-            <h3>Table of Contents</h3>
-            <ul>
-                <li><a href="#objectives">🎯 Learning Objectives</a></li>
-                <li><a href="#concepts">📖 Key Concepts & Definitions</a></li>
-                <li><a href="#notes">📝 Detailed Notes</a></li>
-                <li><a href="#code">💻 Technical Deep-Dive / Code & Tools</a></li>
-                <li><a href="#qa">❓ Q&A / Discussion Highlights</a></li>
-                <li><a href="#takeaways">✅ Key Takeaways</a></li>
-                <li><a href="#homework">📌 Action Items & Homework</a></li>
-            </ul>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-badge">&#x1F4C5; Week 4 &nbsp;&middot;&nbsp; Tuesday &nbsp;&middot;&nbsp; AI Bootcamp</div>
+            <h1>Model Complexity &amp; Representative Data</h1>
+            <p>Understanding model complexity, overcoming overfitting with representative data, and utilizing test data as a real-world benchmark.</p>
+            <p class="date-line">&#x1F4C5; Tuesday, 17 March 2026</p>
         </div>
+    </header>
 
-        <h2 id="objectives">🎯 Learning Objectives</h2>
-        <ul>
-            <li>Understand the relationship between model complexity, data volume, and generalization.</li>
-            <li>Learn why "representation" in training datasets is more important than sheer volume.</li>
-            <li>Recognize the role of test data as a benchmark for measuring model deviation and real-world performance.</li>
-        </ul>
+    <div class="container">
 
-        <h2 id="concepts">📖 Key Concepts & Definitions</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Concept</th>
-                    <th>Definition</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Model Complexity</strong></td>
-                    <td>The capacity of a model to learn intricate patterns. Higher degree polynomials increase complexity but run the risk of overfitting.</td>
-                </tr>
-                <tr>
-                    <td><strong>Representative Data</strong></td>
-                    <td>Training data that accurately reflects the diversity and distribution of data the model will encounter in production (the real world).</td>
-                </tr>
-                <tr>
-                    <td><strong>Test Data</strong></td>
-                    <td>A separate subset of data held out from training, used exclusively to evaluate how well the model generalizes to new, unseen examples.</td>
-                </tr>
-                <tr>
-                    <td><strong>Overfitting</strong></td>
-                    <td>When a model learns the training data <em>too well</em>, including the noise, causing it to perform poorly on test/production data.</td>
-                </tr>
-            </tbody>
-        </table>
+        <nav class="toc">
+            <h2>&#x1F4D1; Table of Contents</h2>
+            <ol>
+                <li><a href="#objectives">Learning Objectives</a></li>
+                <li><a href="#concepts">Key Concepts &amp; Definitions</a></li>
+                <li><a href="#complexity">Model Complexity vs. Data Volume</a></li>
+                <li><a href="#representation">The Concept of "Representative Data"</a></li>
+                <li><a href="#test-data">The Role of Test Data</a></li>
+                <li><a href="#code">Technical Deep-Dive</a></li>
+                <li><a href="#qa">Q&amp;A Highlights</a></li>
+                <li><a href="#takeaways">Key Takeaways</a></li>
+            </ol>
+        </nav>
 
-        <h2 id="notes">📝 Detailed Notes</h2>
+        <section class="section" id="objectives">
+            <h2>&#x1F3AF; Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Understand the relationship between <strong>model complexity</strong>, data volume, and generalization.</li>
+                <li>Identify the symptoms of <strong>overfitting</strong> when using higher-degree polynomial models.</li>
+                <li>Learn why <strong>data representation</strong> in training datasets is more important than sheer data volume.</li>
+                <li>Recognize the role of <strong>test data</strong> as a strict benchmark for evaluating model deviation.</li>
+                <li>Visualize highly correlated features using <strong>scatter plots</strong> to confirm linearity.</li>
+            </ul>
+        </section>
 
-        <h3>Model Complexity vs. Data Volume</h3>
-        <p>A student (Ronak) raised an important question: <em>If a higher-degree polynomial model performs poorly, will adding more data improve its efficiency/results?</em></p>
-        <ul>
-            <li><strong>Instructor's Insight</strong>: "We can never say for sure." It depends entirely on the underlying pattern of the data. However, adding more data generally helps because it increases the representation of the underlying phenomenon.</li>
-            <li><strong>The Golden Rule</strong>: When in doubt, stick to a <strong>lower degree polynomial</strong> (typically degree 1, which is standard Linear Regression).</li>
-            <li>Why? Simpler models generalize better. Even if a degree 1 model yields a lower R² score on the training data, it is heavily preferred over a complex, high-degree model that memorizes the training data but fails completely in production.</li>
-        </ul>
+        <section class="section" id="concepts">
+            <h2>&#x1F4D6; Key Concepts & Definitions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Definition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Model Complexity</strong></td>
+                        <td>The capacity of a model to learn intricate patterns. In regression, higher degree polynomials increase complexity but risk overfitting.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Representative Data</strong></td>
+                        <td>Training data that accurately reflects the diversity, distribution, and edge cases of data the model will encounter in production.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test Data</strong></td>
+                        <td>A separate subset of data held out from training, used exclusively to evaluate how well the model generalizes to new, unseen examples.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Overfitting</strong></td>
+                        <td>When a model learns the training data <em>too well</em>, memorizing the noise rather than the underlying pattern. This causes it to perform poorly on test/production data.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Underfitting</strong></td>
+                        <td>When a model is too simple to capture the underlying pattern of the data, performing poorly on both training and test data.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Generalization</strong></td>
+                        <td>The model's ability to adapt properly to new, previously unseen data drawn from the same distribution as the one used to train the model.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-        <h3>The Concept of "Representative Data"</h3>
-        <p>Simply adding <em>more</em> data is not enough; the data must be <strong>representative</strong>.</p>
-        <ul>
-            <li><strong>The Cat, Dog, and Tiger Analogy</strong>: Assume you are training an image classifier to identify cats and dogs. Your training set consists only of cats and dogs. In production, if the model encounters a tiger, it will fail or output nonsense because the tiger was never represented in the training data.</li>
-            <li><strong>Real-World Implication</strong>: If you want your model to handle tigers in production, you must include tigers in the training dataset. Your training data must accurately mirror the environment where the model will be deployed.</li>
-        </ul>
+        <section class="section" id="complexity">
+            <h2>1. Model Complexity vs. Data Volume</h2>
+            <p>A student (Ronak) raised an important question during the session:</p>
+            <p><em>"If a higher-degree polynomial model performs poorly, will adding more data improve its efficiency or results?"</em></p>
+            
+            <p><strong>Instructor's Insight:</strong> "We can never say for sure." It depends entirely on the underlying pattern of the data. However, adding more data generally helps because it exposes the model to a wider representation of the underlying phenomenon. Complex models require exponentially more data to generalize effectively without memorizing noise.</p>
+            
+            <p><strong>The Golden Rule:</strong> When in doubt, stick to a <strong>lower degree polynomial</strong> (typically degree 1, which represents standard Linear Regression).</p>
+            
+            <p>Why?</p>
+            <ul>
+                <li>Simpler models <strong>generalize better</strong>.</li>
+                <li>Even if a degree 1 model yields a lower R² score on the training data, it is heavily preferred over a complex, high-degree model that memorizes the training data perfectly but fails completely in production.</li>
+            </ul>
 
-        <h3>The Role of Test Data</h3>
-        <p>The session reinforced why we perform a Train/Test Split before modeling.</p>
-        <ul>
-            <li>The test data serves as the ultimate reference point. By predicting against the test data and comparing it to the actual values, we see exactly "how far we have deviated."</li>
-            <li>If the model performs well on training data but poorly on test data, the model has overfitted. Test data forces the model to prove it actually learned the underlying pattern, not just memorized the training examples.</li>
-        </ul>
+            <div class="callout callout-tip">
+                <span class="callout-icon">&#x1F4A1;</span>
+                <div><strong>Pro Tip:</strong> In the machine learning community, this concept is tied to Occam's Razor: <em>Other things being equal, simpler explanations are generally better than more complex ones.</em></div>
+            </div>
+        </section>
 
-        <h2 id="code">💻 Technical Deep-Dive / Code & Tools</h2>
-        <p>The session started with a review of a previous exercise: <strong>Plotting Highly Correlated Features</strong>.</p>
-        <p>When looking at a Pandas correlation matrix (or a seaborn heatmap), you should identify features with a high correlation coefficient (e.g., <code>> 0.7</code> or <code>&lt; -0.7</code>). Once identified, you visualize their relationship using a scatter plot.</p>
+        <section class="section" id="representation">
+            <h2>2. The Concept of "Representative Data"</h2>
+            <p>Simply adding <em>more</em> data to a failing model is not enough; the data must be <strong>representative</strong>.</p>
+            
+            <h3>The Cat, Dog, and Tiger Analogy</h3>
+            <p>Assume you are training an image classifier to identify cats and dogs. Your training set consists only of cats and dogs. In production, if the model encounters a tiger, it will fail predictably or output nonsense. Why? Because the tiger was <em>never represented</em> in the training data.</p>
+            
+            <h3>Real-World Implication</h3>
+            <p>If you want your model to handle tigers in production, you must include tigers in the training dataset. Your training data must accurately mirror the environment where the model will be deployed. This is known as avoiding "Out-Of-Distribution" (OOD) errors.</p>
 
-        <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
-<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+            <div class="callout callout-danger">
+                <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+                <div><strong>Critical Rule:</strong> 1,000 highly representative, well-distributed rows are exponentially better for model training than 1,000,000 rows of narrow, heavily biased data. Data quality and diversity beat data volume.</div>
+            </div>
+        </section>
 
-<span class="comment"># Assuming df is your DataFrame</span>
-<span class="comment"># 1. View the correlation matrix</span>
+        <section class="section" id="test-data">
+            <h2>3. The Role of Test Data</h2>
+            <p>The session reinforced why we ALWAYS perform a Train/Test Split before modeling.</p>
+            <ul>
+                <li>The test data serves as the ultimate reference point or anchor.</li>
+                <li>By making predictions against the test data and comparing them to the actual target values, we see exactly "how far we have deviated."</li>
+                <li>If the model performs exceptionally well on training data (e.g., Train R² = 0.98) but poorly on test data (e.g., Test R² = 0.40), the model has <strong>overfitted</strong>.</li>
+                <li>Test data forces the model to prove it actually learned the underlying mathematical relationship, rather than just memorizing the coordinates of the training examples.</li>
+            </ul>
+        </section>
+
+        <section class="section" id="code">
+            <h2>4. Technical Deep-Dive / Code & Tools</h2>
+
+            <h3>Identifying and Plotting Features</h3>
+            <p>When looking at a Pandas correlation matrix, you should identify features with a high correlation coefficient. Once identified, you must visualize their relationship using a scatter plot to confirm whether the correlation is strictly linear.</p>
+            <pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+
+# 1. Calculate the correlation matrix
 corr_matrix = df.corr()
 
-<span class="comment"># 2. Identify variables highly correlated with your target (e.g., 'medv')</span>
-<span class="comment"># Here we just print them sorted</span>
-print(corr_matrix[<span class="string">'medv'</span>].sort_values(ascending=<span class="keyword">False</span>))
+# 2. Identify variables highly correlated with your target (e.g., 'medv')
+print("Correlations with MEDV:")
+print(corr_matrix['medv'].sort_values(ascending=False))
 
-<span class="comment"># 3. Create a scatter plot for a highly correlated feature</span>
-plt.scatter(df[<span class="string">'rm'</span>], df[<span class="string">'medv'</span>], alpha=<span class="keyword">0.5</span>)
-plt.title(<span class="string">'Scatter Plot: RM vs MEDV'</span>)
-plt.xlabel(<span class="string">'Average Number of Rooms (RM)'</span>)
-plt.ylabel(<span class="string">'Median Value (MEDV)'</span>)
+# 3. Create a scatter plot to visually inspect the relationship
+plt.figure(figsize=(8, 6))
+plt.scatter(df['rm'], df['medv'], alpha=0.5, color='blue')
+plt.title('Scatter Plot: RM vs MEDV', fontsize=14)
+plt.xlabel('Average Number of Rooms (RM)', fontsize=12)
+plt.ylabel('Median Value (MEDV)', fontsize=12)
+plt.grid(True, linestyle='--', alpha=0.7)
 plt.show()</code></pre>
 
-        <blockquote>
-            <strong>💡 Best Practice:</strong> Never skip Exploratory Data Analysis (EDA). Scatter plots confirm whether a high correlation score translates to a genuinely linear relationship suitable for a degree 1 regression model.
-        </blockquote>
+            <h3>Demonstrating Overfitting (Polynomial Degree Comparison)</h3>
+            <p>While not explicitly coded in this session, the instructor's point about keeping models simple can be demonstrated using <code>sklearn</code>'s PolynomialFeatures:</p>
+            <pre><code>from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import r2_score
 
-        <h2 id="qa">❓ Q&A / Discussion Highlights</h2>
-        <ul>
-            <li><strong>Q</strong>: <em>If we use a lower polynomial degree, will a smaller amount of data still yield good results?</em></li>
-            <li><strong>A</strong>: Not necessarily. While simpler models require less data to train than complex deep learning architectures, small datasets are prone to lacking representation. You always want as much representative data as you can reasonably get.</li>
-        </ul>
+# Assume X_train, X_test, y_train, y_test are ready
 
-        <div class="takeaways" id="takeaways">
+# --- Model 1: Simple Linear Regression (Degree 1) ---
+lr = LinearRegression()
+lr.fit(X_train, y_train)
+print(f"Degree 1 Train R²: {r2_score(y_train, lr.predict(X_train)):.3f}")
+print(f"Degree 1 Test R²: {r2_score(y_test, lr.predict(X_test)):.3f}")
+# Result: Train and Test might both be around 0.65 (Stable, Generalized)
+
+# --- Model 2: Polynomial Regression (Degree 15) ---
+poly_high = PolynomialFeatures(degree=15)
+X_train_poly = poly_high.fit_transform(X_train)
+X_test_poly = poly_high.transform(X_test)
+
+lr_high = LinearRegression()
+lr_high.fit(X_train_poly, y_train)
+print(f"Degree 15 Train R²: {r2_score(y_train, lr_high.predict(X_train_poly)):.3f}")
+print(f"Degree 15 Test R²: {r2_score(y_test, lr_high.predict(X_test_poly)):.3f}")
+# Result: Train R² is 0.99 but Test R² is heavily negative! (Overfitted)</code></pre>
+        </section>
+
+        <section class="section" id="qa">
+            <h2>12. Q&amp;A Highlights</h2>
+            <div class="qa-item">
+                <strong>Q:</strong> If we use a lower polynomial degree, will a smaller amount of data still yield good results?<br>
+                <strong>A:</strong> Not necessarily. While simpler models require fewer data points to train than complex deep learning architectures, small datasets are highly prone to lacking representation. You always want as much representative data as you can reasonably get.
+            </div>
+            <div class="qa-item">
+                <strong>Q:</strong> Does adding more data to a failing high-degree polynomial model fix it?<br>
+                <strong>A:</strong> It can help, but it's not a guaranteed fix. If the underlying data is noisy, a high-degree polynomial will just memorize the new noise. The best approach is combining representative data with an appropriately stable and simple algorithm.
+            </div>
+        </section>
+
+        <section class="section takeaways" id="takeaways">
             <h2>✅ Key Takeaways</h2>
-            <ul>
-                <li><strong>Keep it Simple</strong>: Default to Linear Regression (degree 1) unless the data strongly dictates otherwise.</li>
-                <li><strong>R² isn't Everything</strong>: A lower training R² on a simple model is often better than a high training R² on an over-complex model.</li>
-                <li><strong>Representation > Volume</strong>: 1,000 highly representative rows are exponentially better than 1,000,000 rows of narrow, biased data.</li>
-                <li><strong>Test Set</strong>: Your test set is your source of truth for measuring deviation from reality.</li>
-            </ul>
-        </div>
+            <ol>
+                <li><strong>Keep it Simple:</strong> Default to Linear Regression (degree 1) unless the data scatter plots strongly dictate a specific non-linear curve.</li>
+                <li><strong>R² Isn't Everything:</strong> A lower training R² on a simple model is vastly superior to a high training R² on an over-complex model that fails to generalize.</li>
+                <li><strong>Representation Beats Volume:</strong> A million rows of biased data will fail in production quicker than a thousand rows of perfectly representative data.</li>
+                <li><strong>Test Set as Reality Check:</strong> The test set is your source of truth for measuring deviation from reality. Never optimize your model configurations solely using the test dataset.</li>
+            </ol>
+        </section>
 
-        <div class="homework" id="homework">
-            <h2>📌 Action Items & Homework</h2>
-            <ul>
-                <li><strong>No new homework</strong> was assigned in this session, as the next session was scheduled for the very next day.</li>
-                <li><strong>Review</strong>: Review the regression metrics covered earlier in the week to prepare for polynomial regression exercises.</li>
-            </ul>
-        </div>
     </div>
 </body>
 </html>

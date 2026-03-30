@@ -1,307 +1,654 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Week 4, Thursday - Model Evaluation & Feature Selection</title>
+    <title>AI Bootcamp — Week 4, Thursday | Polynomial vs Linear Regression</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --bg-color: #f9fbfd;
-            --text-color: #333;
-            --code-bg: #1e1e1e;
-            --border-color: #e1e8ed;
-            --callout-bg: #e8f4fd;
+            --bg: #f8f9fc;
+            --surface: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-light: #e0e7ff;
+            --accent: #06b6d4;
+            --accent-light: #cffafe;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --amber: #f59e0b;
+            --amber-light: #fef3c7;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1d4ed8 0%, #4338ca 40%, #0891b2 100%);
+            color: white;
+            padding: 48px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 700px;
+        }
+
+        .header .date-line {
+            margin-top: 12px;
+            opacity: 0.75;
+            font-size: 14px;
         }
 
         .container {
             max-width: 900px;
-            margin: 40px auto;
-            padding: 40px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        h1, h2, h3 {
-            color: var(--primary-color);
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
-            font-weight: 600;
-        }
-
-        h1 {
-            border-bottom: 3px solid var(--accent-color);
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-
-        h2 {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
         }
 
         .toc {
-            background-color: #f8f9fa;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
         }
 
-        .toc h3 {
-            margin-top: 0;
+        .toc h2 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
         }
 
-        .toc ul {
-            list-style-type: none;
-            padding-left: 0;
+        .toc ol {
+            list-style: none;
+            counter-reset: toc-counter;
         }
 
         .toc li {
-            margin-bottom: 8px;
+            counter-increment: toc-counter;
+            margin-bottom: 6px;
+        }
+
+        .toc li::before {
+            content: counter(toc-counter) ".";
+            color: var(--primary);
+            font-weight: 600;
+            margin-right: 8px;
         }
 
         .toc a {
-            color: var(--accent-color);
+            color: var(--text);
             text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
         .toc a:hover {
-            text-decoration: underline;
+            color: var(--primary);
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.2s;
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .section h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .section h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .section h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .section h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 20px 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+
+        ul,
+        ol {
+            margin: 8px 0 16px 20px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 14px;
+        }
+
+        :not(pre)>code {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 13.5px;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px 24px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 12px 0 20px;
+            line-height: 1.6;
+            font-size: 13.5px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        pre code {
+            color: inherit;
+            background: none;
+            padding: 0;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-            background: #fff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin: 12px 0 20px;
+            font-size: 14.5px;
         }
 
-        th, td {
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
+        thead th {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
             text-align: left;
-        }
-
-        th {
-            background-color: #f4f6f8;
             font-weight: 600;
-            color: var(--primary-color);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        blockquote {
-            background-color: var(--callout-bg);
-            border-left: 5px solid var(--accent-color);
-            margin: 20px 0;
-            padding: 15px 20px;
-            border-radius: 0 8px 8px 0;
+        thead th:first-child {
+            border-radius: 8px 0 0 0;
         }
 
-        code {
-            font-family: 'Consolas', 'Courier New', Courier, monospace;
-            background-color: #f1f3f5;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            color: #d63384;
+        thead th:last-child {
+            border-radius: 0 8px 0 0;
         }
 
-        pre {
-            background-color: var(--code-bg);
-            color: #d4d4d4;
-            padding: 20px;
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        tr:hover {
+            background: var(--primary-light);
+        }
+
+        .callout {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 14px 0;
+            font-size: 14.5px;
+            line-height: 1.6;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .callout-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .callout-tip {
+            background: var(--green-light);
+            border-left: 4px solid var(--green);
+        }
+
+        .callout-info {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent);
+        }
+
+        .callout-warn {
+            background: var(--amber-light);
+            border-left: 4px solid var(--amber);
+        }
+
+        .callout-danger {
+            background: var(--red-light);
+            border-left: 4px solid var(--red);
+        }
+
+        .callout strong {
+            font-weight: 600;
+        }
+
+        .takeaways {
+            background: linear-gradient(135deg, #e0e7ff 0%, #cffafe 100%);
+            border: 1px solid var(--primary);
+        }
+
+        .takeaways h2 {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .takeaways ol {
+            counter-reset: takeaway;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .takeaways li {
+            counter-increment: takeaway;
+            padding: 8px 0 8px 36px;
+            position: relative;
+        }
+
+        .takeaways li::before {
+            content: counter(takeaway);
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .resources a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed var(--primary);
+            transition: border-color 0.2s;
+        }
+
+        .resources a:hover {
+            border-bottom-style: solid;
+        }
+
+        .objectives-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .objectives-list li {
+            padding: 6px 0 6px 28px;
+            position: relative;
+        }
+
+        .objectives-list li::before {
+            content: '🎯';
+            position: absolute;
+            left: 0;
+        }
+
+        .qa-item {
+            margin-bottom: 16px;
+            padding: 16px;
+            background: #f8fafc;
             border-radius: 8px;
-            overflow-x: auto;
-            margin: 20px 0;
+            border-left: 3px solid var(--accent);
         }
 
-        pre code {
-            background-color: transparent;
-            color: inherit;
-            padding: 0;
+        .qa-item strong {
+            color: var(--primary);
         }
 
-        .keyword { color: #569cd6; }
-        .string { color: #ce9178; }
-        .comment { color: #6a9955; font-style: italic; }
-        .function { color: #dcdcaa; }
+        @media print {
+            body {
+                background: white;
+                font-size: 12pt;
+            }
 
-        .takeaways, .homework {
-            background-color: #fdfaf6;
-            border: 1px solid #f2e3d5;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 30px;
+            .header {
+                background: #4338ca !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+
+            pre {
+                font-size: 10pt;
+            }
         }
 
-        .takeaways h2, .homework h2 {
-            margin-top: 0;
-            border-bottom: none;
-            color: #d35400;
-        }
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 24px;
+            }
 
-        @media (max-width: 768px) {
-            .container {
-                margin: 0;
-                border-radius: 0;
+            .section {
                 padding: 20px;
+            }
+
+            pre {
+                padding: 14px;
+                font-size: 12.5px;
+            }
+
+            table {
+                font-size: 13px;
             }
         }
     </style>
 </head>
+
 <body>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="header-badge">&#x1F4C5; Week 4 &nbsp;&middot;&nbsp; Thursday &nbsp;&middot;&nbsp; AI Bootcamp</div>
+            <h1>Polynomial vs Linear Regression &amp; Model Evaluation</h1>
+            <p>Practical comparison of Linear and Polynomial Regression models, managing model complexity, and interpreting Train/Test R² metrics.</p>
+            <p class="date-line">&#x1F4C5; Thursday, 19 March 2026</p>
+        </div>
+    </header>
+
     <div class="container">
-        <h1>📋 Session Overview</h1>
-        <ul>
-            <li><strong>Date</strong>: Week 4, Thursday</li>
-            <li><strong>Theme</strong>: Polynomial Regression, Model Evaluation, and Feature Selection</li>
-            <li><strong>Summary</strong>: This session focused on practically choosing between Linear and Polynomial Regression based on feature distributions. The instructor covered evaluating model performance using Train/Test R² comparisons and introduced manual feature selection to improve model accuracy.</li>
-        </ul>
 
-        <div class="toc">
-            <h3>Table of Contents</h3>
-            <ul>
-                <li><a href="#objectives">🎯 Learning Objectives</a></li>
-                <li><a href="#concepts">📖 Key Concepts & Definitions</a></li>
-                <li><a href="#notes">📝 Detailed Notes</a></li>
-                <li><a href="#code">💻 Technical Deep-Dive / Code & Tools</a></li>
-                <li><a href="#qa">❓ Q&A / Discussion Highlights</a></li>
-                <li><a href="#takeaways">✅ Key Takeaways</a></li>
-                <li><a href="#homework">📌 Action Items & Homework</a></li>
+        <nav class="toc">
+            <h2>&#x1F4D1; Table of Contents</h2>
+            <ol>
+                <li><a href="#objectives">Learning Objectives</a></li>
+                <li><a href="#concepts">Key Concepts &amp; Definitions</a></li>
+                <li><a href="#linear-failure">When Linear Regression Fails</a></li>
+                <li><a href="#polynomial">Introducing Polynomial Regression</a></li>
+                <li><a href="#dangers">The Dangers of Going Too Far</a></li>
+                <li><a href="#code">Technical Deep-Dive / Code Overview</a></li>
+                <li><a href="#qa">Q&amp;A Highlights</a></li>
+                <li><a href="#takeaways">Key Takeaways</a></li>
+                <li><a href="#homework">Action Items &amp; Homework</a></li>
+            </ol>
+        </nav>
+
+        <section class="section" id="objectives">
+            <h2>&#x1F3AF; Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Identify when a simple straight line is insufficient by interpreting <strong>scatter plots</strong> and <strong>residual plots</strong>.</li>
+                <li>Understand the mechanics of <strong>Polynomial Regression</strong> and data transformation.</li>
+                <li>Analyze <strong>R² Scores</strong> correctly to spot underfitting and overfitting.</li>
+                <li>Implement Polynomial Regression using <code>PolynomialFeatures</code>.</li>
+                <li>Recognize how higher degree configurations easily lead to severe overfitting on the training data.</li>
             </ul>
-        </div>
+        </section>
 
-        <h2 id="objectives">🎯 Learning Objectives</h2>
-        <ul>
-            <li>Understand when to apply Polynomial Regression based on data curvature.</li>
-            <li>Evaluate model generalizability by comparing training and testing R² scores.</li>
-            <li>Perform basic feature selection to refine model inputs.</li>
-        </ul>
+        <section class="section" id="concepts">
+            <h2>&#x1F4D6; Key Concepts & Definitions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Definition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Polynomial Regression</strong></td>
+                        <td>A form of regression where the relationship between the independent variable x and the dependent variable y is modeled as an nth degree polynomial.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Polynomial Features</strong></td>
+                        <td>Generating a new feature matrix consisting of all polynomial combinations of the features with degree less than or equal to the specified degree.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Residual Plot</strong></td>
+                        <td>A scatter plot showing the residuals (errors) on the y-axis and predicted values on the x-axis. A core metric to detect whether a straight line is indeed the appropriate model choice.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Degree</strong></td>
+                        <td>The highest exponent used in a polynomial function. E.g., <code>ax² + bx + c</code> is a polynomial of degree 2.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-        <h2 id="concepts">📖 Key Concepts & Definitions</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Concept</th>
-                    <th>Definition</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Polynomial Regression</strong></td>
-                    <td>An extension of linear regression that models the relationship between the independent variable x and the dependent variable y as an nth degree polynomial. Useful for non-linear, curved data patterns.</td>
-                </tr>
-                <tr>
-                    <td><strong>Model Generalization</strong></td>
-                    <td>How well a model performs on unseen test data compared to the training data.</td>
-                </tr>
-                <tr>
-                    <td><strong>Feature Selection</strong></td>
-                    <td>The process of selecting a subset of relevant, highly correlated features (variables) for use in model construction.</td>
-                </tr>
-                <tr>
-                    <td><strong>Regularization (Preview)</strong></td>
-                    <td>A technique used to prevent overfitting by adding a penalty term to the model's loss function. (To be covered next session).</td>
-                </tr>
-            </tbody>
-        </table>
+        <section class="section" id="linear-failure">
+            <h2>1. When Linear Regression Fails</h2>
+            <p>The instructor started by asking students to visualize highly correlated columns (such as <code>lstat</code> vs <code>medv</code>).</p>
+            <p>If you view the scatter plot, it does not perfectly follow a straight linear decline. Instead, the data slightly curves (like a shallow 'U' or logarithmic curve).</p>
+            
+            <p>When you apply a simple <strong>Linear Regression</strong> model to this curved relationship:</p>
+            <ul>
+                <li>It forces a stiff, straight line through a bent distribution.</li>
+                <li>The <strong>R²</strong> stays moderately low (around ~0.50 - 0.54) because the strict linearity cannot capture the curvature.</li>
+                <li>The <strong>Residual Plot</strong> will display an arching pattern, which violates the core linear regression assumption that residuals should appear randomly scattered.</li>
+            </ul>
+        </section>
 
-        <h2 id="notes">📝 Detailed Notes</h2>
+        <section class="section" id="polynomial">
+            <h2>2. Introducing Polynomial Regression</h2>
+            <p>Since the relationship is not straight, we must adapt the model to be "curved". This is done via <strong>Polynomial Regression</strong>.</p>
+            
+            <p><strong>Misconception:</strong> Polynomial regression is not an entirely new algorithm! It is just a mathematical transformation trick applied <em>before</em> Standard Linear Regression.</p>
+            <p>Instead of predicting <code>y</code> from <code>x</code>, we predict <code>y</code> from <code>x</code>, <code>x²</code>, <code>x³</code>, etc. Because the standard Linear Regression algorithm now has access to these non-linear transformations, the final equation becomes capable of drawing a curve.</p>
 
-        <h3>Choosing the Right Regression Model</h3>
-        <p>When deciding between Linear and Polynomial Regression, the most critical step is to visualize the data.</p>
-        <ul>
-            <li>If the feature pattern (scatterplot of feature vs target) follows a roughly straight line, <strong>Linear Regression</strong> is appropriate.</li>
-            <li>If the feature pattern is curved or non-linear, <strong>Polynomial Regression</strong> will likely capture the relationship much better.</li>
-        </ul>
-        <blockquote>
-            <strong>💡 Pro Tip:</strong> Always start with visual EDA (Exploratory Data Analysis). Don't arbitrarily apply higher-degree polynomials, as this can lead to severe overfitting.
-        </blockquote>
+            <div class="callout callout-info">
+                <span class="callout-icon">&#x1F4CC;</span>
+                <div><strong>Pro Tip:</strong> Polynomial Regression is still classified statistically as a "linear model." Even though the curve it draws on the graph is bent, the model parameters (weights/coefficients) are mathematically linear.</div>
+            </div>
 
-        <h3>Misconceptions about Polynomial Transformation</h3>
-        <p>During the session, a question was raised: <em>Does applying a polynomial transformation increase the dataset, causing us to lose accuracy but cover more data?</em></p>
-        <ul>
-            <li><strong>Correction</strong>: No, polynomial regression does not "increase the dataset" in terms of new observations. Instead, it adds new <em>features</em> (like x², x³) derived from the original features. This actually allows the model to map <em>more accurately</em> to the training data, though it risks overfitting if the degree is too high.</li>
-        </ul>
+            <h3>How to Execute Polynomial Regression</h3>
+            <p>To create polynomial regression in Python, you use <code>sklearn.preprocessing.PolynomialFeatures</code>.</p>
+            <ol>
+                <li><strong>Transform Data:</strong> Pass your <code>X_train</code> into the polynomial transformer.</li>
+                <li><strong>Train Linear Regression:</strong> Pass the transformed <code>X_train_poly</code> into the standard <code>LinearRegression.fit()</code> function.</li>
+                <li><strong>Predict:</strong> Transform the test data (<code>X_test_poly</code>) before predicting.</li>
+            </ol>
 
-        <h3>Evaluating Model Performance (Train vs. Test R²)</h3>
-        <p>To ensure a model isn't overfitting, you must compare the <strong>R² score on the training set</strong> against the <strong>R² score on the testing set</strong>.</p>
-        <ul>
-            <li>Example discussed: A training R² of 0.75 (75%) and a testing R² of 0.66 (66%).</li>
-            <li><strong>Instructor's Assessment</strong>: This is a decent model. The drop-off is only about 9-15%, which indicates the model is generalizing reasonably well to unseen data.</li>
-            <li><strong>Red Flag</strong>: If training R² is 0.95 and testing R² is 0.40, the model is heavily overfitted.</li>
-        </ul>
+            <div class="callout callout-danger">
+                <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+                <div><strong>Critical Rule:</strong> You must always fit your <code>PolynomialFeatures</code> object ONLY on the Training set. Only <code>transform()</code> the test set. Providing the test set during the <code>fit</code> stage creates data leakage!</div>
+            </div>
+        </section>
 
-        <h3>Feature Selection Strategies</h3>
-        <p>Not all features are useful. Including features with low correlation or low predictive power can add noise to the model.</p>
-        <ul>
-            <li><strong>Actionable Strategy</strong>: Isolate the top predictors. For example, rank features by their correlation coefficient with the target variable, pick the top 4, and build a model using only those. By isolating features, you can often achieve cleaner, more stable, and sometimes more accurate results.</li>
-        </ul>
+        <section class="section" id="dangers">
+            <h2>3. The Dangers of Going Too Far</h2>
+            <p>During the session, the instructor reinforced the topic of <strong>Model Complexity</strong>.</p>
+            <p>If we use <code>degree=2</code> and it improves our score, should we use <code>degree=5</code> or <code>degree=10</code> to get an even better score? <strong>Absolutely not.</strong></p>
+            
+            <p>When you increase the polynomial degree:</p>
+            <ul>
+                <li>The model's curve becomes highly erratic, weaving up and down violently to perfectly hit every single data point in the training set.</li>
+                <li><strong>Train R²</strong> approaches <code>0.99</code>.</li>
+                <li><strong>Test R²</strong> will instantly drop—often plunging heavily into negative numbers.</li>
+            </ul>
+            <p>This is the exact definition of <strong>Overfitting</strong>. The model curve memorized the noise, but missed the true signal.</p>
+        </section>
 
-        <h2 id="code">💻 Technical Deep-Dive / Code & Tools</h2>
-        <p>While no direct code was shared in the transcript, the workflow for creating/comparing models is as follows:</p>
+        <section class="section" id="code">
+            <h2>4. Technical Deep-Dive / Code & Tools</h2>
 
-        <pre><code><span class="comment"># Assuming X_train, X_test, y_train, y_test are already defined</span>
+            <h3>End to End Polynomial Evaluation</h3>
+            <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
 
-<span class="comment"># 1. Standard Linear Regression</span>
-<span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression
-<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> r2_score
+# Sample Setup
+X = df[['lstat']]
+y = df['medv']
 
-lr_model = LinearRegression()
-lr_model.fit(X_train, y_train)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-<span class="comment"># Check R-squared</span>
-print(<span class="string">"LR Train R2:"</span>, r2_score(y_train, lr_model.predict(X_train)))
-print(<span class="string">"LR Test R2:"</span>, r2_score(y_test, lr_model.predict(X_test)))
+# ----- 1. Simple Linear Model (Degree 1) -----
+lin_reg = LinearRegression()
+lin_reg.fit(X_train, y_train)
 
-<span class="comment"># 2. Polynomial Regression (Degree 2)</span>
-<span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures
+# Ensure to test both Train R² and Test R²
+print("Linear Regression Train R²:", r2_score(y_train, lin_reg.predict(X_train)))
+print("Linear Regression Test R²:", r2_score(y_test, lin_reg.predict(X_test)))
 
-poly = PolynomialFeatures(degree=<span class="keyword">2</span>)
+
+# ----- 2. Polynomial Model (Degree 2) -----
+# Initialize Transformer
+poly = PolynomialFeatures(degree=2, include_bias=False)
+
+# Transform Data
 X_train_poly = poly.fit_transform(X_train)
-X_test_poly = poly.transform(X_test)
+X_test_poly = poly.transform(X_test) # NEVER fit the test data!
 
-pr_model = LinearRegression()
-pr_model.fit(X_train_poly, y_train)
+# Train Model on Transformed Data
+poly_reg = LinearRegression()
+poly_reg.fit(X_train_poly, y_train)
 
-print(<span class="string">"Poly Train R2:"</span>, r2_score(y_train, pr_model.predict(X_train_poly)))
-print(<span class="string">"Poly Test R2:"</span>, r2_score(y_test, pr_model.predict(X_test_poly)))</code></pre>
+print("Polynomial (Degree 2) Train R²:", r2_score(y_train, poly_reg.predict(X_train_poly)))
+print("Polynomial (Degree 2) Test R²:", r2_score(y_test, poly_reg.predict(X_test_poly)))</code></pre>
+        </section>
 
-        <h2 id="qa">❓ Q&A / Discussion Highlights</h2>
-        <ul>
-            <li><strong>Q</strong>: How do we know if the R² is close enough to actual test data?</li>
-            <li><strong>A</strong>: You explicitly compute the R² for both training and testing datasets. A small gap (e.g., 75% vs 66%) means it's generalizing well. If the gap is huge, you need to simplify the model or drop noisy features.</li>
-        </ul>
+        <section class="section" id="qa">
+            <h2>5. Q&amp;A Highlights</h2>
+            <div class="qa-item">
+                <strong>Q:</strong> Why is my R² score negative when I test a high degree polynomial model?<br>
+                <strong>A:</strong> This means the model essentially failed drastically. A negative R² indicates that your model is performing worse than if you had simply predicted the mean value of the data point for every single instance. It highlights catastrophic failure caused strictly by overfitting.
+            </div>
+        </section>
 
-        <div class="takeaways" id="takeaways">
+        <section class="section takeaways" id="takeaways">
             <h2>✅ Key Takeaways</h2>
-            <ul>
-                <li>Look at the shape of your data: Straight lines = Linear Regression; Curves = Polynomial Regression.</li>
-                <li>A drop in R² from Train to Test is normal; a 15% drop is considered acceptable/decent.</li>
-                <li>Dropping uncorrelated features can simplify your model and sometimes improve performance.</li>
-                <li>Next session will focus on local Python environments and Regularization.</li>
-            </ul>
-        </div>
-
-        <div class="homework" id="homework">
+            <ol>
+                <li>Polynomial regression handles curves within data by adding new mathematical combination columns (features).</li>
+                <li>You are ultimately still executing a standard Linear Regression model, but on transformed data.</li>
+                <li>Small degrees (2 or 3) are usually enough to create a safe curve.</li>
+                <li>Higher degrees (like 10 or 15) instantly lead to overfitting, evidenced by a high Training R² and a plunging (or strongly negative) Test R².</li>
+            </ol>
+        </section>
+        
+        <section class="section" id="homework">
             <h2>📌 Action Items & Homework</h2>
             <ul>
-                <li><strong>Setup</strong>: Have your laptops ready for local Python environment setup next session.</li>
-                <li><strong>Assignment</strong>: Build one Linear Regression model and one Polynomial Regression model for the next session. Aim for the highest R² possible. (See <code>assignment.py</code>)</li>
+                <li>Complete the <code>assignment.py</code> script provided this week.</li>
+                <li>Create a Linear Regression model evaluating the <code>rm</code> and <code>lstat</code> columns.</li>
+                <li>After evaluating its Train/Test R², construct a Polynomial model evaluating the same features and compare the output.</li>
+                <li>Print your R² comparison and share your observation on which model performs better for those features.</li>
             </ul>
-        </div>
+        </section>
+
     </div>
 </body>
 </html>

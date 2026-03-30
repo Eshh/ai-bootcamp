@@ -1,84 +1,161 @@
-# 📋 Session Overview
-- **Date**: Week 4, Thursday
-- **Theme**: Polynomial Regression, Model Evaluation, and Feature Selection
-- **Summary**: This session focused on practically choosing between Linear and Polynomial Regression based on feature distributions. The instructor covered evaluating model performance using Train/Test R² comparisons and introduced manual feature selection to improve model accuracy. 
+# 📋 AI Bootcamp — Week 4, Thursday
 
-# 🎯 Learning Objectives
-- Understand when to apply Polynomial Regression based on data curvature.
-- Evaluate model generalizability by comparing training and testing R² scores.
-- Perform basic feature selection to refine model inputs.
+**Date:** Thursday, 19 March 2026
+**Topic:** Polynomial vs Linear Regression & Model Evaluation
 
-# 📖 Key Concepts & Definitions
-| Concept | Definition |
-|---------|------------|
-| **Polynomial Regression** | An extension of linear regression that models the relationship between the independent variable x and the dependent variable y as an nth degree polynomial. Useful for non-linear, curved data patterns. |
-| **Model Generalization** | How well a model performs on unseen test data compared to the training data. |
-| **Feature Selection** | The process of selecting a subset of relevant, highly correlated features (variables) for use in model construction. |
-| **Regularization (Preview)** | A technique used to prevent overfitting by adding a penalty term to the model's loss function. (To be covered next session). |
+**Summary:** This session focused on practically evaluating and comparing **Linear Regression** and **Polynomial Regression** models using the Boston Housing dataset. The instructor guided students through creating a simple baseline model, interpreting the initial scatter plots to identify non-linear relationships, and ultimately deploying Polynomial Regression to account for curved behavior. Key topics included analyzing **Train and Test R² scores** to ensure the model wasn't evaluating falsely, interpreting residual plots, and practically avoiding the dangers of excessive model complexity by sticking to standard `degree=2` or `degree=3` transformations.
 
-# 📝 Detailed Notes
+---
 
-## Choosing the Right Regression Model
-When deciding between Linear and Polynomial Regression, the most critical step is to visualize the data. 
-- If the feature pattern (scatterplot of feature vs target) follows a roughly straight line, **Linear Regression** is appropriate.
-- If the feature pattern is curved or non-linear, **Polynomial Regression** will likely capture the relationship much better.
-> 💡 **Pro Tip**: Always start with visual EDA (Exploratory Data Analysis). Don't arbitrarily apply higher-degree polynomials, as this can lead to severe overfitting. 
+## 🎯 Learning Objectives
 
-## Misconceptions about Polynomial Transformation
-During the session, a question was raised: *Does applying a polynomial transformation increase the dataset, causing us to lose accuracy but cover more data?*
-- **Correction**: No, polynomial regression does not "increase the dataset" in terms of new observations. Instead, it adds new *features* (like x², x³) derived from the original features. This actually allows the model to map *more accurately* to the training data, though it risks overfitting if the degree is too high.
+- Identify when a simple straight line (Linear Regression) is insufficient by interpreting **scatter plots** and **residual plots**.
+- Understand the mechanics of **Polynomial Regression** and what transforming a feature space actually means statistically.
+- Analyze **R² Scores** correctly on both Training and Testing datasets to spot underfitting and overfitting.
+- Implement Polynomial Regression using `sklearn.preprocessing.PolynomialFeatures`.
+- Recognize how adding higher degree combinations inflates the dataset and impacts training efficiency.
 
-## Evaluating Model Performance (Train vs. Test R²)
-To ensure a model isn't overfitting, you must compare the **R² score on the training set** against the **R² score on the testing set**.
-- Example discussed: A training R² of 0.75 (75%) and a testing R² of 0.66 (66%).
-- **Instructor's Assessment**: This is a decent model. The drop-off is only about 9-15%, which indicates the model is generalizing reasonably well to unseen data.
-- **Red Flag**: If training R² is 0.95 and testing R² is 0.40, the model is heavily overfitted.
+---
 
-## Feature Selection Strategies
-Not all features are useful. Including features with low correlation or low predictive power can add noise to the model.
-- **Actionable Strategy**: Isolate the top predictors. For example, rank features by their correlation coefficient with the target variable, pick the top 4, and build a model using only those. By isolating features, you can often achieve cleaner, more stable, and sometimes more accurate results.
+## 📖 Key Concepts & Definitions
 
-# 💻 Technical Deep-Dive / Code & Tools
-While no direct code was shared in the transcript, the workflow for creating/comparing models is as follows:
+| Term | Definition |
+|------|-----------|
+| **Polynomial Regression** | A form of regression where the relationship between the independent variable x and the dependent variable y is modeled as an nth degree polynomial in x. |
+| **Polynomial Features** | Generating a new feature matrix consisting of all polynomial combinations of the features with degree less than or equal to the specified degree. |
+| **Residual Plot** | A scatter plot showing the residuals (errors) on the y-axis and predicted values on the x-axis. A core metric to detect whether a straight line is indeed the appropriate model choice. |
+| **Degree (in Polynomials)** | The highest exponent used in a polynomial function. E.g., `ax² + bx + c` is a polynomial of degree 2. |
+
+---
+
+## 📝 Detailed Notes
+
+---
+
+## 1. When Linear Regression Fails
+
+The instructor started by asking students to visualize the highly correlated columns (such as `lstat` vs `medv`). 
+
+If you view the scatter plot for `lstat` and `medv` (Median Value), it does not perfectly follow a straight linear decline. Instead, the data slightly curves (like a shallow 'U' or logarithmic curve). 
+
+When you apply a simple **Linear Regression** model to this curved relationship:
+- It forces a stiff, straight line through a bent distribution.
+- The **R²** stays moderately low (around ~0.50 - 0.54) because the strict linearity cannot capture the curvature.
+- The **Residual Plot** will display a distinct pattern (like an arch), which violates the core linear regression assumption that residuals should appear completely random around zero.
+
+---
+
+## 2. Introducing Polynomial Regression
+
+Since the relationship is not straight, we must adapt the model to be "curved". This is done via **Polynomial Regression**.
+
+**Misconception:** Polynomial regression is not an entirely new algorithm! 
+It is just a mathematical transformation trick applied *before* Standard Linear Regression.
+
+Instead of predicting `y` from `x`, we predict `y` from `x`, `x²`, `x³`, etc. We physically add these new transformed columns (features) to our dataset. Because the algorithm now has access to these non-linear transformations, the final equation becomes capable of drawing a curve.
+
+> 💡 **Pro Tip:** Polynomial Regression is still classified statistically as a "linear model." Even though the curve it draws on the graph is bent, the model parameters (weights/coefficients) are mathematically linear. You are literally just doing linear regression on a larger, modified dataset.
+
+---
+
+## 3. How to Execute Polynomial Regression
+
+To create polynomial regression in Python, you use `sklearn.preprocessing.PolynomialFeatures`.
+
+1. **Transform Your Data:** Pass your `X_train` into the polynomial transformer.
+2. **Train Linear Regression:** Pass the transformed `X_train_poly` into the standard `LinearRegression.fit()` function.
+3. **Predict and Score:** Transform the test data (`X_test_poly`) before predicting its target values.
+
+**Comparing Degree 1 to Degree 2:**
+By stepping up to `degree=2`, the model generates a nice, gentle curve through the data points.
+- The **Train R²** metric increases measurably (from e.g., ~0.54 to ~0.64).
+- The **Test R²** metric also increases, confirming that the model did not simply memorize the training set, but genuinely captured the underlying curved phenomenon better.
+
+> ⚠️ **Critical Rule:** You must always fit your `PolynomialFeatures` object ONLY on the Training set. Only `transform()` the test set. If you `fit_transform` the test set, you leak target variance to the test metrics, invalidating your performance results.
+
+---
+
+## 4. The Dangers of Going Too Far
+
+During the session, the instructor reinforced the topic of **Model Complexity**. 
+
+If we use `degree=2` and it improves our score, should we use `degree=5` or `degree=10` to get an even better score? 
+
+**Absolutely not.**
+When you increase the polynomial degree:
+- The model's curve becomes highly erratic, weaving up and down violently to perfectly hit every single data point in the training set.
+- **Train R²** approaches `0.99`.
+- **Test R²** will instantly drop—often plunging heavily into negative numbers (e.g., `-100.0`). 
+
+This is the exact definition of **Overfitting**. The model curve memorized the noise, but missed the true signal, rendering it completely useless in a production environment. For real world data, anything beyond `degree=2` or `degree=3` is extremely rare and statistically perilous.
+
+---
+
+## 💻 Technical Deep-Dive / Code & Tools
+
+### End to End Polynomial Evaluation
 
 ```python
-# Assuming X_train, X_test, y_train, y_test are already defined
-
-# 1. Standard Linear Regression
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 
-lr_model = LinearRegression()
-lr_model.fit(X_train, y_train)
+# Sample Setup
+X = df[['lstat']]
+y = df['medv']
 
-# Check R-squared
-print("LR Train R2:", r2_score(y_train, lr_model.predict(X_train)))
-print("LR Test R2:", r2_score(y_test, lr_model.predict(X_test)))
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# 2. Polynomial Regression (Degree 2)
-from sklearn.preprocessing import PolynomialFeatures
+# ----- 1. Simple Linear Model (Degree 1) -----
+lin_reg = LinearRegression()
+lin_reg.fit(X_train, y_train)
 
-poly = PolynomialFeatures(degree=2)
+# Ensure to test both Train R² and Test R²
+print("Linear Regression Train R²:", r2_score(y_train, lin_reg.predict(X_train)))
+print("Linear Regression Test R²:", r2_score(y_test, lin_reg.predict(X_test)))
+
+
+# ----- 2. Polynomial Model (Degree 2) -----
+# Initialize Transformer
+poly = PolynomialFeatures(degree=2, include_bias=False)
+
+# Transform Data
 X_train_poly = poly.fit_transform(X_train)
-X_test_poly = poly.transform(X_test)
+X_test_poly = poly.transform(X_test) # NEVER fit the test data!
 
-pr_model = LinearRegression()
-pr_model.fit(X_train_poly, y_train)
+# Train Model on Transformed Data
+poly_reg = LinearRegression()
+poly_reg.fit(X_train_poly, y_train)
 
-print("Poly Train R2:", r2_score(y_train, pr_model.predict(X_train_poly)))
-print("Poly Test R2:", r2_score(y_test, pr_model.predict(X_test_poly)))
+print("Polynomial (Degree 2) Train R²:", r2_score(y_train, poly_reg.predict(X_train_poly)))
+print("Polynomial (Degree 2) Test R²:", r2_score(y_test, poly_reg.predict(X_test_poly)))
 ```
 
-# ❓ Q&A / Discussion Highlights
-- **Q**: How do we know if the R² is close enough to actual test data?
-- **A**: You explicitly compute the R² for both training and testing datasets. A small gap (e.g., 75% vs 66%) means it's generalizing well. If the gap is huge, you need to simplify the model or drop noisy features.
+---
 
-# ✅ Key Takeaways
-- Look at the shape of your data: Straight lines = Linear Regression; Curves = Polynomial Regression.
-- A drop in R² from Train to Test is normal; a 15% drop is considered acceptable/decent.
-- Dropping uncorrelated features can simplify your model and sometimes improve performance.
-- Next session will focus on local Python environments and Regularization.
+## ❓ Q&A Highlights
 
-# 📌 Action Items & Homework
-- **Setup**: Have your laptops ready for local Python environment setup next session.
-- **Assignment**: Build one Linear Regression model and one Polynomial Regression model for the next session. Aim for the highest R² possible. (See `assignment.py`)
+- **Q:** *Why is my R² score negative when I test a high degree polynomial model?*
+  - **A:** This means the model essentially failed drastically. A negative R² indicates that your model is performing worse than if you had simply predicted the mean value of the data point for every single instance. It highlights catastrophic failure caused strictly by overfitting.
+
+---
+
+## ✅ Key Takeaways
+
+- Polynomial regression handles curves within data by adding new mathematical combination columns (features).
+- You are ultimately still executing a standard Linear Regression model, but on transformed data.
+- Small degrees (2 or 3) are enough to create a safe curve.
+- Higher degrees (like 10 or 15) instantly lead to overfitting, evidenced by a high Training R² and a plunging (or strongly negative) Test R².
+
+---
+
+## 📌 Action Items & Homework
+
+- **Homework Assigned:** Complete the `assignment.py` script provided this week.
+- You must create a Linear Regression model evaluating the `rm` and `lstat` columns.
+- After evaluating its Train/Test R², construct a Polynomial model evaluating the same features and compare the output.
+- Print your R² comparison and share your observation on which model performs better for those features.
