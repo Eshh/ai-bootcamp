@@ -184,4 +184,48 @@ Polynomial regression extends linear regression by transforming features into hi
             },
         ],
     },
+    {
+        week: 4,
+        slug: "week-4",
+        title: "Model Evaluation & Tuning",
+        description: "Evaluating model generalizability, feature selection, and choosing between Linear and Polynomial Regression.",
+        days: [
+            {
+                day: "Tuesday",
+                slug: "tuesday",
+                title: "Model Complexity & Data Representation",
+                subtitle: "Polynomial complexity, Representative Data, and the role of Test Data",
+                topics: [
+                    "Model Complexity vs Model Performance",
+                    "The importance of Representative Data",
+                    "Evaluating deviation with Test Data",
+                    "Scatter plots for correlated features"
+                ],
+                contentPath: "/content/week-4/tuesday/study_material.html",
+                summary: `This session critically examined the relationship between model complexity and data. The instructor emphasized that we should default to simple models — specifically, degree 1 Linear Regression — even if a higher-degree polynomial yields a slightly better R-squared score on the training data. Complex models are highly prone to overfitting.
+
+A crucial concept introduced was "Representative Data". Having a massive volume of data doesn't help if that data doesn't represent the real world. Using the analogy of a cat-and-dog classifier failing when it encounters a tiger in production, the instructor explained that your training set must contain examples of the diverse scenarios your model will eventually face.
+
+Finally, the session reinforced that the test dataset is our ultimate anchor. It shows us exactly how far our model's logic has deviated from reality, serving as a critical check against overfitting before a model goes into production.`,
+            },
+            {
+                day: "Thursday",
+                slug: "thursday",
+                title: "Polynomial Regression & Feature Selection",
+                subtitle: "Visualizing relationships, Comparing R², and isolating top features",
+                topics: [
+                    "Choosing Linear vs Polynomial",
+                    "Train vs Test R² comparison",
+                    "Feature Selection strategies"
+                ],
+                contentPath: "/content/week-4/thursday/study_material.html",
+                summary: `This session focused on selecting the right regression model based on data patterns. If a feature's scatterplot shows a curve, Polynomial Regression is a better choice than a straight Linear Regression line. A critical misconception was corrected: polynomial regression doesn't add new observations, it creates new derived features to better capture non-linear relationships.
+
+Model evaluation was also a key topic. You must always compare the training R-squared score against the testing R-squared score to check for overfitting. A model with a training score of 75 percent and a testing score of 66 percent is considered decent, as the drop-off is minimal. If the testing score is significantly lower, the model is overfitted.
+
+Finally, the session emphasized feature selection. Dropping features with low correlation and isolating the top predictors can simplify your model and often improve accuracy. The workflow of building, testing, and refining models iteratively is the core of effective machine learning.`,
+            },
+        ],
+    },
 ];
+

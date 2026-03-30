@@ -45,6 +45,7 @@ Transcripts are noisy. Apply these filters ruthlessly:
 
 ## Folder Structure
 All output goes under the workspace at `/Users/eswarprasadkona/Desktop/code/Personal/AI/bootcamp/`.
+**CRITICAL**: The HTML output must *also* be saved to `viewer/public/content/week-<N>/<day>/` to prevent an infinite replication bug in the viewer app.
 
 ```
 bootcamp/
@@ -162,6 +163,10 @@ Produce a document with these sections (omit any that aren't applicable):
 
 #### Output 2: `study_material.html` (Styled HTML)
 - A self-contained, beautifully styled HTML file.
+- **CRITICAL**: You MUST write this HTML file to TWO locations:
+  1. `bootcamp/week-<N>/<day>/study_material.html`
+  2. `bootcamp/viewer/public/content/week-<N>/<day>/study_material.html` (Create the directory using run_command or write_to_file).
+  *Why? If the viewer app cannot find the file in `viewer/public/content/`, it will fallback to rendering `index.html`, causing an infinite UI replication bug.*
 - Use embedded CSS (no external dependencies).
 - Styling guidelines:
   - Modern, clean design with good typography (use system font stack or Google Fonts via CDN).
